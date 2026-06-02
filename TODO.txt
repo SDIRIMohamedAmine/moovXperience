@@ -1,0 +1,100 @@
+==============================================
+  MOVE EXPERIENCE — TODO & PRODUCTION NOTES
+  Dernière mise à jour : 2026-06-02
+==============================================
+
+Ce fichier liste les choses à faire, les placeholders, et les
+points à adresser avant la mise en production.
+
+
+----------------------------------------------
+SECURITE — A FAIRE AVANT PROD
+----------------------------------------------
+
+[x] Installer helmet (HTTP security headers) — DONE
+[x] Installer express-rate-limit (anti brute-force) — DONE (100 req/15min API, 20 req/15min auth)
+[x] Limiter la taille des requêtes (body parser limit) — DONE (1mb)
+[x] Error handler global Express (pas de stack trace en prod) — DONE
+[x] Input validation sur tous les endpoints — DONE (name, price, stock, UUID, search sanitize)
+[x] select() explicite sur profiles (pas de select('*')) — DONE
+[x] Token validation dans auth middleware — DONE
+[x] Ajout "Rester connecté" (remember me) — DONE
+[ ] Vérifier que server/.env n'a jamais été commité dans l'historique git
+    -> Si oui, rotate la clé secrète Supabase immédiatement
+[ ] Activer la confirmation par email dans Supabase
+[ ] Politique de mot de passe plus stricte (min 8 chars, complexité)
+[ ] CORS : remplacer localhost par le vrai domaine en prod
+
+
+----------------------------------------------
+FONCTIONNALITES — PLACEHOLDERS ACTUELS
+----------------------------------------------
+
+[x] Dashboard fournisseur : liens /supplier/products et /supplier/orders — DONE (Phase 2)
+[x] StatCard produits — wired to real product count
+[ ] Dashboard client : lien /my-rentals
+    -> pointent vers une route qui n'existe pas encore (Phase 3)
+[ ] StatCard locations (client) — toujours "0"
+[ ] Avatar : pas d'upload d'image, juste l'initiale du nom
+[ ] Pas de page 404 personnalisée (redirect vers /)
+[ ] Pas de page "Unauthorized" (403) — redirect vers /dashboard
+
+
+----------------------------------------------
+DESIGN & UX
+----------------------------------------------
+
+[ ] Ajouter un favicon personnalisé
+[ ] Meta tags pour SEO (title, description, og:image)
+[ ] Responsive : tester sur mobile (hamburger menu)
+[ ] Animations de transition entre les pages
+[ ] Loading states plus élaborés (skeleton screens)
+[ ] Toast notifications au lieu de messages inline
+
+
+----------------------------------------------
+I18N — BILINGUE FR/EN
+---------------------------------------------
+
+[x] Système de traduction (context + JSON) — DONE
+[x] Toutes les pages doivent supporter FR et EN — DONE
+[x] Sélecteur de langue dans le header (bouton EN/FR) — DONE
+[x] Sauvegarder la préférence de langue (localStorage) — DONE
+
+
+----------------------------------------------
+TECHNIQUE
+----------------------------------------------
+
+[ ] Supprimer server/src/db/schema.sql (doublon de 001_init.sql)
+[ ] Supabase Storage pour les images produits (Phase 2)
+[ ] Tests unitaires (Vitest)
+[ ] Tests E2E (Playwright)
+[ ] CI/CD pipeline (GitHub Actions)
+[ ] Docker pour le serveur
+[ ] Monitoring / error tracking (Sentry)
+
+
+----------------------------------------------
+PROCHAINES PHASES
+----------------------------------------------
+
+Phase 2 : Catalogue produits — **DONE**
+  [x] CRUD produits fournisseur (API + pages)
+  [x] Page catalogue avec filtres/recherche
+  [x] Page détail produit
+  [ ] Upload images (Supabase Storage) — placeholder (URL input for now)
+
+Phase 3 : Réservations & disponibilité
+  - Calendrier de disponibilité
+  - Panier / tunnel de réservation
+  - Statuts de location
+
+Phase 4 : Paiement & facturation
+  - Intégration Konnect
+  - Factures PDF
+
+Phase 5 : Avis, recherche & déploiement
+  - Système d'avis
+  - Recherche full-text
+  - Déploiement Vercel + Railway

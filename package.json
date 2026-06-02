@@ -1,0 +1,19 @@
+{
+  "name": "projet-move-experience",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "lint": "cd client && npm run lint",
+    "format": "cd client && npm run format"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Marketplace de location d'équipements événementiels",
+  "dependencies": {
+    "concurrently": "^10.0.1"
+  }
+}

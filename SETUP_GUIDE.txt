@@ -1,0 +1,205 @@
+==============================================
+  MOVE EXPERIENCE - GUIDE DE SETUP
+  Phase 0 + Phase 1 + Phase 2
+==============================================
+
+Phase 0, 1 et 2 sont codees. Voici ce que tu dois faire pour tout faire tourner.
+
+
+----------------------------------------------
+ETAPE 1 : CREER UN PROJET SUPABASE (si pas deja fait)
+----------------------------------------------
+
+  a) Va sur https://supabase.com et connecte-toi
+  b) Clique sur "New Project"
+  c) Remplis les infos :
+     - Organization : cree une nouvelle org si besoin
+     - Project name : move-experience
+     - Database Password : choisis un mot de passe solide (note-le !)
+     - Region : Europe West (ou la plus proche)
+  d) Clique "Create new project" et attends ~2 minutes
+
+
+----------------------------------------------
+ETAPE 2 : CONFIGURER LA BASE DE DONNEES
+----------------------------------------------
+
+  a) Dans le dashboard Supabase, va dans "SQL Editor" (menu a gauche)
+  b) Clique "New query"
+  c) Execute les fichiers SQL dans l'ordre :
+
+  1. supabase/migrations/001_init.sql
+     -> Cree les tables (profiles, categories, products, rentals, etc.)
+     -> Cree les politiques RLS et le trigger de creation de profil
+
+  2. supabase/migrations/002_security_fixes.sql
+     -> Corrige les vulnerabilites de securite
+     -> Empeche l'escalade de role
+     -> Ajoute les politiques admin
+
+  3. Seed les categories (colle et execute ce SQL) :
+
+     INSERT INTO categories (name, slug, icon) VALUES
+       ('Chaises', 'chairs', 'chair'),
+       ('Tables', 'tables', 'table'),
+       ('Mobilier lounge', 'lounge', 'sofa'),
+       ('Bars & comptoirs', 'bars', 'wine-glass'),
+       ('Eclairage', 'lighting', 'lightbulb'),
+       ('Decoration', 'decor', 'palette'),
+       ('Textiles', 'textiles', 'fabric'),
+       ('Audiovisuel', 'av-equipment', 'speaker');
+
+
+----------------------------------------------
+ETAPE 3 : DESACTIVER LA CONFIRMATION PAR EMAIL
+----------------------------------------------
+
+  Pour le dev, desactive la confirmation par email :
+
+  a) Authentication > Sign In / Up > Email
+  b) Desactive "Confirm email"
+  c) Clique "Save"
+
+  ATTENTION : Reactive pour la production !
+
+
+----------------------------------------------
+ETAPE 4 : RECUPERER LES CLES API
+----------------------------------------------
+
+  a) Project Settings > API
+  b) Note : Project URL, Publishable key, Secret key
+
+
+----------------------------------------------
+ETAPE 5 : REMPLIR LES FICHIERS .ENV
+----------------------------------------------
+
+  client/.env.local :
+     VITE_SUPABASE_URL=https://ton-url.supabase.co
+     VITE_SUPABASE_PUBLISHABLE_KEY=ta-cle-publishable
+
+  server/.env :
+     SUPABASE_URL=https://ton-url.supabase.co
+     SUPABASE_SECRET_KEY=ta-cle-secret
+     PORT=3001
+
+
+----------------------------------------------
+ETAPE 6 : INSTALLER ET LANCER
+----------------------------------------------
+
+  cd client && npm install && cd ..
+  cd server && npm install && cd ..
+  npm install
+  npm run dev
+
+  Frontend : http://localhost:5173
+  Backend  : http://localhost:3001
+
+
+----------------------------------------------
+ETAPE 7 : TESTER LE CATALOGUE
+----------------------------------------------
+
+  1. Inscris-toi comme "Fournisseur"
+  2. Va sur /supplier/products
+  3. Clique "Ajouter un produit"
+  4. Remplis le formulaire (nom, prix, categorie, etc.)
+  5. Soumets -> le produit apparait dans la liste
+  6. Ouvre /catalog -> le produit est visible publiquement
+  7. Clique sur le produit -> page de detail
+  8. Modifie ou supprime depuis /supplier/products
+  9. Connecte-toi en tant que "Client"
+  10. /catalog -> peut voir mais pas modifier
+  11. Le Dashboard affiche le vrai nombre de produits
+
+
+----------------------------------------------
+CE QUI EST EN PLACE
+----------------------------------------------
+
+  Phase 0 :
+  - Monorepo (client Vite + server Express)
+  - Supabase connecte
+  - Base de donnees avec 6 tables + RLS + triggers
+  - Tailwind CSS v4
+
+  Phase 1 :
+  - Auth (inscription, connexion, deconnexion)
+  - Roles (client, fournisseur, admin)
+  - Profils (modification nom, telephone)
+  - Dashboard adapte au role
+  - Routes protegees
+  - Bilingual FR/EN
+  - UI CORT Events (palette #F5F5F5 #76ABAE #303841 #FF5722)
+  - Securite (anti-escalade, CORS restreint, admin RLS)
+
+  Phase 2 :
+  - API CRUD produits (GET/POST/PUT/DELETE)
+  - API categories (GET)
+  - Page catalogue publique (recherche + filtres par categorie)
+  - Page detail produit
+  - Dashboard fournisseur (liste, edition, suppression)
+  - Formulaire creation/edition produit
+  - Dashboard avec vrais comptes de produits
+  - i18n pour toutes les pages du catalogue
+
+
+----------------------------------------------
+STRUCTURE DU PROJET
+----------------------------------------------
+
+  client/src/
+  ├── components/
+  │   ├── AuthProvider.jsx
+  │   ├── ProtectedRoute.jsx
+  │   └── ProductCard.jsx          # NOUVEAU
+  ├── hooks/useAuth.js
+  ├── i18n/
+  │   ├── LanguageContext.jsx
+  │   ├── fr.json
+  │   └── en.json
+  ├── layouts/
+  │   ├── MainLayout.jsx
+  │   └── AuthLayout.jsx
+  ├── pages/
+  │   ├── HomePage.jsx
+  │   ├── LoginPage.jsx
+  │   ├── RegisterPage.jsx
+  │   ├── DashboardPage.jsx
+  │   ├── ProfilePage.jsx
+  │   ├── CatalogPage.jsx          # NOUVEAU
+  │   ├── ProductDetailPage.jsx    # NOUVEAU
+  │   └── supplier/
+  │       ├── SupplierProductsPage.jsx  # NOUVEAU
+  │       └── ProductFormPage.jsx       # NOUVEAU
+  ├── services/
+  │   ├── authService.js
+  │   ├── productService.js        # NOUVEAU
+  │   └── categoryService.js       # NOUVEAU
+  ├── stores/authStore.js
+  └── lib/supabase.js
+
+  server/src/
+  ├── middleware/auth.js
+  ├── controllers/
+  │   ├── profileController.js
+  │   ├── productController.js     # NOUVEAU
+  │   └── categoryController.js    # NOUVEAU
+  ├── routes/
+  │   ├── profiles.js
+  │   ├── products.js              # NOUVEAU
+  │   └── categories.js            # NOUVEAU
+  └── index.js
+
+
+----------------------------------------------
+PROCHAINE ETAPE
+----------------------------------------------
+
+  Phase 3 : Reservations & disponibilite
+  - Calendrier de disponibilite
+  - Panier / tunnel de reservation
+  - Statuts de location (pending -> confirmed -> delivered -> returned)
+  - Notifications
