@@ -40,7 +40,7 @@ export default function AdminRentals() {
   }, [filter])
 
   if (!isAdminLoggedIn()) {
-    return <Navigate to="/admin/login" replace />
+    return <Navigate to="/login" replace />
   }
 
   const formatDate = (d) => d ? new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'

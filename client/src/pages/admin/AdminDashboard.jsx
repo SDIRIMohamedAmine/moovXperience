@@ -25,7 +25,7 @@ export default function AdminDashboard() {
   }, [])
 
   if (!isAdminLoggedIn()) {
-    return <Navigate to="/admin/login" replace />
+    return <Navigate to="/login" replace />
   }
 
   if (loading) {

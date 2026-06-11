@@ -26,7 +26,7 @@ export default function AdminUsers() {
   }, [filter])
 
   if (!isAdminLoggedIn()) {
-    return <Navigate to="/admin/login" replace />
+    return <Navigate to="/login" replace />
   }
 
   const handleRoleChange = async (userId, newRole) => {

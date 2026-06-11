@@ -19,7 +19,7 @@ export default function AdminProducts() {
   }, [])
 
   if (!isAdminLoggedIn()) {
-    return <Navigate to="/admin/login" replace />
+    return <Navigate to="/login" replace />
   }
 
   const handleToggle = async (id) => {

@@ -67,7 +67,7 @@ export default function AdminProductForm() {
   }, [id, isEdit])
 
   if (!isAdminLoggedIn()) {
-    return <Navigate to="/admin/login" replace />
+    return <Navigate to="/login" replace />
   }
 
   const handleChange = (field, value) => {

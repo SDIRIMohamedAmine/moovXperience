@@ -31,6 +31,9 @@ export async function signIn(email, password, remember = true) {
 }
 
 export async function signOut() {
+  // Clear admin token if exists
+  localStorage.removeItem('admin-token')
+  localStorage.removeItem('admin-user')
   const { error } = await supabase.auth.signOut()
   return { error }
 }
