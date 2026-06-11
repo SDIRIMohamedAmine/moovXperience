@@ -15,6 +15,22 @@ const useAuthStore = create((set, get) => ({
     if (initialized) return subscription
     initialized = true
 
+    // Check for admin token first
+    const adminToken = localStorage.getItem('admin-token')
+    const adminUser = localStorage.getItem('admin-user')
+    if (adminToken && adminUser) {
+      try {
+        const parsed = JSON.parse(adminUser)
+        set({
+          user: { id: null, email: parsed.email, user_metadata: { full_name: 'Admin' } },
+          session: null,
+          profile: { role: 'admin', full_name: 'Admin' },
+          loading: false,
+        })
+        return null
+      } catch { /* corrupted admin-user, fall through */ }
+    }
+
     const remembered = getRememberMe()
 
     const { data: { session } } = await supabase.auth.getSession()

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signIn } from '../services/authService'
 import { adminLogin } from '../services/adminService'
+import { authStore } from '../stores/authStore'
 import { useTranslation } from '../i18n/LanguageContext'
 
 export default function LoginPage() {
@@ -48,7 +49,14 @@ export default function LoginPage() {
 
     // If Supabase login fails, try admin login (.env credentials)
     try {
-      await adminLogin(email, password)
+      const adminData = await adminLogin(email, password)
+      // Set admin user in auth store so logout button renders
+      authStore.setState({
+        user: { id: null, email: adminData.user?.email || email, user_metadata: { full_name: 'Admin' } },
+        session: null,
+        profile: { role: 'admin', full_name: 'Admin' },
+        loading: false,
+      })
       navigate('/admin')
       return
     } catch (adminError) {

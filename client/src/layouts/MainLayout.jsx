@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Outlet, Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import { authStore } from '../stores/authStore'
 import { useCartStore } from '../stores/cartStore'
 import { signOut } from '../services/authService'
 import { useTranslation } from '../i18n/LanguageContext'
@@ -16,6 +17,7 @@ export default function MainLayout() {
 
   const handleLogout = async () => {
     await signOut()
+    authStore.setState({ user: null, session: null, profile: null })
     setMenuOpen(false)
     navigate('/')
   }
