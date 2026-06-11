@@ -4,6 +4,7 @@ import { useTranslation } from '../i18n/LanguageContext'
 import { useCartStore } from '../stores/cartStore'
 import { useAuth } from '../hooks/useAuth'
 import { createRental } from '../services/rentalService'
+import { createQuote } from '../services/quoteService'
 import LocationPicker from '../components/LocationPicker'
 import { showToast } from '../components/Toast'
 
@@ -11,7 +12,7 @@ export default function CheckoutPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { user, session } = useAuth()
-  const { items, getItemTotal, getTotal, clearCart } = useCartStore()
+  const { items, getItemTotal, getTotal, clearCart, removeItem, updateQuantity } = useCartStore()
   const [notes, setNotes] = useState('')
   const [location, setLocation] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -70,8 +71,25 @@ export default function CheckoutPage() {
         }, accessToken)
       }
 
-      // Purchase items would go through a different flow (quote/payment)
-      // For now, they're handled the same way
+      // Create quotes for purchase items
+      for (const item of purchaseItems) {
+        const optionsTotal = (item.options || []).reduce((sum, opt) => sum + (opt.price || 0), 0)
+        const estimatedTotal = (item.price_purchase || item.price_per_day || 0) * item.quantity + optionsTotal
+        await createQuote({
+          product_id: item.product_id,
+          client_name: user.user_metadata?.full_name || user.email,
+          client_email: user.email,
+          client_phone: user.user_metadata?.phone || '',
+          company_name: user.user_metadata?.company_name || '',
+          mode: 'purchase',
+          duration_days: null,
+          options: item.options || [],
+          event_date: null,
+          event_location: location || null,
+          notes: notes || null,
+          estimated_total: estimatedTotal,
+        }, accessToken)
+      }
 
       clearCart()
       showToast('Réservation confirmée !', 'success')
@@ -95,6 +113,70 @@ export default function CheckoutPage() {
     return Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1
   }
 
+  const renderItem = (item, showDates) => (
+    <div key={item.key} className="p-4 flex items-center gap-3"
+      style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
+      {/* Image */}
+      <div className="w-12 h-12 flex-shrink-0" style={{ backgroundColor: '#1a1a1a' }}>
+        {item.images?.[0] ? (
+          <img src={item.images[0]} alt="" className="w-full h-full object-cover" />
+        ) : null}
+      </div>
+
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+          {item.name}
+        </div>
+        <div className="text-xs mt-0.5" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+          {item.mode === 'rental'
+            ? `${item.quantity} × ${item.price_per_day} TND/jour${getDays(item) > 0 ? ` × ${getDays(item)} jours` : ''}`
+            : `${item.quantity} × ${item.price_purchase || item.price_per_day} TND`
+          }
+        </div>
+        {showDates && item.startDate && item.endDate && (
+          <div className="text-xs mt-0.5" style={{ color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
+            {formatDate(item.startDate)} → {formatDate(item.endDate)}
+          </div>
+        )}
+        {/* Quantity controls */}
+        <div className="flex items-center gap-2 mt-2">
+          <button
+            onClick={() => updateQuantity(item.key, item.quantity - 1)}
+            className="w-6 h-6 flex items-center justify-center text-xs"
+            style={{ backgroundColor: '#222', color: '#fff', border: '1px solid #333' }}
+          >
+            -
+          </button>
+          <span className="text-xs w-6 text-center" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+            {item.quantity}
+          </span>
+          <button
+            onClick={() => updateQuantity(item.key, item.quantity + 1)}
+            className="w-6 h-6 flex items-center justify-center text-xs"
+            style={{ backgroundColor: '#222', color: '#fff', border: '1px solid #333' }}
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      {/* Price + Remove */}
+      <div className="flex flex-col items-end gap-2">
+        <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+          {getItemTotal(item).toFixed(2)} TND
+        </div>
+        <button
+          onClick={() => removeItem(item.key)}
+          className="text-xs px-2 py-1"
+          style={{ color: '#FF6B6B', border: '1px solid #FF6B6B33' }}
+        >
+          Supprimer
+        </button>
+      </div>
+    </div>
+  )
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-3xl mb-8 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
@@ -108,38 +190,7 @@ export default function CheckoutPage() {
             Locations
           </h2>
           <div className="space-y-3">
-            {rentalItems.map(item => {
-              const days = getDays(item)
-              return (
-                <div key={item.key} className="p-4 flex items-center justify-between"
-                  style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 flex-shrink-0" style={{ backgroundColor: '#1a1a1a' }}>
-                      {item.images?.[0] ? (
-                        <img src={item.images[0]} alt="" className="w-full h-full object-cover" />
-                      ) : null}
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-                        {item.name}
-                      </div>
-                      <div className="text-xs mt-0.5" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-                        {item.quantity} × {item.price_per_day} TND/jour
-                        {days > 0 && ` × ${days} jours`}
-                      </div>
-                      {item.startDate && item.endDate && (
-                        <div className="text-xs mt-0.5" style={{ color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
-                          {formatDate(item.startDate)} → {formatDate(item.endDate)}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-                    {getItemTotal(item).toFixed(2)} TND
-                  </div>
-                </div>
-              )
-            })}
+            {rentalItems.map(item => renderItem(item, true))}
           </div>
         </div>
       )}
@@ -151,29 +202,7 @@ export default function CheckoutPage() {
             Achats
           </h2>
           <div className="space-y-3">
-            {purchaseItems.map(item => (
-              <div key={item.key} className="p-4 flex items-center justify-between"
-                style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 flex-shrink-0" style={{ backgroundColor: '#1a1a1a' }}>
-                    {item.images?.[0] ? (
-                      <img src={item.images[0]} alt="" className="w-full h-full object-cover" />
-                    ) : null}
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-                      {item.name}
-                    </div>
-                    <div className="text-xs mt-0.5" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-                      {item.quantity} × {item.price_purchase || item.price_per_day} TND
-                    </div>
-                  </div>
-                </div>
-                <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-                  {getItemTotal(item).toFixed(2)} TND
-                </div>
-              </div>
-            ))}
+            {purchaseItems.map(item => renderItem(item, false))}
           </div>
         </div>
       )}
