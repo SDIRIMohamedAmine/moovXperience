@@ -213,6 +213,42 @@ export async function getAllRentals(req, res) {
   res.json({ rentals: data, total: count })
 }
 
+export async function getRentalDetails(req, res) {
+  if (!(await requireAdmin(req, res))) return
+
+  const { id } = req.params
+
+  const { data, error } = await supabase
+    .from('rentals')
+    .select('*, profiles!client_id(full_name, phone), rental_items(*, products(name, images))')
+    .eq('id', id)
+    .single()
+
+  if (error || !data) {
+    return res.status(404).json({ error: 'Rental not found' })
+  }
+
+  res.json(data)
+}
+
+export async function deleteRental(req, res) {
+  if (!(await requireAdmin(req, res))) return
+
+  const { id } = req.params
+
+  // Delete rental items first
+  await supabase.from('rental_items').delete().eq('rental_id', id)
+
+  const { error } = await supabase.from('rentals').delete().eq('id', id)
+
+  if (error) {
+    console.error('Delete rental error:', error.message)
+    return res.status(400).json({ error: 'Failed to delete rental' })
+  }
+
+  res.json({ success: true })
+}
+
 export async function getAllCategories(req, res) {
   if (!(await requireAdmin(req, res))) return
 

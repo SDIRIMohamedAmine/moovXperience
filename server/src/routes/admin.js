@@ -8,6 +8,8 @@ import {
   toggleProductAvailability,
   deleteProductAdmin,
   getAllRentals,
+  getRentalDetails,
+  deleteRental,
   getAllCategories,
   createCategory,
   updateCategory,
@@ -33,6 +35,8 @@ router.delete('/products/:id', deleteProductAdmin)
 
 // Rentals
 router.get('/rentals', getAllRentals)
+router.get('/rentals/:id', getRentalDetails)
+router.delete('/rentals/:id', deleteRental)
 
 // Categories
 router.get('/categories', getAllCategories)
