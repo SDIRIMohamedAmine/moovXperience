@@ -25,8 +25,6 @@ export default function MainLayout() {
   const navLinks = [
     { to: '/', label: t('nav.home') },
     { to: '/catalog', label: t('nav.catalog') },
-    ...(user && (profile?.role === 'supplier' || profile?.role === 'admin') ? [{ to: '/dashboard', label: t('nav.dashboard') }] : []),
-    ...(user && profile?.role === 'supplier' ? [{ to: '/supplier/orders', label: t('orders.title') }] : []),
     ...(user && profile?.role === 'admin' ? [{ to: '/admin', label: 'Admin' }] : []),
   ]
 

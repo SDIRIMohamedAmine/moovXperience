@@ -68,13 +68,6 @@ function App() {
         <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
         <Route path="/payment-result" element={<ProtectedRoute><PaymentResultPage /></ProtectedRoute>} />
 
-        {/* Supplier routes */}
-        <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['supplier', 'admin']}><DashboardPage /></ProtectedRoute>} />
-        <Route path="/supplier/products" element={<ProtectedRoute allowedRoles={['supplier']}><SupplierProductsPage /></ProtectedRoute>} />
-        <Route path="/supplier/orders" element={<ProtectedRoute allowedRoles={['supplier']}><OrdersPage /></ProtectedRoute>} />
-        <Route path="/supplier/products/new" element={<ProtectedRoute allowedRoles={['supplier']}><ProductFormPage /></ProtectedRoute>} />
-        <Route path="/supplier/products/:id/edit" element={<ProtectedRoute allowedRoles={['supplier']}><ProductFormPage /></ProtectedRoute>} />
-
         {/* Admin routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminDashboard />} />

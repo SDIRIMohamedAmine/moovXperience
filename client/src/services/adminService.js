@@ -97,6 +97,34 @@ export async function fetchAllRentals(params = {}) {
   return res.json()
 }
 
+export async function fetchRentalDetails(id) {
+  const res = await fetch(`${API_URL}/admin/rentals/${id}`, { headers: authHeaders() })
+  if (!res.ok) throw new Error('Failed to fetch rental details')
+  return res.json()
+}
+
+export async function updateRentalStatus(id, status) {
+  const res = await fetch(`${API_URL}/rentals/${id}/status`, {
+    method: 'PATCH',
+    headers: authHeaders(),
+    body: JSON.stringify({ status }),
+  })
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.error || 'Failed to update status')
+  }
+  return res.json()
+}
+
+export async function deleteRental(id) {
+  const res = await fetch(`${API_URL}/admin/rentals/${id}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  })
+  if (!res.ok) throw new Error('Failed to delete rental')
+  return res.json()
+}
+
 export async function fetchAllCategories() {
   const res = await fetch(`${API_URL}/admin/categories`, { headers: authHeaders() })
   if (!res.ok) throw new Error('Failed to fetch categories')

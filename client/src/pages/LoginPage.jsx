@@ -25,7 +25,7 @@ export default function LoginPage() {
       setLoading(false)
       return
     }
-    navigate('/dashboard')
+    navigate('/')
   }
 
   return (
