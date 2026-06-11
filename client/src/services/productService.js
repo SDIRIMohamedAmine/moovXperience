@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001/api'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 export async function fetchProducts(filters = {}) {
   const params = new URLSearchParams()
@@ -6,6 +6,8 @@ export async function fetchProducts(filters = {}) {
   if (filters.search) params.set('search', filters.search)
   if (filters.min_price) params.set('min_price', filters.min_price)
   if (filters.max_price) params.set('max_price', filters.max_price)
+  if (filters.mode) params.set('mode', filters.mode)
+  if (filters.pricing_type) params.set('pricing_type', filters.pricing_type)
   if (filters.limit) params.set('limit', filters.limit)
   if (filters.offset) params.set('offset', filters.offset)
 

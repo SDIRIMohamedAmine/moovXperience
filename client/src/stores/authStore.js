@@ -1,6 +1,9 @@
 import { create } from 'zustand'
 import { supabase, getRememberMe } from '../lib/supabase'
 
+let initialized = false
+let subscription = null
+
 const useAuthStore = create((set, get) => ({
   user: null,
   session: null,
@@ -8,21 +11,20 @@ const useAuthStore = create((set, get) => ({
   loading: true,
 
   initialize: async () => {
-    // Check remember me preference
+    // Prevent double initialization
+    if (initialized) return subscription
+    initialized = true
+
     const remembered = getRememberMe()
 
-    if (!remembered) {
-      // If not remembered, clear any persisted session
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session) {
-        // Session exists but user didn't want to be remembered — clear it
-        await supabase.auth.signOut()
-        set({ session: null, user: null, profile: null, loading: false })
-        return
-      }
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (!remembered && session) {
+      await supabase.auth.signOut()
+      set({ session: null, user: null, profile: null, loading: false })
+      return null
     }
 
-    const { data: { session } } = await supabase.auth.getSession()
     set({ session, user: session?.user ?? null })
 
     if (session?.user) {
@@ -31,15 +33,36 @@ const useAuthStore = create((set, get) => ({
 
     set({ loading: false })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      set({ session, user: session?.user ?? null })
-      if (session?.user) {
-        await get().fetchProfile(session.user.id)
-      } else {
-        set({ profile: null })
+    const { data } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+      if (newSession?.user) {
+        set({ session: newSession, user: newSession.user })
+        await get().fetchProfile(newSession.user.id)
+      } else if (event === 'SIGNED_OUT') {
+        // Only clear if there's truly no session
+        const { data: { session: currentSession } } = await supabase.auth.getSession()
+        if (!currentSession) {
+          set({ session: null, user: null, profile: null })
+        }
       }
     })
 
+    // Listen for storage events to sync auth across tabs
+    const handleStorage = (e) => {
+      if (e.key?.startsWith('sb-') && e.key?.endsWith('-auth-token')) {
+        // Session changed in another tab, re-check
+        supabase.auth.getSession().then(({ data: { session: newSession } }) => {
+          if (newSession?.user) {
+            set({ session: newSession, user: newSession.user })
+            get().fetchProfile(newSession.user.id)
+          } else {
+            set({ session: null, user: null, profile: null })
+          }
+        })
+      }
+    }
+    window.addEventListener('storage', handleStorage)
+
+    subscription = data.subscription
     return subscription
   },
 
@@ -57,9 +80,15 @@ const useAuthStore = create((set, get) => ({
   updateProfile: async (updates) => {
     const user = get().user
     if (!user) return { error: 'Not authenticated' }
+
+    // Only allow specific fields to be updated
+    const allowed = {}
+    if (updates.full_name !== undefined) allowed.full_name = String(updates.full_name).slice(0, 200)
+    if (updates.phone !== undefined) allowed.phone = String(updates.phone).slice(0, 30)
+
     const { data, error } = await supabase
       .from('profiles')
-      .update({ ...updates, updated_at: new Date().toISOString() })
+      .update({ ...allowed, updated_at: new Date().toISOString() })
       .eq('id', user.id)
       .select()
       .single()

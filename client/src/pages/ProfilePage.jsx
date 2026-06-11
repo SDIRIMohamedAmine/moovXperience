@@ -95,10 +95,18 @@ export default function ProfilePage() {
             <>
               <button onClick={handleSave} disabled={saving}
                 className="px-6 py-2.5 text-sm uppercase tracking-widest font-medium transition-colors"
-                style={{ backgroundColor: colors.cta, color: colors.textWhite, fontFamily: 'DM Sans, system-ui, sans-serif' }}
-                onMouseEnter={(e) => (e.target.style.backgroundColor = colors.ctaHover)}
+                style={{ backgroundColor: colors.cta, color: colors.textWhite, fontFamily: 'DM Sans, system-ui, sans-serif', opacity: saving ? 0.7 : 1, cursor: saving ? 'not-allowed' : 'pointer' }}
+                onMouseEnter={(e) => !saving && (e.target.style.backgroundColor = colors.ctaHover)}
                 onMouseLeave={(e) => (e.target.style.backgroundColor = colors.cta)}>
-                {saving ? t('profile.saving') : t('profile.save')}
+                {saving ? (
+                  <span className="inline-flex items-center gap-2">
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    {t('profile.saving')}
+                  </span>
+                ) : t('profile.save')}
               </button>
               <button onClick={() => setEditing(false)}
                 className="px-6 py-2.5 text-sm uppercase tracking-widest font-medium transition-colors"
@@ -131,7 +139,7 @@ function Field({ label, value, editing, editValue, onEditChange, type = 'text' }
       </label>
       {editing ? (
         <input type={type} value={editValue} onChange={(e) => onEditChange(e.target.value)}
-          className="w-full px-4 py-3 text-sm outline-none transition-colors"
+          className="w-full px-4 py-3 text-sm transition-colors"
           style={{ border: '1px solid #E0E3E6', fontFamily: 'DM Sans, system-ui, sans-serif', color: '#303841' }}
           onFocus={(e) => (e.target.style.borderColor = '#76ABAE')}
           onBlur={(e) => (e.target.style.borderColor = '#E0E3E6')}
