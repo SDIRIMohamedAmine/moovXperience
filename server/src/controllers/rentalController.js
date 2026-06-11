@@ -249,6 +249,7 @@ export async function createRental(req, res) {
   res.status(201).json({ ...rental, items: insertedItems })
 
   // Send confirmation email to client (non-blocking)
+  console.log('[RENTAL] Rental created, attempting emails... user:', req.user?.email)
   try {
     const { data: clientProfile } = await supabase
       .from('profiles')
@@ -259,23 +260,29 @@ export async function createRental(req, res) {
     const clientName = clientProfile?.full_name || 'Client'
     const clientEmail = req.user.email
 
+    console.log('[RENTAL] clientEmail:', clientEmail, '| clientName:', clientName)
     if (clientEmail) {
+      console.log('[RENTAL] Calling sendRentalConfirmation...')
       sendRentalConfirmation({
         clientEmail,
         clientName,
         rental,
         items: insertedItems,
-      }).catch(err => console.error('Client email failed:', err.message))
+      }).then(r => console.log('[RENTAL] Client email result:', r ? 'OK' : 'NULL'))
+       .catch(err => console.error('[RENTAL] Client email failed:', err.message))
 
-      // Also notify admin
+      console.log('[RENTAL] Calling sendRentalNotification...')
       sendRentalNotification({
         clientName,
         rental,
         items: insertedItems,
-      }).catch(err => console.error('Admin notification failed:', err.message))
+      }).then(r => console.log('[RENTAL] Admin email result:', r ? 'OK' : 'NULL'))
+       .catch(err => console.error('[RENTAL] Admin notification failed:', err.message))
+    } else {
+      console.warn('[RENTAL] No clientEmail found on req.user — skipping emails')
     }
   } catch (err) {
-    console.error('Email notification error:', err.message)
+    console.error('[RENTAL] Email notification error:', err.message)
   }
 }
 

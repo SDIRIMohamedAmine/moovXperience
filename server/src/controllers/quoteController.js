@@ -87,8 +87,10 @@ export async function createQuote(req, res) {
   }
 
   // Send emails
+  console.log('[QUOTE] Quote created:', data.id, '| client:', client_email, '| product:', product.name)
   try {
     const { sendDemandNotificationToAdmin, sendDemandConfirmationToClient } = await import('../services/emailService.js')
+    console.log('[QUOTE] Email module loaded, sending...')
 
     // Notify admin
     sendDemandNotificationToAdmin({
@@ -105,7 +107,8 @@ export async function createQuote(req, res) {
       eventLocation: event_location,
       notes,
       quoteId: data.id,
-    }).catch(err => console.error('Admin email failed:', err.message))
+    }).then(r => console.log('[QUOTE] Admin email result:', r ? 'OK' : 'NULL'))
+     .catch(err => console.error('[QUOTE] Admin email failed:', err.message))
 
     // Confirm to client
     sendDemandConfirmationToClient({
@@ -115,9 +118,10 @@ export async function createQuote(req, res) {
       mode,
       estimatedTotal: total,
       quoteId: data.id,
-    }).catch(err => console.error('Client email failed:', err.message))
+    }).then(r => console.log('[QUOTE] Client email result:', r ? 'OK' : 'NULL'))
+     .catch(err => console.error('[QUOTE] Client email failed:', err.message))
   } catch (emailErr) {
-    console.error('Failed to send emails:', emailErr)
+    console.error('[QUOTE] Failed to send emails:', emailErr)
   }
 
   res.status(201).json({ id: data.id, message: 'Quote request submitted successfully' })
