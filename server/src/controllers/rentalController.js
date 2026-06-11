@@ -381,4 +381,35 @@ export async function updateRentalStatus(req, res) {
   }
 
   res.json(updated)
+
+  // Send email notification to client on status change
+  if (status === 'confirmed' || status === 'cancelled') {
+    try {
+      const { sendRentalStatusUpdateToClient } = await import('../services/emailService.js')
+
+      // Get client email
+      const { data: clientProfile } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', rental.client_id)
+        .single()
+
+      // Get client email from auth
+      const { data: { user } } = await supabase.auth.admin.getUserById(rental.client_id)
+
+      if (user?.email) {
+        sendRentalStatusUpdateToClient({
+          clientEmail: user.email,
+          clientName: clientProfile?.full_name || 'Client',
+          rentalId: rental.id,
+          status,
+          startDate: rental.start_date,
+          endDate: rental.end_date,
+          totalPrice: rental.total_price,
+        }).catch(err => console.error('Status update email failed:', err.message))
+      }
+    } catch (err) {
+      console.error('Email notification error:', err.message)
+    }
+  }
 }

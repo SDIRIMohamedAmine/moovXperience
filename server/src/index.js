@@ -21,6 +21,9 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
+// Trust proxy for Railway/Vercel
+app.set('trust proxy', 1)
+
 // Security headers
 app.use(helmet())
 
