@@ -1,19 +1,24 @@
 import nodemailer from 'nodemailer'
 
-const GMAIL_USER = process.env.GMAIL_USER
-const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || GMAIL_USER
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173'
-
 let transporter = null
 
+function getConfig() {
+  return {
+    gmailUser: process.env.GMAIL_USER,
+    gmailPassword: process.env.GMAIL_APP_PASSWORD,
+    adminEmail: process.env.ADMIN_EMAIL || process.env.GMAIL_USER,
+    clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
+  }
+}
+
 function getTransporter() {
-  if (!transporter && GMAIL_USER && GMAIL_APP_PASSWORD) {
+  const { gmailUser, gmailPassword } = getConfig()
+  if (!transporter && gmailUser && gmailPassword) {
     transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: GMAIL_USER,
-        pass: GMAIL_APP_PASSWORD,
+        user: gmailUser,
+        pass: gmailPassword,
       },
     })
   }
@@ -36,23 +41,26 @@ function sanitizeSubject(str) {
 }
 
 async function sendEmail({ to, subject, html }) {
+  const { gmailUser, gmailPassword } = getConfig()
+  console.log('[EMAIL] sendEmail called → to:', to, '| from:', gmailUser, '| env set:', !!gmailUser, !!gmailPassword)
+
   const transport = getTransporter()
   if (!transport) {
-    console.warn('Gmail not configured, skipping email')
+    console.error('[EMAIL] Transporter is NULL — GMAIL_USER or GMAIL_APP_PASSWORD missing in process.env')
     return null
   }
 
   try {
     const info = await transport.sendMail({
-      from: `"MoovXperience" <${GMAIL_USER}>`,
+      from: `"MoovXperience" <${gmailUser}>`,
       to,
       subject: sanitizeSubject(subject),
       html,
     })
-    console.log('Email sent:', info.messageId)
+    console.log('[EMAIL] SENT OK →', info.messageId, '| to:', to)
     return info
   } catch (err) {
-    console.error('Email send failed:', err.message)
+    console.error('[EMAIL] SEND FAILED →', err.message, '| to:', to)
     return null
   }
 }
@@ -139,7 +147,7 @@ export async function sendDemandNotificationToAdmin({ productName, clientName, c
             </div>
           ` : ''}
 
-          <a href="${CLIENT_URL}/admin/rentals" style="display: block; background: linear-gradient(135deg, #D23AB0, #AE59CE); color: #FFFFFF; text-align: center; padding: 14px 24px; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.05em;">
+          <a href="${getConfig().clientUrl}/admin/rentals" style="display: block; background: linear-gradient(135deg, #D23AB0, #AE59CE); color: #FFFFFF; text-align: center; padding: 14px 24px; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.05em;">
             VOIR LA DEMANDE DANS L'ADMIN
           </a>
 
@@ -153,7 +161,7 @@ export async function sendDemandNotificationToAdmin({ productName, clientName, c
   `
 
   return sendEmail({
-    to: ADMIN_EMAIL,
+    to: getConfig().adminEmail,
     subject: `Nouvelle demande — ${productName} — MoovXperience`,
     html,
   })
@@ -288,7 +296,7 @@ export async function sendRentalConfirmation({ clientEmail, clientName, rental, 
           ` : ''}
 
           <p style="margin: 0; font-size: 11px; color: #444; text-align: center;">
-            ${CLIENT_URL}/profile
+            ${getConfig().clientUrl}/profile
           </p>
         </div>
       </div>
@@ -366,7 +374,7 @@ export async function sendRentalNotification({ clientName, rental, items }) {
             </div>
           ` : ''}
 
-          <a href="${CLIENT_URL}/admin/rentals" style="display: block; background: linear-gradient(135deg, #D23AB0, #AE59CE); color: #FFFFFF; text-align: center; padding: 14px 24px; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.05em;">
+          <a href="${getConfig().clientUrl}/admin/rentals" style="display: block; background: linear-gradient(135deg, #D23AB0, #AE59CE); color: #FFFFFF; text-align: center; padding: 14px 24px; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.05em;">
             VOIR DANS L'ADMIN
           </a>
         </div>
@@ -376,7 +384,7 @@ export async function sendRentalNotification({ clientName, rental, items }) {
   `
 
   return sendEmail({
-    to: ADMIN_EMAIL,
+    to: getConfig().adminEmail,
     subject: `Nouvelle location de ${clientName} — MoovXperience`,
     html,
   })
