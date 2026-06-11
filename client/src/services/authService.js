@@ -16,6 +16,7 @@ export async function signUp(email, password, role, metadata = {}, remember = tr
     password,
     options: {
       data: { role, ...metadata },
+      emailRedirectTo: `${window.location.origin}/`,
     },
   })
   return { data, error }
@@ -34,6 +35,8 @@ export async function signOut() {
   // Clear admin token if exists
   localStorage.removeItem('admin-token')
   localStorage.removeItem('admin-user')
+  // Clear remember me
+  localStorage.removeItem('rememberMe')
   const { error } = await supabase.auth.signOut()
   return { error }
 }

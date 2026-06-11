@@ -433,7 +433,7 @@ export default function HomePage() {
           </motion.p>
           <motion.div variants={fadeInUp}>
             <Link
-              to="/register"
+              to="/catalog"
               className="group inline-flex items-center gap-3 px-10 py-5 text-sm uppercase tracking-widest font-bold transition-all duration-300 hover:scale-105"
               style={{ backgroundColor: '#FFFFFF', color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
               {t('home.cta_bottom_btn')}
