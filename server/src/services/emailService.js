@@ -458,3 +458,84 @@ export async function sendDemandNotificationToAdmin({ productName, clientName, c
     return null
   }
 }
+
+export async function sendDemandConfirmationToClient({ clientEmail, clientName, productName, mode, estimatedTotal, quoteId }) {
+  const client = getClient()
+  if (!client) {
+    console.warn('Resend not configured, skipping client confirmation email')
+    return null
+  }
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="margin: 0; padding: 0; background-color: #0D0D0D; font-family: Outfit, sans-serif;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #141414;">
+        <div style="padding: 32px; border-bottom: 1px solid #222;">
+          <h1 style="margin: 0; font-size: 24px; font-weight: 800; background: linear-gradient(135deg, #D23AB0, #AE59CE); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            MoovXperience
+          </h1>
+        </div>
+        <div style="padding: 32px;">
+          <div style="display: inline-block; padding: 4px 12px; background: #4CAF50; color: #FFFFFF; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 16px;">
+            Demande reçue
+          </div>
+          <h2 style="margin: 0 0 8px; font-size: 22px; color: #FFFFFF; font-weight: 700;">
+            Merci ${escapeHtml(clientName)} !
+          </h2>
+          <p style="margin: 0 0 24px; font-size: 14px; color: #666; line-height: 1.6;">
+            Votre demande pour <strong style="color: #FFFFFF;">${escapeHtml(productName)}</strong> a bien été reçue. Notre équipe va l'examiner et vous recontacter dans les plus brefs délais.
+          </p>
+
+          <div style="background-color: #0D0D0D; padding: 20px; margin-bottom: 24px; border: 1px solid #222;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.05em;">Solution</td>
+                <td style="padding: 8px 0; font-size: 13px; color: #FFFFFF; text-align: right;">${escapeHtml(productName)}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.05em;">Type</td>
+                <td style="padding: 8px 0; font-size: 13px; color: #FFFFFF; text-align: right;">${mode === 'rental' ? 'Location' : 'Achat'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.05em;">Total estimé</td>
+                <td style="padding: 8px 0; font-size: 13px; color: #D23AB0; text-align: right; font-weight: 700;">${Number(estimatedTotal).toFixed(2)} TND</td>
+              </tr>
+            </table>
+          </div>
+
+          <div style="background: linear-gradient(135deg, #D23AB0, #AE59CE); padding: 16px; text-align: center; margin-bottom: 24px;">
+            <p style="margin: 0; font-size: 13px; color: #FFFFFF; font-weight: 600;">
+              Nous vous contacterons très bientôt !
+            </p>
+          </div>
+
+          <p style="margin: 0; font-size: 11px; color: #444; text-align: center;">
+            Référence : #${String(quoteId).slice(0, 8)} · MoovXperience by Maker Skills
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `
+
+  try {
+    const { data, error } = await client.emails.send({
+      from: EMAIL_FROM,
+      to: clientEmail,
+      subject: sanitizeSubject(`Confirmation de votre demande — ${productName} — MoovXperience`),
+      html,
+    })
+
+    if (error) {
+      console.error('Resend error:', error)
+      return null
+    }
+
+    return data
+  } catch (err) {
+    console.error('Email send failed:', err.message)
+    return null
+  }
+}
