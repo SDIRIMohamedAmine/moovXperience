@@ -19,7 +19,7 @@ export default function MainLayout() {
     await signOut()
     authStore.setState({ user: null, session: null, profile: null })
     setMenuOpen(false)
-    navigate('/')
+    window.location.href = '/'
   }
 
   const closeMenu = () => setMenuOpen(false)
