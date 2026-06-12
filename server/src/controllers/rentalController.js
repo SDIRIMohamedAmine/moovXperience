@@ -196,7 +196,7 @@ export async function createRental(req, res) {
       end_date,
       total_price: totalPrice,
       notes: sanitizedNotes,
-      delivery_address: delivery_address || null,
+      delivery_address: delivery_address ? JSON.parse(JSON.stringify(delivery_address).slice(0, 2000)) : null,
     })
     .select()
     .single()
@@ -336,9 +336,8 @@ export async function updateRentalStatus(req, res) {
     return res.status(404).json({ error: 'Rental not found' })
   }
 
-  const profile = await getUserProfile(req.user.id)
   const isClient = rental.client_id === req.user.id
-  const isAdmin = profile?.role === 'admin'
+  const isAdmin = req.user.isAdmin || (await getUserProfile(req.user.id))?.role === 'admin'
 
   if (!isClient && !isAdmin) {
     return res.status(403).json({ error: 'Not authorized' })
@@ -384,7 +383,8 @@ export async function updateRentalStatus(req, res) {
     .single()
 
   if (updateError) {
-    return res.status(400).json({ error: updateError.message })
+    console.error('Rental update error:', updateError.message)
+    return res.status(400).json({ error: 'Operation failed' })
   }
 
   res.json(updated)

@@ -70,11 +70,13 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' })
 })
 
-// Swagger docs
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'MoovXperience API Docs',
-}))
+// Swagger docs (dev only)
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'MoovXperience API Docs',
+  }))
+}
 
 // Apply rate limiters
 app.use('/api/', apiLimiter)

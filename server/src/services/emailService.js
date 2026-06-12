@@ -1,7 +1,5 @@
 import nodemailer from 'nodemailer'
 
-let transporter = null
-
 function getConfig() {
   return {
     gmailUser: process.env.GMAIL_USER,
@@ -13,16 +11,14 @@ function getConfig() {
 
 function getTransporter() {
   const { gmailUser, gmailPassword } = getConfig()
-  if (!transporter && gmailUser && gmailPassword) {
-    transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: gmailUser,
-        pass: gmailPassword,
-      },
-    })
-  }
-  return transporter
+  if (!gmailUser || !gmailPassword) return null
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: gmailUser,
+      pass: gmailPassword,
+    },
+  })
 }
 
 function escapeHtml(str) {

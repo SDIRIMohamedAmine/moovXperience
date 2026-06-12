@@ -3,9 +3,20 @@ import crypto from 'crypto'
 
 const router = Router()
 
+function timingSafeCompare(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string') return false
+  if (a.length !== b.length) return false
+  return crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b))
+}
+
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
-const ADMIN_TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET || 'moovxperience-admin-secret-2024'
+const ADMIN_TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET
+
+if (!ADMIN_TOKEN_SECRET) {
+  console.error('FATAL: ADMIN_TOKEN_SECRET is not set in environment variables. Generate one with: node -e "console.log(require(\'crypto\').randomBytes(48).toString(\'hex\'))"')
+  process.exit(1)
+}
 
 // Generate a simple admin token
 function generateAdminToken() {
@@ -49,7 +60,7 @@ router.post('/login', (req, res) => {
     return res.status(500).json({ error: 'Admin credentials not configured' })
   }
 
-  if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+  if (!timingSafeCompare(email, ADMIN_EMAIL) || !timingSafeCompare(password, ADMIN_PASSWORD)) {
     return res.status(401).json({ error: 'Invalid credentials' })
   }
 

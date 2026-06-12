@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { requireAuth } from '../middleware/auth.js'
+import { requireAuth, requireAdmin } from '../middleware/auth.js'
 import { createQuote, getAllQuotes, getClientQuotes, updateQuoteStatus } from '../controllers/quoteController.js'
 
 const router = Router()
@@ -56,7 +56,7 @@ router.post('/', (req, res, next) => {
  *       200:
  *         description: Liste des devis
  */
-router.get('/all', requireAuth, getAllQuotes)
+router.get('/all', requireAuth, requireAdmin, getAllQuotes)
 
 /**
  * @swagger
@@ -96,6 +96,6 @@ router.get('/client/me', requireAuth, getClientQuotes)
  *       200:
  *         description: Statut mis à jour
  */
-router.patch('/:id/status', requireAuth, updateQuoteStatus)
+router.patch('/:id/status', requireAuth, requireAdmin, updateQuoteStatus)
 
 export default router

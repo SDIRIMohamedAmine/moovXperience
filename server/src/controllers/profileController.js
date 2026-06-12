@@ -37,7 +37,11 @@ export async function updateMyProfile(req, res) {
     if (typeof avatar_url !== 'string') {
       return res.status(400).json({ error: 'Invalid avatar URL' })
     }
-    updates.avatar_url = avatar_url.trim().slice(0, 2000)
+    const trimmed = avatar_url.trim().slice(0, 2000)
+    if (trimmed && !/^https?:\/\//.test(trimmed)) {
+      return res.status(400).json({ error: 'Avatar URL must use http or https' })
+    }
+    updates.avatar_url = trimmed || null
   }
 
   // Only update if there are changes
@@ -55,7 +59,8 @@ export async function updateMyProfile(req, res) {
     .single()
 
   if (error) {
-    return res.status(400).json({ error: error.message })
+    console.error('Profile update error:', error.message)
+    return res.status(400).json({ error: 'Operation failed' })
   }
 
   res.json(data)

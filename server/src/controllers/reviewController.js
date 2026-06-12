@@ -79,7 +79,8 @@ export async function createReview(req, res) {
     .single()
 
   if (reviewError) {
-    return res.status(400).json({ error: reviewError.message })
+    console.error('Review error:', reviewError.message)
+    return res.status(400).json({ error: 'Operation failed' })
   }
 
   res.status(201).json(review)

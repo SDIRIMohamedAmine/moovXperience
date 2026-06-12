@@ -299,7 +299,8 @@ export async function deleteProduct(req, res) {
     .eq('id', id)
 
   if (error) {
-    return res.status(400).json({ error: error.message })
+    console.error('Product delete error:', error.message)
+    return res.status(400).json({ error: 'Operation failed' })
   }
 
   res.json({ success: true })

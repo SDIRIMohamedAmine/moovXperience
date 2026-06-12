@@ -117,7 +117,8 @@ export async function updateUserRole(req, res) {
     .eq('id', id)
 
   if (error) {
-    return res.status(400).json({ error: error.message })
+    console.error('Admin operation error:', error.message)
+    return res.status(400).json({ error: 'Operation failed' })
   }
 
   res.json({ success: true })
@@ -164,7 +165,8 @@ export async function toggleProductAvailability(req, res) {
     .eq('id', id)
 
   if (error) {
-    return res.status(400).json({ error: error.message })
+    console.error('Admin operation error:', error.message)
+    return res.status(400).json({ error: 'Operation failed' })
   }
 
   res.json({ success: true, is_available: !product.is_available })
@@ -181,7 +183,8 @@ export async function deleteProductAdmin(req, res) {
     .eq('id', id)
 
   if (error) {
-    return res.status(400).json({ error: error.message })
+    console.error('Admin operation error:', error.message)
+    return res.status(400).json({ error: 'Operation failed' })
   }
 
   res.json({ success: true })
@@ -284,7 +287,8 @@ export async function createCategory(req, res) {
     .single()
 
   if (error) {
-    return res.status(400).json({ error: error.message })
+    console.error('Admin operation error:', error.message)
+    return res.status(400).json({ error: 'Operation failed' })
   }
 
   res.status(201).json(data)
@@ -313,7 +317,8 @@ export async function updateCategory(req, res) {
     .single()
 
   if (error) {
-    return res.status(400).json({ error: error.message })
+    console.error('Admin operation error:', error.message)
+    return res.status(400).json({ error: 'Operation failed' })
   }
 
   res.json(data)
@@ -341,7 +346,8 @@ export async function deleteCategory(req, res) {
     .eq('id', id)
 
   if (error) {
-    return res.status(400).json({ error: error.message })
+    console.error('Admin operation error:', error.message)
+    return res.status(400).json({ error: 'Operation failed' })
   }
 
   res.json({ success: true })

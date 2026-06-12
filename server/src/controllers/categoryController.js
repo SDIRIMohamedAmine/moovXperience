@@ -7,7 +7,8 @@ export async function getCategories(req, res) {
     .order('name')
 
   if (error) {
-    return res.status(500).json({ error: error.message })
+    console.error('Categories fetch error:', error.message)
+    return res.status(500).json({ error: 'Failed to fetch categories' })
   }
 
   res.json(data)

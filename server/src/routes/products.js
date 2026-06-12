@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { requireAuth } from '../middleware/auth.js'
+import { requireAuth, requireAdmin } from '../middleware/auth.js'
 import {
   getProducts,
   getProduct,
@@ -70,7 +70,7 @@ router.get('/', getProducts)
  *       200:
  *         description: Liste des produits du supplier
  */
-router.get('/supplier/me', requireAuth, getMyProducts)
+router.get('/supplier/me', requireAuth, requireAdmin, getMyProducts)
 
 /**
  * @swagger
@@ -140,7 +140,7 @@ router.get('/:id', getProduct)
  *       201:
  *         description: Produit créé
  */
-router.post('/', requireAuth, createProduct)
+router.post('/', requireAuth, requireAdmin, createProduct)
 
 /**
  * @swagger
@@ -158,7 +158,7 @@ router.post('/', requireAuth, createProduct)
  *       200:
  *         description: Produit modifié
  */
-router.put('/:id', requireAuth, updateProduct)
+router.put('/:id', requireAuth, requireAdmin, updateProduct)
 
 /**
  * @swagger
@@ -176,6 +176,6 @@ router.put('/:id', requireAuth, updateProduct)
  *       200:
  *         description: Produit supprimé
  */
-router.delete('/:id', requireAuth, deleteProduct)
+router.delete('/:id', requireAuth, requireAdmin, deleteProduct)
 
 export default router
