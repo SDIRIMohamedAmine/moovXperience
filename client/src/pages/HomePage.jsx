@@ -6,6 +6,7 @@ import { useTranslation } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
 import { fetchProducts } from '../services/productService'
 import ProductCard from '../components/ProductCard'
+import InfiniteGallery from '../components/InfiniteGallery'
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
@@ -80,10 +81,22 @@ export default function HomePage() {
   const { t } = useTranslation()
   const { colors } = useTheme()
   const [featured, setFeatured] = useState([])
+  const [galleryImages, setGalleryImages] = useState([])
 
   useEffect(() => {
     fetchProducts({ limit: 4 })
-      .then((data) => setFeatured(data.products || []))
+      .then((data) => {
+        setFeatured(data.products || [])
+        // Extract product images for the 3D gallery
+        const images = (data.products || [])
+          .flatMap(p => p.media || [])
+          .filter(m => m.type === 'image')
+          .map(m => m.url)
+        // Use product images or fallback to placeholder gradients
+        if (images.length > 0) {
+          setGalleryImages(images)
+        }
+      })
       .catch(() => {})
   }, [])
 
@@ -151,44 +164,64 @@ export default function HomePage() {
               </motion.div>
             </motion.div>
 
-            {/* Hero visual — floating cards */}
+            {/* Hero visual — 3D Infinite Gallery */}
             <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="hidden md:block relative">
               <div className="relative w-full h-[500px]">
                 {/* Glowing orb behind */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full blur-[80px]"
-                  style={{ background: 'radial-gradient(circle, rgba(210,58,176,0.4) 0%, transparent 70%)' }} />
+                  style={{ background: 'radial-gradient(circle, rgba(210,58,176,0.4) 0%, transparent 70%)', zIndex: 0 }} />
 
-                {/* Floating solution cards */}
-                {allSolutions.slice(0, 3).map((sol, i) => (
-                  <motion.div key={sol.key}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.6 + i * 0.2 }}
-                    className="absolute p-5 backdrop-blur-sm"
-                    style={{
-                      backgroundColor: 'rgba(20,20,20,0.8)',
-                      border: '1px solid rgba(210,58,176,0.2)',
-                      top: `${15 + i * 25}%`,
-                      left: i === 1 ? '55%' : '10%',
-                      width: '260px',
-                      animation: `float${i + 1} ${15 + i * 3}s ease-in-out infinite`,
-                    }}>
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-8 h-8 rounded flex items-center justify-center" style={{ background: sol.gradient }}>
-                        <svg className="w-4 h-4" fill="none" stroke="white" strokeWidth="1.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d={sol.icon} />
-                        </svg>
-                      </div>
-                      <span className="text-sm font-semibold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-                        {sol.title}
-                      </span>
-                    </div>
-                    <p className="text-xs leading-relaxed" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-                      {sol.desc.slice(0, 80)}...
-                    </p>
-                  </motion.div>
-                ))}
+                {/* 3D Gallery */}
+                {galleryImages.length > 0 ? (
+                  <InfiniteGallery
+                    images={galleryImages}
+                    className="w-full h-full"
+                    style={{ position: 'relative', zIndex: 1 }}
+                    fadeSettings={{
+                      fadeIn: { start: 0.05, end: 0.25 },
+                      fadeOut: { start: 0.4, end: 0.43 },
+                    }}
+                    blurSettings={{
+                      blurIn: { start: 0.0, end: 0.1 },
+                      blurOut: { start: 0.4, end: 0.43 },
+                      maxBlur: 8.0,
+                    }}
+                  />
+                ) : (
+                  // Fallback: floating solution cards when no product images
+                  <div className="relative w-full h-full">
+                    {allSolutions.slice(0, 3).map((sol, i) => (
+                      <motion.div key={sol.key}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.6 + i * 0.2 }}
+                        className="absolute p-5 backdrop-blur-sm"
+                        style={{
+                          backgroundColor: 'rgba(20,20,20,0.8)',
+                          border: '1px solid rgba(210,58,176,0.2)',
+                          top: `${15 + i * 25}%`,
+                          left: i === 1 ? '55%' : '10%',
+                          width: '260px',
+                          animation: `float${i + 1} ${15 + i * 3}s ease-in-out infinite`,
+                        }}>
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 rounded flex items-center justify-center" style={{ background: sol.gradient }}>
+                            <svg className="w-4 h-4" fill="none" stroke="white" strokeWidth="1.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d={sol.icon} />
+                            </svg>
+                          </div>
+                          <span className="text-sm font-semibold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                            {sol.title}
+                          </span>
+                        </div>
+                        <p className="text-xs leading-relaxed" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                          {sol.desc.slice(0, 80)}...
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>

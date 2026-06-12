@@ -37,8 +37,13 @@ export async function signOut() {
   localStorage.removeItem('admin-user')
   // Clear remember me
   localStorage.removeItem('rememberMe')
-  const { error } = await supabase.auth.signOut()
-  return { error }
+  // Clear Supabase session — ignore errors (session may already be expired)
+  try {
+    await supabase.auth.signOut({ scope: 'local' })
+  } catch {
+    // Session already invalid, local cleanup is enough
+  }
+  return { error: null }
 }
 
 export async function getSession() {

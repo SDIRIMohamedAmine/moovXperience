@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@boxicons/react": "^1.0.3",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
     "@supabase/supabase-js": "^2.106.2",
     "framer-motion": "^12.40.0",
     "leaflet": "^1.9.4",
@@ -21,6 +23,7 @@
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.16.0",
     "rolldown": "^1.0.3",
+    "three": "^0.184.0",
     "zustand": "^5.0.14"
   },
   "devDependencies": {

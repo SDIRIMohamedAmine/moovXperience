@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
+import { showToast } from './Toast'
 
 export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
   const { session } = useAuth()
@@ -13,7 +14,7 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
   const handleUpload = async (selectedFiles) => {
     if (!selectedFiles || selectedFiles.length === 0) return
     if (files.length + selectedFiles.length > maxFiles) {
-      alert(`Maximum ${maxFiles} fichiers`)
+      showToast(`Maximum ${maxFiles} fichiers`, 'error')
       return
     }
 
@@ -28,7 +29,7 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
       // Check file size (50MB max for videos, 5MB for images)
       const maxSize = isVideo ? 50 * 1024 * 1024 : 5 * 1024 * 1024
       if (file.size > maxSize) {
-        alert(`${file.name} est trop volumineux (max ${isVideo ? '50MB' : '5MB'})`)
+        showToast(`${file.name} est trop volumineux (max ${isVideo ? '50MB' : '5MB'})`, 'error')
         continue
       }
 

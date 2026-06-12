@@ -22,7 +22,7 @@ export default function AdminCategories() {
   }, [])
 
   if (!isAdminLoggedIn()) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/admin/login" replace />
   }
 
   const handleCreate = async (e) => {

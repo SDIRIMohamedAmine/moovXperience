@@ -25,7 +25,7 @@ export default function RegisterPage() {
     setError('')
     setSuccess('')
     if (password !== confirmPassword) { setError(t('auth.password_mismatch')); return }
-    if (password.length < 6) { setError(t('auth.password_min')); return }
+    if (password.length < 8) { setError(t('auth.password_min')); return }
     setLoading(true)
     const metadata = { full_name: fullName.trim(), phone: phone.trim(), company_name: companyName.trim() }
     const { data, error } = await signUp(email, password, 'client', metadata, remember)

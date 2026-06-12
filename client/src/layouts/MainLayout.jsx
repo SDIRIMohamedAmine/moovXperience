@@ -3,7 +3,7 @@ import { Outlet, Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { authStore } from '../stores/authStore'
 import { useCartStore } from '../stores/cartStore'
-import { signOut } from '../services/authService'
+import { supabase } from '../lib/supabase'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
 
@@ -15,10 +15,8 @@ export default function MainLayout() {
   const { colors } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const handleLogout = async () => {
-    await signOut()
-    authStore.setState({ user: null, session: null, profile: null })
-    setMenuOpen(false)
+  const handleLogout = () => {
+    localStorage.clear()
     window.location.href = '/'
   }
 
@@ -88,7 +86,7 @@ export default function MainLayout() {
                     {profile?.full_name || user?.email}
                   </Link>
                   <button onClick={handleLogout} className="text-xs px-4 py-2 uppercase tracking-wider font-medium transition-colors"
-                    style={{ color: '#FFFFFF', border: '1px solid #222', fontFamily: 'Outfit, sans-serif' }}
+                    style={{ color: '#FFFFFF', border: '1px solid #222', fontFamily: 'Outfit, sans-serif', cursor: 'pointer' }}
                     onMouseEnter={(e) => { e.target.style.borderColor = '#D23AB0'; e.target.style.color = '#D23AB0' }}
                     onMouseLeave={(e) => { e.target.style.borderColor = '#222'; e.target.style.color = '#FFFFFF' }}>
                     {t('nav.logout')}
@@ -158,7 +156,7 @@ export default function MainLayout() {
                   </Link>
                   <button onClick={handleLogout}
                     className="w-full py-2.5 text-xs uppercase tracking-wider text-center font-medium transition-colors"
-                    style={{ color: '#FFFFFF', border: '1px solid #222', fontFamily: 'Outfit, sans-serif' }}>
+                    style={{ color: '#FFFFFF', border: '1px solid #222', fontFamily: 'Outfit, sans-serif', cursor: 'pointer' }}>
                     {t('nav.logout')}
                   </button>
                 </>

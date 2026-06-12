@@ -18,7 +18,7 @@ export default function QuotePage() {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { colors } = useTheme()
-  const { user } = useAuth()
+  const { user, session } = useAuth()
 
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -103,7 +103,7 @@ export default function QuotePage() {
         event_location: form.event_location || null,
         notes: form.notes || null,
         estimated_total: estimatedTotal,
-      }, user?.access_token)
+      }, session?.access_token)
 
       setSubmitted(true)
     } catch (err) {

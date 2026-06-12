@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, Navigate } from 'react-router-dom'
-import { fetchStats, isAdminLoggedIn } from '../../services/adminService'
+import { fetchStats, isAdminLoggedIn, adminLogout } from '../../services/adminService'
 
 const statCards = (stats) => [
   { label: 'Utilisateurs', value: stats.users, icon: 'M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z', color: '#D23AB0', to: '/admin/users' },
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
   }, [])
 
   if (!isAdminLoggedIn()) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/admin/login" replace />
   }
 
   if (loading) {
@@ -37,14 +37,27 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="mb-10">
-        <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
-          Administration
-        </p>
-        <h1 className="text-3xl font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
-          Dashboard
-        </h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-10">
+      <div className="mb-10 flex items-start justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
+            Administration
+          </p>
+          <h1 className="text-3xl font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+            Dashboard
+          </h1>
+        </div>
+        <div className="flex items-center gap-3 relative z-[60]">
+          <Link to="/" className="text-xs px-4 py-2 uppercase tracking-wider font-medium transition-colors cursor-pointer"
+            style={{ color: '#666', border: '1px solid #222', fontFamily: 'Outfit, sans-serif', cursor: 'pointer' }}>
+            Site
+          </Link>
+          <button type="button" onClick={() => { adminLogout(); window.location.href = '/admin/login' }}
+            className="text-xs px-4 py-2 uppercase tracking-wider font-medium transition-colors cursor-pointer"
+            style={{ color: '#FF5722', border: '1px solid #FF572244', fontFamily: 'Outfit, sans-serif', cursor: 'pointer', position: 'relative', zIndex: 60 }}>
+            Déconnexion
+          </button>
+        </div>
       </div>
 
       {/* Stats grid */}

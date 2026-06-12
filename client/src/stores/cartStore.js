@@ -62,8 +62,9 @@ const useCartStore = create((set, get) => ({
 
   updateQuantity: (key, quantity) => {
     if (quantity < 1) return get().removeItem(key)
+    const capped = Math.min(100, quantity)
     const newItems = get().items.map(i =>
-      i.key === key ? { ...i, quantity } : i
+      i.key === key ? { ...i, quantity: capped } : i
     )
     set({ items: newItems })
     saveCart({ ...get(), items: newItems })

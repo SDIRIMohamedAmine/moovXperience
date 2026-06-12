@@ -33,7 +33,8 @@ export default function AdminLogin() {
       // Store admin token
       localStorage.setItem('admin-token', data.token)
       localStorage.setItem('admin-user', JSON.stringify(data.user))
-      navigate('/admin')
+      // Force reload so auth store picks up the admin token
+      window.location.href = '/admin'
     } catch (err) {
       setError('Erreur de connexion')
       setLoading(false)
