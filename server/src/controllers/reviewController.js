@@ -107,6 +107,24 @@ export async function getProductReviews(req, res) {
   res.json(data || [])
 }
 
+// GET /api/reviews/recent
+export async function getRecentReviews(req, res) {
+  const limit = Math.min(parseInt(req.query.limit) || 6, 12)
+
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('id, rating, comment, created_at, profiles!client_id(full_name), products!product_id(name)')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    console.error('Recent reviews error:', error.message)
+    return res.status(500).json({ error: 'Failed to fetch reviews' })
+  }
+
+  res.json(data || [])
+}
+
 // GET /api/reviews/check/:rentalId
 export async function checkReviewEligibility(req, res) {
   const { rentalId } = req.params

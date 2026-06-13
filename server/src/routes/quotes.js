@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { requireAuth, requireAdmin } from '../middleware/auth.js'
-import { createQuote, getAllQuotes, getClientQuotes, updateQuoteStatus } from '../controllers/quoteController.js'
+import { createQuote, getAllQuotes, getClientQuotes, updateQuoteStatus, getQuoteStatus, deleteQuote } from '../controllers/quoteController.js'
 
 const router = Router()
 
@@ -37,6 +37,25 @@ const router = Router()
  *       400:
  *         description: Données invalides
  */
+/**
+ * @swagger
+ * /api/quotes/status:
+ *   get:
+ *     summary: Vérifier le statut d'une demande (public)
+ *     tags: [Quotes]
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         schema: { type: string }
+ *       - in: query
+ *         name: quote_id
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       200:
+ *         description: Liste des devis trouvés
+ */
+router.get('/status', getQuoteStatus)
+
 router.post('/', (req, res, next) => {
   if (req.headers.authorization) {
     return requireAuth(req, res, next)
@@ -97,5 +116,8 @@ router.get('/client/me', requireAuth, getClientQuotes)
  *         description: Statut mis à jour
  */
 router.patch('/:id/status', requireAuth, requireAdmin, updateQuoteStatus)
+
+// Delete own quote (client)
+router.delete('/:id', requireAuth, deleteQuote)
 
 export default router

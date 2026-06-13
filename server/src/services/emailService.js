@@ -62,7 +62,8 @@ async function sendEmail({ to, subject, html }) {
 }
 
 export async function sendDemandNotificationToAdmin({ productName, clientName, clientEmail, clientPhone, companyName, mode, durationDays, options, estimatedTotal, eventDate, eventLocation, notes, quoteId }) {
-  const optionsHtml = options.length > 0
+  const safeOptions = Array.isArray(options) ? options : []
+  const optionsHtml = safeOptions.length > 0
     ? options.map(opt => `
         <tr>
           <td style="padding: 8px 16px; border-bottom: 1px solid #222; font-family: Outfit, sans-serif; font-size: 13px; color: #FFFFFF;">

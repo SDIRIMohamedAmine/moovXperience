@@ -21,6 +21,14 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
+// Startup email config check
+console.log('[STARTUP] Email config:', {
+  GMAIL_USER: process.env.GMAIL_USER ? 'SET' : 'MISSING',
+  GMAIL_APP_PASSWORD: process.env.GMAIL_APP_PASSWORD ? 'SET' : 'MISSING',
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL ? 'SET' : 'MISSING',
+  ADMIN_TOKEN_SECRET: process.env.ADMIN_TOKEN_SECRET ? 'SET' : 'MISSING',
+})
+
 // Trust proxy for Railway/Vercel
 app.set('trust proxy', 1)
 

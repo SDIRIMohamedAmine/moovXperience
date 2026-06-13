@@ -93,7 +93,7 @@ export async function createQuote(req, res) {
     console.log('[QUOTE] Email module loaded, sending...')
 
     // Notify admin
-    sendDemandNotificationToAdmin({
+    const adminResult = await sendDemandNotificationToAdmin({
       productName: product.name,
       clientName: client_name.trim(),
       clientEmail: client_email.trim(),
@@ -107,24 +107,96 @@ export async function createQuote(req, res) {
       eventLocation: event_location,
       notes,
       quoteId: data.id,
-    }).then(r => console.log('[QUOTE] Admin email result:', r ? 'OK' : 'NULL'))
-     .catch(err => console.error('[QUOTE] Admin email failed:', err.message))
+    }).catch(err => { console.error('[QUOTE] Admin email failed:', err.message); return null })
+    console.log('[QUOTE] Admin email result:', adminResult ? 'OK' : 'NULL')
+
+    // Delay between emails to avoid Gmail rate limiting
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
     // Confirm to client
-    sendDemandConfirmationToClient({
+    const clientResult = await sendDemandConfirmationToClient({
       clientEmail: client_email.trim(),
       clientName: client_name.trim(),
       productName: product.name,
       mode,
       estimatedTotal: total,
       quoteId: data.id,
-    }).then(r => console.log('[QUOTE] Client email result:', r ? 'OK' : 'NULL'))
-     .catch(err => console.error('[QUOTE] Client email failed:', err.message))
+    }).catch(err => { console.error('[QUOTE] Client email failed:', err.message); return null })
+    console.log('[QUOTE] Client email result:', clientResult ? 'OK' : 'NULL')
   } catch (emailErr) {
     console.error('[QUOTE] Failed to send emails:', emailErr)
   }
 
   res.status(201).json({ id: data.id, message: 'Quote request submitted successfully' })
+}
+
+export async function getQuoteStatus(req, res) {
+  const { email, quote_id } = req.query
+
+  if (!email && !quote_id) {
+    return res.status(400).json({ error: 'Email or quote ID required' })
+  }
+
+  let query = supabase
+    .from('quotes')
+    .select('id, client_name, client_email, mode, estimated_total, status, created_at, products(name)')
+    .order('created_at', { ascending: false })
+    .limit(10)
+
+  if (quote_id) {
+    query = query.eq('id', quote_id)
+  } else if (email) {
+    query = query.eq('client_email', email.trim().toLowerCase())
+  }
+
+  const { data, error } = await query
+
+  if (error) {
+    console.error('Quote status lookup error:', error.message)
+    return res.status(400).json({ error: 'Search failed' })
+  }
+
+  res.json({ quotes: data || [] })
+}
+
+export async function deleteQuote(req, res) {
+  const { id } = req.params
+  const userEmail = req.user?.email
+
+  if (!userEmail) {
+    return res.status(401).json({ error: 'Authentication required' })
+  }
+
+  // First verify the quote belongs to this user
+  const { data: quote, error: fetchError } = await supabase
+    .from('quotes')
+    .select('id, client_email, status')
+    .eq('id', id)
+    .single()
+
+  if (fetchError || !quote) {
+    return res.status(404).json({ error: 'Demande non trouvée' })
+  }
+
+  if (quote.client_email !== userEmail) {
+    return res.status(403).json({ error: 'Non autorisé' })
+  }
+
+  if (quote.status !== 'pending') {
+    return res.status(400).json({ error: 'Seules les demandes en attente peuvent être supprimées' })
+  }
+
+  const { error } = await supabase
+    .from('quotes')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('Quote delete error:', error.message)
+    return res.status(400).json({ error: 'Suppression échouée' })
+  }
+
+  res.json({ message: 'Demande supprimée' })
 }
 
 export async function getAllQuotes(req, res) {
