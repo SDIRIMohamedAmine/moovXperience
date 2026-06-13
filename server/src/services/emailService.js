@@ -30,6 +30,24 @@ function sanitizeSubject(str) {
   return String(str).replace(/[\r\n]/g, '').slice(0, 200)
 }
 
+function formatLocation(loc) {
+  if (!loc) return ''
+  if (typeof loc === 'string') return loc
+  if (typeof loc === 'object') {
+    if (loc.text) return loc.text
+    if (loc.display_name) return loc.display_name
+    if (loc.name) return loc.name
+    if (loc.address) return loc.address
+    const lat = loc.lat ?? loc.latitude
+    const lng = loc.lng ?? loc.longitude
+    if (lat != null && lng != null) {
+      return `${Number(lat).toFixed(6)}, ${Number(lng).toFixed(6)}`
+    }
+    return JSON.stringify(loc)
+  }
+  return String(loc)
+}
+
 async function sendEmail({ to, subject, html }) {
   const { fromEmail } = getConfig()
   const resend = getResend()
@@ -128,7 +146,7 @@ export async function sendDemandNotificationToAdmin({ productName, clientName, c
               </tr>` : ''}
               ${eventLocation ? `<tr>
                 <td style="padding: 8px 16px; border-bottom: 1px solid #222; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.05em;">Lieu</td>
-                <td style="padding: 8px 16px; border-bottom: 1px solid #222; font-size: 13px; color: #FFFFFF; text-align: right;">${escapeHtml(eventLocation)}</td>
+                <td style="padding: 8px 16px; border-bottom: 1px solid #222; font-size: 13px; color: #FFFFFF; text-align: right;">${escapeHtml(formatLocation(eventLocation))}</td>
               </tr>` : ''}
               ${optionsHtml}
               <tr>
