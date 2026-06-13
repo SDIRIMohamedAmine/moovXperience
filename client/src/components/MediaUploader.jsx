@@ -2,8 +2,10 @@ import { useState, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { showToast } from './Toast'
+import { useTranslation } from '../i18n/LanguageContext'
 
 export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
+  const { t } = useTranslation()
   const { session } = useAuth()
   const fileInputRef = useRef(null)
   const [uploading, setUploading] = useState(false)
@@ -14,7 +16,7 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
   const handleUpload = async (selectedFiles) => {
     if (!selectedFiles || selectedFiles.length === 0) return
     if (files.length + selectedFiles.length > maxFiles) {
-      showToast(`Maximum ${maxFiles} fichiers`, 'error')
+      showToast(t('media.max_files_reached'), 'error')
       return
     }
 
@@ -29,7 +31,7 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
       // Check file size (50MB max for videos, 5MB for images)
       const maxSize = isVideo ? 50 * 1024 * 1024 : 5 * 1024 * 1024
       if (file.size > maxSize) {
-        showToast(`${file.name} est trop volumineux (max ${isVideo ? '50MB' : '5MB'})`, 'error')
+        showToast(`${file.name} — ${t('media.file_too_large')} (max ${isVideo ? '50MB' : '5MB'})`, 'error')
         continue
       }
 
@@ -98,8 +100,8 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
         onDragLeave={() => setDragOver(false)}
         className="relative cursor-pointer p-8 text-center transition-all"
         style={{
-          backgroundColor: dragOver ? 'rgba(210,58,176,0.1)' : '#0D0D0D',
-          border: `2px dashed ${dragOver ? '#D23AB0' : '#222'}`,
+          backgroundColor: dragOver ? 'var(--accent-bg)' : 'var(--bg)',
+          border: `2px dashed ${dragOver ? 'var(--accent)' : 'var(--border)'}`,
         }}
       >
         <input ref={fileInputRef} type="file" multiple accept={acceptTypes}
@@ -107,21 +109,21 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
 
         {uploading ? (
           <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-2 animate-spin" style={{ borderColor: '#222', borderTopColor: '#D23AB0' }} />
-            <p className="text-sm" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-              Upload en cours...
+            <div className="w-10 h-10 border-2 animate-spin" style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }} />
+            <p className="text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
+              {t('media.uploading')}
             </p>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3">
-            <svg className="w-10 h-10" fill="none" stroke="#666" strokeWidth="1" viewBox="0 0 24 24">
+            <svg className="w-10 h-10" fill="none" stroke="var(--text-muted)" strokeWidth="1" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
             </svg>
-            <p className="text-sm" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-              Glissez vos fichiers ici ou <span style={{ color: '#D23AB0' }}>parcourir</span>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
+              {t('media.drag_drop')} <span style={{ color: 'var(--accent)' }}>{t('media.browse')}</span>
             </p>
-            <p className="text-xs" style={{ color: '#444', fontFamily: 'Outfit, sans-serif' }}>
-              Images (JPG, PNG, WebP, GIF) • Vidéos (MP4, WebM) — Max {maxFiles} fichiers
+            <p className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+              {t('media.accepted_formats')} — {t('media.max_files', { count: maxFiles })}
             </p>
           </div>
         )}
@@ -132,7 +134,7 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
         <div className="grid grid-cols-4 gap-3 mt-4">
           {files.map((file, index) => (
             <div key={index} className="relative group aspect-square"
-              style={{ backgroundColor: '#141414', border: '1px solid #222' }}>
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
               {file.type === 'video' ? (
                 <video src={file.url} className="w-full h-full object-cover" muted />
               ) : (

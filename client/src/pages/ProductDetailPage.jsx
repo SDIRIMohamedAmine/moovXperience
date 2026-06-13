@@ -18,7 +18,7 @@ function getYouTubeId(url) {
 
 export default function ProductDetailPage() {
   const { id } = useParams()
-  const { t } = useTranslation()
+  const { t, lang } = useTranslation()
   const navigate = useNavigate()
   const { user } = useAuth()
   const { showLoginModal } = useAuthModal()
@@ -49,7 +49,7 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="w-8 h-8 border-2 animate-spin" style={{ borderColor: '#222', borderTopColor: '#D23AB0' }} />
+        <div className="w-8 h-8 border-2 animate-spin" style={{ borderColor: '#222', borderTopColor: 'var(--accent)' }} />
       </div>
     )
   }
@@ -58,9 +58,9 @@ export default function ProductDetailPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <h2 className="text-xl font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
-          Solution non trouvée
+          {t('product.not_found')}
         </h2>
-        <Link to="/catalog" className="text-sm mt-4 inline-block" style={{ color: '#D23AB0' }}>
+        <Link to="/catalog" className="text-sm mt-4 inline-block" style={{ color: 'var(--accent)' }}>
           {t('product.back_to_catalog')}
         </Link>
       </div>
@@ -87,7 +87,7 @@ export default function ProductDetailPage() {
   const handleAddToCart = () => {
     // For rental, dates are required
     if (selectedMode === 'rental' && (!selectedRange?.from || !selectedRange?.to)) {
-      showToast('Veuillez sélectionner les dates de location', 'error')
+      showToast(t('product.dates_required'), 'error')
       return
     }
 
@@ -95,7 +95,7 @@ export default function ProductDetailPage() {
     const endDate = selectedMode === 'rental' ? selectedRange.to.toISOString().split('T')[0] : null
 
     addItem(product, quantity, selectedMode, startDate, endDate, selectedOptsList)
-    showToast('Ajouté au panier !', 'success')
+    showToast(t('product.added_to_cart'), 'success')
   }
 
   return (
@@ -103,7 +103,7 @@ export default function ProductDetailPage() {
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center gap-2 text-xs" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-          <Link to="/catalog" style={{ color: '#D23AB0' }}>{t('catalog.title')}</Link>
+          <Link to="/catalog" style={{ color: 'var(--accent)' }}>{t('catalog.title')}</Link>
           <span>/</span>
           {product.categories && <span>{product.categories.name}</span>}
           <span>/</span>
@@ -120,9 +120,9 @@ export default function ProductDetailPage() {
               <button onClick={() => setActiveTab('gallery')}
                 className="px-4 py-2 text-xs uppercase tracking-wider font-medium transition-all"
                 style={{
-                  backgroundColor: activeTab === 'gallery' ? '#D23AB0' : 'transparent',
+                  backgroundColor: activeTab === 'gallery' ? 'var(--accent)' : 'transparent',
                   color: activeTab === 'gallery' ? '#FFFFFF' : '#666',
-                  border: `1px solid ${activeTab === 'gallery' ? '#D23AB0' : '#222'}`,
+                  border: `1px solid ${activeTab === 'gallery' ? 'var(--accent)' : '#222'}`,
                   fontFamily: 'Outfit, sans-serif',
                 }}>
                 {t('product.gallery')}
@@ -131,9 +131,9 @@ export default function ProductDetailPage() {
                 <button onClick={() => setActiveTab('video')}
                   className="px-4 py-2 text-xs uppercase tracking-wider font-medium transition-all flex items-center gap-1.5"
                   style={{
-                    backgroundColor: activeTab === 'video' ? '#D23AB0' : 'transparent',
+                    backgroundColor: activeTab === 'video' ? 'var(--accent)' : 'transparent',
                     color: activeTab === 'video' ? '#FFFFFF' : '#666',
-                    border: `1px solid ${activeTab === 'video' ? '#D23AB0' : '#222'}`,
+                    border: `1px solid ${activeTab === 'video' ? 'var(--accent)' : '#222'}`,
                     fontFamily: 'Outfit, sans-serif',
                   }}>
                   <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -198,7 +198,7 @@ export default function ProductDetailPage() {
                     {images.map((img, i) => (
                       <button key={i} onClick={() => setActiveImage(i)}
                         className="flex-shrink-0 w-16 h-16 overflow-hidden transition-all"
-                        style={{ border: `2px solid ${i === activeImage ? '#D23AB0' : '#1a1a1a'}`, opacity: i === activeImage ? 1 : 0.5 }}>
+                        style={{ border: `2px solid ${i === activeImage ? 'var(--accent)' : '#1a1a1a'}`, opacity: i === activeImage ? 1 : 0.5 }}>
                         <img src={img} alt="" className="w-full h-full object-cover" />
                       </button>
                     ))}
@@ -226,7 +226,7 @@ export default function ProductDetailPage() {
             {/* Category */}
             {product.categories && (
               <p className="text-xs uppercase tracking-[0.25em] mb-2 font-semibold"
-                style={{ color: '#D23AB0', fontFamily: 'Outfit, sans-serif', fontSize: '10px' }}>
+                style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif', fontSize: '10px' }}>
                 {product.categories.name}
               </p>
             )}
@@ -259,15 +259,15 @@ export default function ProductDetailPage() {
               <div className="mb-6">
                 <label className="block text-xs uppercase tracking-wider mb-3 font-semibold"
                   style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-                  Mode
+                  {t('product.mode')}
                 </label>
                 <div className="flex gap-3">
                   {canRent && (
                     <button onClick={() => setSelectedMode('rental')}
                       className="flex-1 p-4 text-left transition-all"
                       style={{
-                        backgroundColor: selectedMode === 'rental' ? 'rgba(210,58,176,0.1)' : '#141414',
-                        border: `2px solid ${selectedMode === 'rental' ? '#D23AB0' : '#1a1a1a'}`,
+                        backgroundColor: selectedMode === 'rental' ? 'var(--accent-bg)' : '#141414',
+                        border: `2px solid ${selectedMode === 'rental' ? 'var(--accent)' : '#1a1a1a'}`,
                       }}>
                       <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
                         {t('quote.rental')}
@@ -281,8 +281,8 @@ export default function ProductDetailPage() {
                     <button onClick={() => setSelectedMode('purchase')}
                       className="flex-1 p-4 text-left transition-all"
                       style={{
-                        backgroundColor: selectedMode === 'purchase' ? 'rgba(210,58,176,0.1)' : '#141414',
-                        border: `2px solid ${selectedMode === 'purchase' ? '#D23AB0' : '#1a1a1a'}`,
+                        backgroundColor: selectedMode === 'purchase' ? 'var(--accent-bg)' : '#141414',
+                        border: `2px solid ${selectedMode === 'purchase' ? 'var(--accent)' : '#1a1a1a'}`,
                       }}>
                       <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
                         {t('quote.purchase')}
@@ -321,11 +321,11 @@ export default function ProductDetailPage() {
                     <label key={opt.name}
                       className="flex items-start gap-3 p-3 cursor-pointer transition-all"
                       style={{
-                        backgroundColor: selectedOptions[opt.name] ? 'rgba(210,58,176,0.08)' : '#141414',
-                        border: `1px solid ${selectedOptions[opt.name] ? '#D23AB0' : '#1a1a1a'}`,
+                        backgroundColor: selectedOptions[opt.name] ? 'var(--accent-bg)' : '#141414',
+                        border: `1px solid ${selectedOptions[opt.name] ? 'var(--accent)' : '#1a1a1a'}`,
                       }}>
                       <input type="checkbox" checked={!!selectedOptions[opt.name]} onChange={() => toggleOption(opt.name)}
-                        className="mt-0.5 accent-[#D23AB0]" />
+                        className="mt-0.5 accent-[var(--accent)]" />
                       <div className="flex-1">
                         <span className="text-sm font-medium" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
                           {opt.name}
@@ -336,7 +336,7 @@ export default function ProductDetailPage() {
                           </p>
                         )}
                       </div>
-                      <span className="text-sm font-bold whitespace-nowrap" style={{ color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
+                      <span className="text-sm font-bold whitespace-nowrap" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
                         +{opt.price} TND
                       </span>
                     </label>
@@ -372,12 +372,12 @@ export default function ProductDetailPage() {
               <span className="inline-block px-3 py-1 text-xs uppercase tracking-wider font-semibold"
                 style={{
                   background: product.pricing_type === 'fixed' ? 'rgba(76,175,80,0.15)' : product.pricing_type === 'negotiable' ? 'rgba(255,152,0,0.15)' : 'rgba(123,97,255,0.15)',
-                  color: product.pricing_type === 'fixed' ? '#4CAF50' : product.pricing_type === 'negotiable' ? '#FF9800' : '#7B61FF',
+                  color: product.pricing_type === 'fixed' ? '#4CAF50' : product.pricing_type === 'negotiable' ? '#FF9800' : 'var(--accent-tertiary)',
                   border: `1px solid ${product.pricing_type === 'fixed' ? 'rgba(76,175,80,0.3)' : product.pricing_type === 'negotiable' ? 'rgba(255,152,0,0.3)' : 'rgba(123,97,255,0.3)'}`,
                   fontFamily: 'Outfit, sans-serif',
                   fontSize: '10px',
                 }}>
-                {product.pricing_type === 'fixed' ? 'Prix fixe' : product.pricing_type === 'negotiable' ? 'Prix négociable' : 'Suggestion de prix'}
+                {product.pricing_type === 'fixed' ? t('product.pricing_fixed') : product.pricing_type === 'negotiable' ? t('product.pricing_negotiable') : t('product.pricing_suggestion')}
               </span>
             </div>
 
@@ -385,13 +385,13 @@ export default function ProductDetailPage() {
             <div className="mb-6 p-4" style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
               {product.pricing_type === 'suggestion' ? (
                 <div>
-                  <p className="text-xs mb-2 font-medium" style={{ color: '#7B61FF', fontFamily: 'Outfit, sans-serif' }}>
-                    Proposez votre prix — le client suggère, l'admin valide
+                  <p className="text-xs mb-2 font-medium" style={{ color: 'var(--accent-tertiary)', fontFamily: 'Outfit, sans-serif' }}>
+                    {t('product.suggest_price_hint')}
                   </p>
                   <input type="number" value={suggestedPrice} onChange={(e) => setSuggestedPrice(e.target.value)}
-                    placeholder="Votre prix suggéré (TND)" min="0" step="0.01"
+                    placeholder={t('product.suggest_price_placeholder')} min="0" step="0.01"
                     className="w-full px-4 py-3 text-sm"
-                    style={{ backgroundColor: '#0D0D0D', border: '1px solid #7B61FF', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }} />
+                    style={{ backgroundColor: '#0D0D0D', border: '1px solid var(--accent-tertiary)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }} />
                 </div>
               ) : selectedMode === 'rental' ? (
                 <div className="flex items-baseline gap-2">
@@ -399,7 +399,7 @@ export default function ProductDetailPage() {
                     {product.price_per_day}
                   </span>
                   <span className="text-sm" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-                    TND / jour × {quantity}
+                    {t('product.per_day')} × {quantity}
                   </span>
                 </div>
               ) : (
@@ -417,11 +417,11 @@ export default function ProductDetailPage() {
             {/* Add to Cart button */}
             <button onClick={handleAddToCart}
               className="w-full py-4 text-sm uppercase tracking-widest font-bold transition-all hover:scale-[1.02] flex items-center justify-center gap-3"
-              style={{ background: 'linear-gradient(135deg, #D23AB0, #AE59CE)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+              style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
               </svg>
-              Ajouter au panier
+              {t('product.add_to_cart')}
             </button>
 
             {/* Supplier info */}

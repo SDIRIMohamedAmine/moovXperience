@@ -1,8 +1,12 @@
+import { getFreshToken } from '../lib/supabase'
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 export async function createQuote(data, token) {
+  // Always use a fresh token to avoid expired session issues
+  const freshToken = token || await getFreshToken()
   const headers = { 'Content-Type': 'application/json' }
-  if (token) headers.Authorization = `Bearer ${token}`
+  if (freshToken) headers.Authorization = `Bearer ${freshToken}`
 
   const res = await fetch(`${API_URL}/quotes`, {
     method: 'POST',

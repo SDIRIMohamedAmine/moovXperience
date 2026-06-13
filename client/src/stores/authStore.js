@@ -101,6 +101,7 @@ const useAuthStore = create((set, get) => ({
     const allowed = {}
     if (updates.full_name !== undefined) allowed.full_name = String(updates.full_name).slice(0, 200)
     if (updates.phone !== undefined) allowed.phone = String(updates.phone).slice(0, 30)
+    if (updates.company_name !== undefined) allowed.company_name = String(updates.company_name).slice(0, 200)
 
     const { data, error } = await supabase
       .from('profiles')

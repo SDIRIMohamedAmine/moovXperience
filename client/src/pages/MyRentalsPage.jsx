@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useAuth } from '../hooks/useAuth'
+import { getFreshToken } from '../lib/supabase'
 import { useTheme } from '../theme/ThemeContext'
 import { fetchMyRentals, updateRentalStatus } from '../services/rentalService'
 import { initiatePayment } from '../services/paymentService'
@@ -43,25 +44,29 @@ export default function MyRentalsPage() {
   }, [success])
 
   useEffect(() => {
-    if (!session?.access_token) {
-      setLoading(false) // eslint-disable-line react-hooks/set-state-in-effect
-      return
-    }
-
     let cancelled = false
     setLoading(true)
-    const status = filter === 'all' ? undefined : filter
-    fetchMyRentals(session.access_token, status)
-      .then((data) => { if (!cancelled) setRentals(data) })
-      .catch(console.error)
-      .finally(() => { if (!cancelled) setLoading(false) })
+
+    getFreshToken().then(token => {
+      if (cancelled || !token) {
+        if (!cancelled) setLoading(false)
+        return
+      }
+      const status = filter === 'all' ? undefined : filter
+      fetchMyRentals(token, status)
+        .then((data) => { if (!cancelled) setRentals(data) })
+        .catch(console.error)
+        .finally(() => { if (!cancelled) setLoading(false) })
+    })
+
     return () => { cancelled = true }
-  }, [filter, refreshKey, session])
+  }, [filter, refreshKey])
 
   async function handleCancel(id) {
     showConfirm(t('rentals.confirm_cancel'), async () => {
       try {
-        await updateRentalStatus(id, 'cancelled', session.access_token)
+        const token = await getFreshToken()
+        await updateRentalStatus(id, 'cancelled', token)
         setRefreshKey(k => k + 1)
         showToast(t('rentals.cancel_success'), 'success')
       } catch (err) {

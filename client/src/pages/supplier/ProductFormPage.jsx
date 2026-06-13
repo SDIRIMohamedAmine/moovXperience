@@ -5,7 +5,7 @@ import { useTheme } from '../../theme/ThemeContext'
 import { useAuth } from '../../hooks/useAuth'
 import { fetchProduct, createProduct, updateProduct } from '../../services/productService'
 import { fetchCategories } from '../../services/categoryService'
-import { supabase } from '../../lib/supabase'
+import { supabase, getFreshToken } from '../../lib/supabase'
 
 export default function ProductFormPage() {
   const { id } = useParams()
@@ -176,9 +176,9 @@ export default function ProductFormPage() {
 
     try {
       if (isEdit) {
-        await updateProduct(id, data, session.access_token)
+        await updateProduct(id, data, await getFreshToken())
       } else {
-        await createProduct(data, session.access_token)
+        await createProduct(data, await getFreshToken())
       }
       navigate('/supplier/products')
     } catch (err) {

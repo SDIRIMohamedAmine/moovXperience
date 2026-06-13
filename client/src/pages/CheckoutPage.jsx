@@ -3,13 +3,15 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useCartStore } from '../stores/cartStore'
 import { useAuth } from '../hooks/useAuth'
+import { getFreshToken } from '../lib/supabase'
 import { createRental } from '../services/rentalService'
 import { createQuote } from '../services/quoteService'
 import LocationPicker from '../components/LocationPicker'
 import { showToast } from '../components/Toast'
+import { getDateLocale } from '../lib/locale'
 
 export default function CheckoutPage() {
-  const { t } = useTranslation()
+  const { t, lang } = useTranslation()
   const navigate = useNavigate()
   const { user, session } = useAuth()
   const { items, getItemTotal, getTotal, clearCart, removeItem, updateQuantity } = useCartStore()
@@ -17,6 +19,7 @@ export default function CheckoutPage() {
   const [location, setLocation] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const total = getTotal()
   const rentalItems = items.filter(i => i.mode === 'rental')
@@ -28,7 +31,7 @@ export default function CheckoutPage() {
         <h2 className="text-xl mb-4 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
           {t('checkout.login_required')}
         </h2>
-        <Link to="/login" className="text-sm" style={{ color: '#D23AB0' }}>
+        <Link to="/login" className="text-sm" style={{ color: 'var(--accent)' }}>
           {t('auth.login_title')}
         </Link>
       </div>
@@ -41,7 +44,7 @@ export default function CheckoutPage() {
         <h2 className="text-xl mb-4 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
           {t('checkout.empty')}
         </h2>
-        <Link to="/catalog" className="text-sm" style={{ color: '#D23AB0' }}>
+        <Link to="/catalog" className="text-sm" style={{ color: 'var(--accent)' }}>
           {t('catalog.title')}
         </Link>
       </div>
@@ -53,7 +56,7 @@ export default function CheckoutPage() {
     setError(null)
 
     try {
-      const accessToken = session?.access_token
+      const accessToken = await getFreshToken()
       if (!accessToken) {
         setError(t('checkout.login_required'))
         return
@@ -92,8 +95,7 @@ export default function CheckoutPage() {
       }
 
       clearCart()
-      showToast('Réservation confirmée !', 'success')
-      navigate('/catalog')
+      setShowSuccess(true)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -103,7 +105,7 @@ export default function CheckoutPage() {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return ''
-    return new Date(dateStr).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+    return new Date(dateStr).toLocaleDateString(getDateLocale(lang), { day: 'numeric', month: 'long', year: 'numeric' })
   }
 
   const getDays = (item) => {
@@ -130,12 +132,12 @@ export default function CheckoutPage() {
         </div>
         <div className="text-xs mt-0.5" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
           {item.mode === 'rental'
-            ? `${item.quantity} × ${item.price_per_day} TND/jour${getDays(item) > 0 ? ` × ${getDays(item)} jours` : ''}`
+            ? `${item.quantity} × ${item.price_per_day} TND/${t('checkout.day')}${getDays(item) > 0 ? ` × ${getDays(item)} ${t('checkout.days')}` : ''}`
             : `${item.quantity} × ${item.price_purchase || item.price_per_day} TND`
           }
         </div>
         {showDates && item.startDate && item.endDate && (
-          <div className="text-xs mt-0.5" style={{ color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
+          <div className="text-xs mt-0.5" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
             {formatDate(item.startDate)} → {formatDate(item.endDate)}
           </div>
         )}
@@ -171,7 +173,7 @@ export default function CheckoutPage() {
           className="text-xs px-2 py-1"
           style={{ color: '#FF6B6B', border: '1px solid #FF6B6B33' }}
         >
-          Supprimer
+          {t('checkout.remove')}
         </button>
       </div>
     </div>
@@ -186,8 +188,8 @@ export default function CheckoutPage() {
       {/* Rental items */}
       {rentalItems.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-xs uppercase tracking-wider mb-4 font-semibold" style={{ color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
-            Locations
+          <h2 className="text-xs uppercase tracking-wider mb-4 font-semibold" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+            {t('checkout.rentals')}
           </h2>
           <div className="space-y-3">
             {rentalItems.map(item => renderItem(item, true))}
@@ -198,8 +200,8 @@ export default function CheckoutPage() {
       {/* Purchase items */}
       {purchaseItems.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-xs uppercase tracking-wider mb-4 font-semibold" style={{ color: '#7B61FF', fontFamily: 'Outfit, sans-serif' }}>
-            Achats
+          <h2 className="text-xs uppercase tracking-wider mb-4 font-semibold" style={{ color: 'var(--accent-tertiary)', fontFamily: 'Outfit, sans-serif' }}>
+            {t('checkout.purchases')}
           </h2>
           <div className="space-y-3">
             {purchaseItems.map(item => renderItem(item, false))}
@@ -227,7 +229,7 @@ export default function CheckoutPage() {
           placeholder={t('checkout.notes_placeholder')} rows={3} maxLength={2000}
           className="w-full px-4 py-3 text-sm resize-none"
           style={{ backgroundColor: '#141414', border: '1px solid #222', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}
-          onFocus={e => e.target.style.borderColor = '#D23AB0'}
+          onFocus={e => e.target.style.borderColor = 'var(--accent)'}
           onBlur={e => e.target.style.borderColor = '#222'} />
       </div>
 
@@ -252,7 +254,7 @@ export default function CheckoutPage() {
       <button onClick={handleConfirm} disabled={loading}
         className="w-full py-4 text-sm uppercase tracking-widest font-bold transition-all hover:scale-[1.02]"
         style={{
-          background: 'linear-gradient(135deg, #D23AB0, #AE59CE)',
+          background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))',
           color: '#FFFFFF',
           fontFamily: 'Outfit, sans-serif',
           opacity: loading ? 0.6 : 1,
@@ -268,6 +270,37 @@ export default function CheckoutPage() {
           </span>
         ) : t('checkout.confirm')}
       </button>
+
+      {/* Success popup */}
+      {showSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
+          <div className="w-full max-w-md p-8 text-center" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+            <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))' }}>
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold mb-3" style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+              {t('checkout.success_heading')}
+            </h2>
+            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
+              {t('checkout.success_desc')}
+            </p>
+            <div className="flex flex-col gap-3">
+              <Link to="/profile"
+                className="w-full py-3 text-sm uppercase tracking-widest font-semibold"
+                style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                {t('checkout.view_demands')}
+              </Link>
+              <button onClick={() => { setShowSuccess(false); navigate('/catalog') }}
+                className="w-full py-3 text-sm uppercase tracking-widest font-medium"
+                style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', cursor: 'pointer' }}>
+                {t('checkout.back_catalog')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

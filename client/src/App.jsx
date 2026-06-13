@@ -19,6 +19,7 @@ const CartPage = lazy(() => import('./pages/CartPage'))
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'))
 const QuotePage = lazy(() => import('./pages/QuotePage'))
 const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'))
+const DemandStatusPage = lazy(() => import('./pages/DemandStatusPage'))
 
 // Supplier pages
 const DashboardPage = lazy(() => import('./pages/DashboardPage'))
@@ -63,6 +64,9 @@ function App() {
 
         {/* Cart — public */}
         <Route path="/cart" element={<CartPage />} />
+
+        {/* Demand status — public */}
+        <Route path="/demand-status" element={<DemandStatusPage />} />
 
         {/* Protected — any role */}
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />

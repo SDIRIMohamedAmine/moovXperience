@@ -29,3 +29,12 @@ export async function clearSessionIfNotRemembered() {
     await supabase.auth.signOut()
   }
 }
+
+/**
+ * Get a fresh access token. Always calls getSession() to ensure
+ * the token is refreshed if expired, rather than relying on cached state.
+ */
+export async function getFreshToken() {
+  const { data: { session } } = await supabase.auth.getSession()
+  return session?.access_token || null
+}

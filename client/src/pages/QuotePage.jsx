@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
 import { useAuth } from '../hooks/useAuth'
+import { supabase } from '../lib/supabase'
 import { fetchProduct } from '../services/productService'
 import { createQuote } from '../services/quoteService'
 import { showToast } from '../components/Toast'
@@ -90,6 +91,9 @@ export default function QuotePage() {
         .filter(opt => selectedOptions[opt.name])
         .map(opt => ({ name: opt.name, price: opt.price, description: opt.description }))
 
+      // Get a fresh session to avoid expired tokens
+      const { data: { session: freshSession } } = await supabase.auth.getSession()
+
       await createQuote({
         product_id: product.id,
         client_name: form.client_name,
@@ -103,7 +107,7 @@ export default function QuotePage() {
         event_location: form.event_location || null,
         notes: form.notes || null,
         estimated_total: estimatedTotal,
-      }, session?.access_token)
+      }, freshSession?.access_token)
 
       setSubmitted(true)
     } catch (err) {

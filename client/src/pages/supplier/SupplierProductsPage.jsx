@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from '../../i18n/LanguageContext'
 import { useTheme } from '../../theme/ThemeContext'
 import { useAuth } from '../../hooks/useAuth'
+import { getFreshToken } from '../../lib/supabase'
 import { fetchMyProducts, deleteProduct } from '../../services/productService'
 import { showToast } from '../../components/Toast'
 import { showConfirm } from '../../components/ConfirmModal'
@@ -21,9 +22,10 @@ export default function SupplierProductsPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!session?.access_token) return
     let cancelled = false
-    fetchMyProducts(session.access_token)
+    getFreshToken().then(token => {
+      if (cancelled || !token) return
+    fetchMyProducts(token)
       .then((data) => {
         if (!cancelled) {
           setProducts(data)
@@ -36,9 +38,10 @@ export default function SupplierProductsPage() {
           setLoading(false)
         }
       })
+    })
 
     return () => { cancelled = true }
-  }, [session])
+  }, [])
 
   const handleDelete = async (id) => {
     showConfirm(t('supplier_products.delete_confirm'), async () => {

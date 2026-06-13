@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import { getFreshToken } from '../lib/supabase'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
 import { fetchMyProducts } from '../services/productService'
@@ -66,29 +67,35 @@ export default function DashboardPage() {
   const [recentRentals, setRecentRentals] = useState([])
 
   useEffect(() => {
-    if (profile?.role === 'supplier' && session?.access_token) {
-      fetchMyProducts(session.access_token)
-        .then((data) => setProductCount(data.length))
-        .catch(() => setProductCount(0))
-      fetchMyRentals(session.access_token)
-        .then((data) => {
-          const pending = data.filter(r => r.status === 'pending').length
-          setRentalCount(data.length)
-          setPendingCount(pending)
-          setRecentRentals(data.slice(0, 3))
-        })
-        .catch(() => { setRentalCount(0); setPendingCount(0) })
-    } else if (profile?.role === 'client' && session?.access_token) {
-      fetchMyRentals(session.access_token)
-        .then((data) => {
-          const pending = data.filter(r => r.status === 'pending').length
-          setRentalCount(data.length)
-          setPendingCount(pending)
-          setRecentRentals(data.slice(0, 3))
-        })
-        .catch(() => { setRentalCount(0); setPendingCount(0) })
+    if (profile?.role === 'supplier') {
+      getFreshToken().then(token => {
+        if (!token) return
+        fetchMyProducts(token)
+          .then((data) => setProductCount(data.length))
+          .catch(() => setProductCount(0))
+        fetchMyRentals(token)
+          .then((data) => {
+            const pending = data.filter(r => r.status === 'pending').length
+            setRentalCount(data.length)
+            setPendingCount(pending)
+            setRecentRentals(data.slice(0, 3))
+          })
+          .catch(() => { setRentalCount(0); setPendingCount(0) })
+      })
+    } else if (profile?.role === 'client') {
+      getFreshToken().then(token => {
+        if (!token) return
+        fetchMyRentals(token)
+          .then((data) => {
+            const pending = data.filter(r => r.status === 'pending').length
+            setRentalCount(data.length)
+            setPendingCount(pending)
+            setRecentRentals(data.slice(0, 3))
+          })
+          .catch(() => { setRentalCount(0); setPendingCount(0) })
+      })
     }
-  }, [profile, session])
+  }, [profile])
 
   if (!profile) {
     return (

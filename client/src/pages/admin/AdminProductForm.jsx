@@ -3,11 +3,13 @@ import { useParams, useNavigate, Navigate } from 'react-router-dom'
 import { fetchProduct } from '../../services/productService'
 import { fetchAllCategories, isAdminLoggedIn } from '../../services/adminService'
 import { showToast } from '../../components/Toast'
+import { useTranslation } from '../../i18n/LanguageContext'
 import MediaUploader from '../../components/MediaUploader'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 export default function AdminProductForm() {
+  const { t } = useTranslation()
   const { id } = useParams()
   const navigate = useNavigate()
   const isEdit = Boolean(id)
@@ -113,7 +115,7 @@ export default function AdminProductForm() {
         throw new Error(err.error || 'Failed to save product')
       }
 
-      showToast(isEdit ? 'Solution mise à jour' : 'Solution créée', 'success')
+      showToast(isEdit ? t('admin.product_updated') : t('admin.product_created'), 'success')
       navigate('/admin/products')
     } catch (err) {
       showToast(err.message, 'error')
@@ -125,7 +127,7 @@ export default function AdminProductForm() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="w-8 h-8 border-2 animate-spin" style={{ borderColor: '#222', borderTopColor: '#D23AB0' }} />
+        <div className="w-8 h-8 border-2 animate-spin" style={{ borderColor: '#222', borderTopColor: 'var(--accent)' }} />
       </div>
     )
   }
@@ -136,87 +138,87 @@ export default function AdminProductForm() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-8">
-        <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
-          Administration
+        <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+          {t('admin.login_title')}
         </p>
         <h1 className="text-3xl font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
-          {isEdit ? 'Modifier la solution' : 'Nouvelle solution'}
+          {isEdit ? t('admin.product_edit_title') : t('admin.product_new_title')}
         </h1>
       </div>
 
       <form onSubmit={handleSubmit} style={{ backgroundColor: '#141414', border: '1px solid #222' }} className="p-8 space-y-5">
         <div>
-          <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>Nom *</label>
+          <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>{t('admin.product_name_label')}</label>
           <input type="text" value={form.name} onChange={(e) => handleChange('name', e.target.value)} required
             className="w-full px-4 py-3 text-sm" style={inputStyle} />
         </div>
 
         <div>
-          <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>Description</label>
+          <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>{t('admin.product_description_label')}</label>
           <textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} rows={4}
             className="w-full px-4 py-3 text-sm resize-y" style={inputStyle} />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>Catégorie</label>
+            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>{t('admin.product_category_label')}</label>
             <select value={form.category_id} onChange={(e) => handleChange('category_id', e.target.value)}
               className="w-full px-4 py-3 text-sm" style={{ ...inputStyle, backgroundColor: '#0D0D0D' }}>
-              <option value="">Sélectionner</option>
+              <option value="">{t('admin.product_select')}</option>
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>{cat.name}</option>
               ))}
             </select>
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>Mode</label>
+            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>{t('admin.product_mode_label')}</label>
             <select value={form.mode} onChange={(e) => handleChange('mode', e.target.value)}
               className="w-full px-4 py-3 text-sm" style={{ ...inputStyle, backgroundColor: '#0D0D0D' }}>
-              <option value="both">Location & Achat</option>
-              <option value="rental">Location uniquement</option>
-              <option value="sale">Achat uniquement</option>
+              <option value="both">{t('admin.mode_both')}</option>
+              <option value="rental">{t('admin.mode_rental')}</option>
+              <option value="sale">{t('admin.mode_sale')}</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>Type de prix</label>
+          <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>{t('admin.product_pricing_type_label')}</label>
           <select value={form.pricing_type} onChange={(e) => handleChange('pricing_type', e.target.value)}
             className="w-full px-4 py-3 text-sm" style={{ ...inputStyle, backgroundColor: '#0D0D0D' }}>
-            <option value="fixed">Prix fixe</option>
-            <option value="negotiable">Prix négociable</option>
-            <option value="suggestion">Suggestion de prix</option>
+            <option value="fixed">{t('admin.pricing_fixed')}</option>
+            <option value="negotiable">{t('admin.pricing_negotiable')}</option>
+            <option value="suggestion">{t('admin.pricing_suggestion')}</option>
           </select>
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>Prix/jour (TND) *</label>
+            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>{t('admin.product_price_day_label')}</label>
             <input type="number" value={form.price_per_day} onChange={(e) => handleChange('price_per_day', e.target.value)} required min="0" step="0.01"
               className="w-full px-4 py-3 text-sm" style={inputStyle} />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>Prix achat (TND)</label>
+            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>{t('admin.product_price_purchase_label')}</label>
             <input type="number" value={form.price_purchase} onChange={(e) => handleChange('price_purchase', e.target.value)} min="0" step="0.01"
               className="w-full px-4 py-3 text-sm" style={inputStyle} />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>Stock</label>
+            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>{t('admin.product_stock_label')}</label>
             <input type="number" value={form.stock} onChange={(e) => handleChange('stock', e.target.value)} min="0"
               className="w-full px-4 py-3 text-sm" style={inputStyle} />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>Médias (images & vidéos)</label>
+          <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={labelStyle}>{t('admin.product_media_label')}</label>
           <MediaUploader files={mediaFiles} onChange={setMediaFiles} maxFiles={10} />
         </div>
 
         <div className="flex items-center gap-3">
           <input type="checkbox" id="is_available" checked={form.is_available} onChange={(e) => handleChange('is_available', e.target.checked)}
-            className="w-4 h-4 accent-[#D23AB0]" />
+            className="w-4 h-4" style={{ accentColor: 'var(--accent)' }} />
           <label htmlFor="is_available" className="text-sm" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-            Disponible
+            {t('admin.product_available_label')}
           </label>
         </div>
 
@@ -224,18 +226,18 @@ export default function AdminProductForm() {
           <button type="submit" disabled={saving}
             className="px-8 py-3 text-xs uppercase tracking-widest font-bold"
             style={{
-              background: 'linear-gradient(135deg, #D23AB0, #AE59CE)',
+              background: 'linear-gradient(135deg, var(--accent), #AE59CE)',
               color: '#FFFFFF',
               fontFamily: 'Outfit, sans-serif',
               opacity: saving ? 0.6 : 1,
               cursor: saving ? 'not-allowed' : 'pointer',
             }}>
-            {saving ? 'Enregistrement...' : (isEdit ? 'Mettre à jour' : 'Créer')}
+            {saving ? t('admin.product_saving') : (isEdit ? t('admin.update') : t('admin.create'))}
           </button>
           <button type="button" onClick={() => navigate('/admin/products')}
             className="px-6 py-3 text-xs uppercase tracking-widest font-medium"
             style={{ border: '1px solid #222', color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-            Annuler
+            {t('common.cancel')}
           </button>
         </div>
       </form>

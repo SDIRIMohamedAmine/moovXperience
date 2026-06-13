@@ -3,9 +3,10 @@ import { useTranslation } from '../i18n/LanguageContext'
 import { useCartStore } from '../stores/cartStore'
 import { useAuth } from '../hooks/useAuth'
 import { useAuthModal } from '../contexts/AuthModalContext'
+import { getDateLocale } from '../lib/locale'
 
 export default function CartPage() {
-  const { t } = useTranslation()
+  const { t, lang } = useTranslation()
   const navigate = useNavigate()
   const { user } = useAuth()
   const { showLoginModal } = useAuthModal()
@@ -21,7 +22,7 @@ export default function CartPage() {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return ''
-    return new Date(dateStr).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+    return new Date(dateStr).toLocaleDateString(getDateLocale(lang), { day: 'numeric', month: 'short' })
   }
 
   const getDays = (item) => {
@@ -41,11 +42,11 @@ export default function CartPage() {
           {t('checkout.empty')}
         </h2>
         <p className="text-sm mb-6" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-          Parcourez notre catalogue pour trouver des solutions interactives.
+          {t('rentals.empty_desc')}
         </p>
         <Link to="/catalog"
           className="inline-flex items-center gap-2 px-6 py-3 text-xs uppercase tracking-widest font-semibold"
-          style={{ background: 'linear-gradient(135deg, #D23AB0, #AE59CE)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+          style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
           {t('catalog.title')}
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -60,7 +61,7 @@ export default function CartPage() {
       <h1 className="text-3xl mb-8 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
         {t('nav.cart')}
         <span className="text-sm ml-3 font-normal" style={{ color: '#666' }}>
-          ({items.length} {items.length > 1 ? 'articles' : 'article'})
+          ({items.length} {items.length > 1 ? t('rentals.items') : t('rentals.item')})
         </span>
       </h1>
 
@@ -98,12 +99,12 @@ export default function CartPage() {
                         </h3>
                         <span className="inline-block mt-1 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider"
                           style={{
-                            background: item.mode === 'rental' ? 'linear-gradient(135deg, #D23AB0, #AE59CE)' : 'linear-gradient(135deg, #7B61FF, #AE59CE)',
+                            background: item.mode === 'rental' ? 'linear-gradient(135deg, var(--accent), var(--accent-secondary))' : 'linear-gradient(135deg, var(--accent-tertiary), var(--accent-secondary))',
                             color: '#FFFFFF',
                             fontFamily: 'Outfit, sans-serif',
                             fontSize: '10px',
                           }}>
-                          {item.mode === 'rental' ? 'Location' : 'Achat'}
+                          {item.mode === 'rental' ? t('rentals.rental') : t('rentals.purchase')}
                         </span>
                       </div>
                       <button onClick={() => removeItem(item.key)}
@@ -132,8 +133,8 @@ export default function CartPage() {
                           style={{ backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}
                         />
                         {days > 0 && (
-                          <span className="text-xs" style={{ color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
-                            ({days}j)
+                          <span className="text-xs" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                            ({days}{t('rentals.days_short')})
                           </span>
                         )}
                       </div>
@@ -144,7 +145,7 @@ export default function CartPage() {
                       <div className="mt-2 flex flex-wrap gap-1.5">
                         {item.options.map((opt) => (
                           <span key={opt.name} className="px-2 py-0.5 text-xs"
-                            style={{ backgroundColor: 'rgba(210,58,176,0.1)', border: '1px solid rgba(210,58,176,0.2)', color: '#D23AB0', fontFamily: 'Outfit, sans-serif' }}>
+                            style={{ backgroundColor: 'var(--accent-bg)', border: '1px solid var(--accent-bg)', color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
                             {opt.name} +{opt.price} TND
                           </span>
                         ))}
@@ -179,7 +180,7 @@ export default function CartPage() {
         <div className="lg:col-span-1">
           <div className="sticky top-24 p-6" style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
             <h3 className="text-lg font-bold mb-5" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-              Résumé
+              {t('rentals.summary')}
             </h3>
 
             <div className="space-y-3 mb-5">
@@ -194,7 +195,7 @@ export default function CartPage() {
             <div className="pt-4 mb-6" style={{ borderTop: '1px solid #222' }}>
               <div className="flex justify-between items-baseline">
                 <span className="text-xs uppercase tracking-wider" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-                  Total
+                  {t('rentals.total')}
                 </span>
                 <span className="text-2xl font-bold gradient-text" style={{ fontFamily: 'Outfit, sans-serif' }}>
                   {getTotal().toFixed(2)} TND
@@ -204,13 +205,13 @@ export default function CartPage() {
 
             <button onClick={handleCheckout}
               className="w-full py-3.5 text-xs uppercase tracking-widest font-semibold transition-all hover:scale-[1.02]"
-              style={{ background: 'linear-gradient(135deg, #D23AB0, #AE59CE)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+              style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
               {t('checkout.confirm')}
             </button>
 
             <Link to="/catalog" className="block text-center text-xs mt-3 transition-colors"
               style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}
-              onMouseEnter={(e) => (e.target.style.color = '#D23AB0')}
+              onMouseEnter={(e) => (e.target.style.color = 'var(--accent)')}
               onMouseLeave={(e) => (e.target.style.color = '#666')}>
               ← {t('product.back_to_catalog')}
             </Link>

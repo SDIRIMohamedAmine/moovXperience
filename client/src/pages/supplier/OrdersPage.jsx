@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from '../../i18n/LanguageContext'
 import { useAuth } from '../../hooks/useAuth'
+import { getFreshToken } from '../../lib/supabase'
 import { useTheme } from '../../theme/ThemeContext'
 import { fetchMyRentals, updateRentalStatus } from '../../services/rentalService'
 import { showToast } from '../../components/Toast'
@@ -32,20 +33,23 @@ export default function OrdersPage() {
   const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
-    if (!session?.access_token) {
-      setLoading(false) // eslint-disable-line react-hooks/set-state-in-effect
-      return
-    }
-
     let cancelled = false
     setLoading(true)
-    const status = filter === 'all' ? undefined : filter
-    fetchMyRentals(session.access_token, status)
+
+    getFreshToken().then(token => {
+      if (cancelled || !token) {
+        if (!cancelled) setLoading(false)
+        return
+      }
+      const status = filter === 'all' ? undefined : filter
+      fetchMyRentals(token, status)
       .then((data) => { if (!cancelled) setOrders(data) })
       .catch(console.error)
       .finally(() => { if (!cancelled) setLoading(false) })
+    })
+
     return () => { cancelled = true }
-  }, [filter, refreshKey, session])
+  }, [filter, refreshKey])
 
   async function handleStatus(id, newStatus) {
     const labels = {
@@ -56,7 +60,8 @@ export default function OrdersPage() {
     }
     showConfirm(`${labels[newStatus] || newStatus}?`, async () => {
       try {
-        await updateRentalStatus(id, newStatus, session.access_token)
+        const token = await getFreshToken()
+        await updateRentalStatus(id, newStatus, token)
         setRefreshKey(k => k + 1)
         showToast(t('orders.status_updated'), 'success')
       } catch (err) {

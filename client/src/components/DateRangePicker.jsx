@@ -2,8 +2,11 @@ import { useState, useEffect, useMemo } from 'react'
 import { DayPicker } from 'react-day-picker'
 import 'react-day-picker/style.css'
 import { fetchAvailability } from '../services/rentalService'
+import { useTranslation } from '../i18n/LanguageContext'
+import { getDateLocale } from '../lib/locale'
 
 export default function DateRangePicker({ productId, selectedRange, onSelect }) {
+  const { t, lang } = useTranslation()
   const [unavailable, setUnavailable] = useState([])
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [loading, setLoading] = useState(false)
@@ -48,14 +51,14 @@ export default function DateRangePicker({ productId, selectedRange, onSelect }) 
   }
 
   const formatShort = (date) => {
-    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+    return date.toLocaleDateString(getDateLocale(lang), { day: 'numeric', month: 'short' })
   }
 
   return (
     <div>
       {loading && (
         <div className="text-xs mb-2" style={{ color: '#8A939B', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
-          Chargement...
+          {t('common.loading')}
         </div>
       )}
       <div className="date-picker-wrapper">

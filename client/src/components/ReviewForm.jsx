@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTheme } from '../theme/ThemeContext'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useAuth } from '../hooks/useAuth'
+import { getFreshToken } from '../lib/supabase'
 import { showToast } from './Toast'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
@@ -28,7 +29,7 @@ export default function ReviewForm({ productId, rentalId, onSuccess }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.access_token}`,
+          Authorization: `Bearer ${await getFreshToken()}`,
         },
         body: JSON.stringify({
           rental_id: rentalId,
