@@ -200,10 +200,18 @@ export async function deleteQuote(req, res) {
 }
 
 export async function getAllQuotes(req, res) {
-  const { data, error } = await supabase
+  const { client_id } = req.query
+
+  let query = supabase
     .from('quotes')
-    .select('id, product_id, client_name, client_email, mode, duration_days, options, event_date, event_location, estimated_total, status, created_at, products(name, images)')
+    .select('id, product_id, client_id, client_name, client_email, mode, duration_days, options, event_date, event_location, estimated_total, status, created_at, products(name, images)')
     .order('created_at', { ascending: false })
+
+  if (client_id) {
+    query = query.eq('client_id', client_id)
+  }
+
+  const { data, error } = await query
 
   if (error) {
     return res.status(500).json({ error: 'Failed to fetch quotes' })

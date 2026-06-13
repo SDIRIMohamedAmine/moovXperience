@@ -133,7 +133,8 @@ export async function getAllProducts(req, res) {
 
   const { data, error, count } = await supabase
     .from('products')
-    .select('id, name, price_per_day, price_purchase, stock, is_available, mode, pricing_type, deleted_at, created_at, categories(name)', { count: 'exact' })
+    .select('id, name, price_per_day, price_purchase, stock, is_available, mode, pricing_type, created_at, categories(name)', { count: 'exact' })
+    .is('deleted_at', null)
     .order('created_at', { ascending: false })
     .range(safeOffset, safeOffset + safeLimit - 1)
 
@@ -179,7 +180,7 @@ export async function deleteProductAdmin(req, res) {
 
   const { error } = await supabase
     .from('products')
-    .update({ deleted_at: new Date().toISOString(), is_available: false })
+    .delete()
     .eq('id', id)
 
   if (error) {
@@ -193,18 +194,22 @@ export async function deleteProductAdmin(req, res) {
 export async function getAllRentals(req, res) {
   if (!(await requireAdmin(req, res))) return
 
-  const { status, limit = 50, offset = 0 } = req.query
+  const { status, client_id, limit = 50, offset = 0 } = req.query
   const safeLimit = Math.min(Math.max(Number(limit) || 50, 1), 100)
   const safeOffset = Math.max(Number(offset) || 0, 0)
 
   let query = supabase
     .from('rentals')
-    .select('id, status, start_date, end_date, total_price, payment_status, created_at, profiles!client_id(full_name)', { count: 'exact' })
+    .select('id, status, start_date, end_date, total_price, payment_status, client_id, created_at, profiles!client_id(full_name)', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(safeOffset, safeOffset + safeLimit - 1)
 
   if (status && ['pending', 'confirmed', 'delivered', 'returned', 'completed', 'cancelled'].includes(status)) {
     query = query.eq('status', status)
+  }
+
+  if (client_id) {
+    query = query.eq('client_id', client_id)
   }
 
   const { data, error, count } = await query
