@@ -103,16 +103,27 @@ const useAuthStore = create((set, get) => ({
     if (updates.phone !== undefined) allowed.phone = String(updates.phone).slice(0, 30)
     if (updates.company_name !== undefined) allowed.company_name = String(updates.company_name).slice(0, 200)
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .update({ ...allowed, updated_at: new Date().toISOString() })
-      .eq('id', user.id)
-      .select()
-      .single()
-    if (!error && data) {
-      set({ profile: data })
+    try {
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timed out')), 10000)
+      )
+
+      const query = supabase
+        .from('profiles')
+        .update({ ...allowed, updated_at: new Date().toISOString() })
+        .eq('id', user.id)
+        .select()
+        .single()
+
+      const { data, error } = await Promise.race([query, timeout])
+
+      if (!error && data) {
+        set({ profile: data })
+      }
+      return { data, error }
+    } catch (err) {
+      return { data: null, error: err }
     }
-    return { data, error }
   },
 
   clearAuth: () => {

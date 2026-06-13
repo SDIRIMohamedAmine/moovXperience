@@ -2,7 +2,7 @@
   "nav": {
     "home": "Accueil",
     "dashboard": "Dashboard",
-    "profile": "Mon profil",
+    "profile": "Mon compte",
     "login": "Connexion",
     "register": "S'inscrire",
     "logout": "Déconnexion",
@@ -344,6 +344,7 @@
     "remove": "Supprimer",
     "day": "jour",
     "days": "jours",
+    "redirecting": "Redirection vers vos demandes...",
     "success_heading": "Demande envoyée !",
     "success_desc": "Votre demande a été transmise avec succès. Notre équipe vous contactera dans les plus brefs délais pour discuter de votre projet.",
     "view_demands": "Voir mes demandes",

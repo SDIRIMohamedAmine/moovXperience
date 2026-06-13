@@ -137,12 +137,6 @@ export default function ProfilePage() {
                   <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('profile.phone')}</span>
                   <span className="text-sm" style={{ color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>{profile?.phone || '—'}</span>
                 </div>
-                <div className="flex items-center justify-between py-2" style={{ borderBottom: '1px solid var(--border)' }}>
-                  <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('profile.role')}</span>
-                  <span className="text-xs px-2 py-0.5 uppercase tracking-wider" style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
-                    {profile?.role === 'admin' ? t('profile.admin_role') : t('profile.client_role')}
-                  </span>
-                </div>
                 <div className="flex items-center justify-between py-2">
                   <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('profile.my_demands')}</span>
                   <span className="text-sm font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>{demands.length}</span>

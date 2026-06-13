@@ -2,7 +2,7 @@
   "nav": {
     "home": "Home",
     "dashboard": "Dashboard",
-    "profile": "My Profile",
+    "profile": "My Account",
     "login": "Login",
     "register": "Sign Up",
     "logout": "Logout",
@@ -344,6 +344,7 @@
     "remove": "Remove",
     "day": "day",
     "days": "days",
+    "redirecting": "Redirecting to your requests...",
     "success_heading": "Request sent!",
     "success_desc": "Your request has been successfully submitted. Our team will contact you shortly to discuss your project.",
     "view_demands": "View my requests",

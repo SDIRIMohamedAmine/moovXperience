@@ -93,13 +93,17 @@ export default function MainLayout() {
 
               {user ? (
                 <>
-                  <Link to="/profile" className="text-sm hidden sm:block transition-colors font-medium" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
-                    {profile?.full_name || user?.email}
+                  <Link to="/profile" className="hidden sm:flex items-center gap-2 text-xs px-4 py-2 uppercase tracking-wider font-medium transition-all"
+                    style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
+                    {t('nav.profile') || 'Mon compte'}
                   </Link>
-                  <button onClick={handleLogout} className="hidden sm:block text-xs px-4 py-2 uppercase tracking-wider font-medium transition-colors"
-                    style={{ color: 'var(--text-on-accent)', border: '1px solid var(--border)', fontFamily: 'Outfit, sans-serif', cursor: 'pointer' }}
-                    onMouseEnter={(e) => { e.target.style.borderColor = 'var(--accent)'; e.target.style.color = 'var(--accent)' }}
-                    onMouseLeave={(e) => { e.target.style.borderColor = 'var(--border)'; e.target.style.color = 'var(--text-on-accent)' }}>
+                  <button onClick={handleLogout} className="hidden sm:block text-xs px-5 py-2.5 uppercase tracking-wider font-semibold transition-all hover:scale-105"
+                    style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)', fontFamily: 'Outfit, sans-serif', cursor: 'pointer' }}>
                     {t('nav.logout')}
                   </button>
                 </>
@@ -162,8 +166,12 @@ export default function MainLayout() {
               {user ? (
                 <>
                   <Link to="/profile" onClick={closeMenu}
-                    className="block py-2 px-4 text-sm font-medium" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
-                    {profile?.full_name || user?.email}
+                    className="flex items-center gap-2 py-2.5 px-4 text-xs uppercase tracking-wider font-semibold text-center justify-center"
+                    style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)', fontFamily: 'Outfit, sans-serif' }}>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
+                    {t('nav.profile') || 'Mon compte'}
                   </Link>
                   <button onClick={handleLogout}
                     className="w-full py-2.5 text-xs uppercase tracking-wider text-center font-medium transition-colors"

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useCartStore } from '../stores/cartStore'
@@ -96,6 +96,7 @@ export default function CheckoutPage() {
 
       clearCart()
       setShowSuccess(true)
+      setTimeout(() => navigate('/profile'), 3000)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -286,17 +287,11 @@ export default function CheckoutPage() {
             <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
               {t('checkout.success_desc')}
             </p>
-            <div className="flex flex-col gap-3">
-              <Link to="/profile"
-                className="w-full py-3 text-sm uppercase tracking-widest font-semibold"
-                style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-                {t('checkout.view_demands')}
-              </Link>
-              <button onClick={() => { setShowSuccess(false); navigate('/catalog') }}
-                className="w-full py-3 text-sm uppercase tracking-widest font-medium"
-                style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', cursor: 'pointer' }}>
-                {t('checkout.back_catalog')}
-              </button>
+            <p className="text-xs mb-4" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+              {t('checkout.redirecting') || 'Redirection vers vos demandes...'}
+            </p>
+            <div className="w-full h-1 overflow-hidden" style={{ backgroundColor: 'var(--border)' }}>
+              <div className="h-full" style={{ background: 'var(--accent-gradient)', animation: 'progressBar 3s linear forwards' }} />
             </div>
           </div>
         </div>

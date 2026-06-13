@@ -131,6 +131,11 @@ input::placeholder, textarea::placeholder {
   66% { transform: translate(-15px, -20px) scale(0.97); }
 }
 
+@keyframes progressBar {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
 @keyframes pulse-glow {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
