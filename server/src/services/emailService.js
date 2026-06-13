@@ -1,24 +1,18 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 function getConfig() {
   return {
-    gmailUser: process.env.GMAIL_USER,
-    gmailPassword: process.env.GMAIL_APP_PASSWORD,
-    adminEmail: process.env.ADMIN_EMAIL || process.env.GMAIL_USER,
+    resendKey: process.env.RESEND_API_KEY,
+    adminEmail: process.env.ADMIN_EMAIL || 'contact@makerskills.tn',
     clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
+    fromEmail: process.env.EMAIL_FROM || 'onboarding@resend.dev',
   }
 }
 
-function getTransporter() {
-  const { gmailUser, gmailPassword } = getConfig()
-  if (!gmailUser || !gmailPassword) return null
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: gmailUser,
-      pass: gmailPassword,
-    },
-  })
+function getResend() {
+  const { resendKey } = getConfig()
+  if (!resendKey) return null
+  return new Resend(resendKey)
 }
 
 function escapeHtml(str) {
@@ -37,24 +31,31 @@ function sanitizeSubject(str) {
 }
 
 async function sendEmail({ to, subject, html }) {
-  const { gmailUser, gmailPassword } = getConfig()
-  console.log('[EMAIL] sendEmail called → to:', to, '| from:', gmailUser, '| env set:', !!gmailUser, !!gmailPassword)
+  const { fromEmail } = getConfig()
+  const resend = getResend()
 
-  const transport = getTransporter()
-  if (!transport) {
-    console.error('[EMAIL] Transporter is NULL — GMAIL_USER or GMAIL_APP_PASSWORD missing in process.env')
+  console.log('[EMAIL] sendEmail called → to:', to, '| from:', fromEmail, '| resend configured:', !!resend)
+
+  if (!resend) {
+    console.error('[EMAIL] Resend client is NULL — RESEND_API_KEY missing in process.env')
     return null
   }
 
   try {
-    const info = await transport.sendMail({
-      from: `"MoovXperience" <${gmailUser}>`,
-      to,
+    const { data, error } = await resend.emails.send({
+      from: `MoovXperience <${fromEmail}>`,
+      to: [to],
       subject: sanitizeSubject(subject),
       html,
     })
-    console.log('[EMAIL] SENT OK →', info.messageId, '| to:', to)
-    return info
+
+    if (error) {
+      console.error('[EMAIL] RESEND ERROR →', error.message, '| to:', to)
+      return null
+    }
+
+    console.log('[EMAIL] SENT OK →', data?.id, '| to:', to)
+    return data
   } catch (err) {
     console.error('[EMAIL] SEND FAILED →', err.message, '| to:', to)
     return null
