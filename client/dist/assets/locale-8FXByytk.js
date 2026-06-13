@@ -1,0 +1,1 @@
+function e(e){return e===`fr`?`fr-FR`:`en-US`}export{e as t};
