@@ -389,6 +389,42 @@ export async function updateRentalStatus(req, res) {
 
   res.json(updated)
 
+  // Stock management: reduce on confirm, restore on return/cancel
+  if (status === 'confirmed' || status === 'returned' || (status === 'cancelled' && rental.status === 'confirmed')) {
+    try {
+      const { data: items } = await supabase
+        .from('rental_items')
+        .select('product_id, quantity')
+        .eq('rental_id', id)
+
+      if (items?.length) {
+        for (const item of items) {
+          const { data: product } = await supabase
+            .from('products')
+            .select('stock')
+            .eq('id', item.product_id)
+            .single()
+
+          if (product) {
+            let newStock = product.stock
+            if (status === 'confirmed') {
+              newStock = Math.max(0, product.stock - item.quantity)
+            } else {
+              // returned or cancelled-after-confirm: restore stock
+              newStock = product.stock + item.quantity
+            }
+            await supabase
+              .from('products')
+              .update({ stock: newStock })
+              .eq('id', item.product_id)
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Stock update error:', err.message)
+    }
+  }
+
   // Send email notification to client on status change
   if (status === 'confirmed' || status === 'cancelled') {
     try {

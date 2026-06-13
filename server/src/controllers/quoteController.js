@@ -256,6 +256,12 @@ export async function updateQuoteStatus(req, res) {
     return res.status(404).json({ error: 'Quote not found' })
   }
 
+  const { data: quoteData } = await supabase
+    .from('quotes')
+    .select('client_name, client_email, estimated_total, mode, products(name)')
+    .eq('id', id)
+    .single()
+
   const { error } = await supabase
     .from('quotes')
     .update({ status, updated_at: new Date().toISOString() })
@@ -267,4 +273,21 @@ export async function updateQuoteStatus(req, res) {
   }
 
   res.json({ success: true })
+
+  // Send confirmation email to client when demand is accepted
+  if (status === 'accepted' && quoteData?.client_email) {
+    try {
+      const { sendDemandConfirmationToClient } = await import('../services/emailService.js')
+      sendDemandConfirmationToClient({
+        clientEmail: quoteData.client_email,
+        clientName: quoteData.client_name || 'Client',
+        productName: quoteData.products?.name || 'Solution',
+        mode: quoteData.mode,
+        estimatedTotal: quoteData.estimated_total,
+        quoteId: id,
+      }).catch(err => console.error('Demand confirmation email failed:', err.message))
+    } catch (err) {
+      console.error('Email notification error:', err.message)
+    }
+  }
 }
