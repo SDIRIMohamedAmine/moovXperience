@@ -34,13 +34,8 @@ export default function MainLayout() {
       <header className="sticky top-0 z-50 backdrop-blur-md" style={{ backgroundColor: dark ? 'rgba(13,13,13,0.85)' : 'rgba(247,241,222,0.85)', borderBottom: '1px solid var(--border)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center gap-1">
-              <span className="text-xl font-bold tracking-tight gradient-text" style={{ fontFamily: 'Outfit, sans-serif' }}>
-                Moov
-              </span>
-              <span className="text-xl font-light tracking-tight" style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
-                Xperience
-              </span>
+            <Link to="/" className="flex items-center">
+              <img src={dark ? '/logo-dark.png' : '/logo-light.png'} alt="MoovXperience" className="h-12 w-auto" />
             </Link>
 
             <nav className="hidden md:flex items-center gap-8">
@@ -54,7 +49,7 @@ export default function MainLayout() {
               ))}
             </nav>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3">
               {/* Language toggle */}
               <button onClick={toggleLang} className="text-xs px-2.5 py-1 uppercase tracking-wider font-medium transition-colors"
                 style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}
@@ -101,7 +96,7 @@ export default function MainLayout() {
                   <Link to="/profile" className="text-sm hidden sm:block transition-colors font-medium" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
                     {profile?.full_name || user?.email}
                   </Link>
-                  <button onClick={handleLogout} className="text-xs px-4 py-2 uppercase tracking-wider font-medium transition-colors"
+                  <button onClick={handleLogout} className="hidden sm:block text-xs px-4 py-2 uppercase tracking-wider font-medium transition-colors"
                     style={{ color: 'var(--text-on-accent)', border: '1px solid var(--border)', fontFamily: 'Outfit, sans-serif', cursor: 'pointer' }}
                     onMouseEnter={(e) => { e.target.style.borderColor = 'var(--accent)'; e.target.style.color = 'var(--accent)' }}
                     onMouseLeave={(e) => { e.target.style.borderColor = 'var(--border)'; e.target.style.color = 'var(--text-on-accent)' }}>
@@ -208,7 +203,7 @@ export default function MainLayout() {
 
       {/* Footer */}
       <footer style={{ backgroundColor: 'var(--bg-overlay)', borderTop: '1px solid var(--border)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             <div className="md:col-span-1">
               <h3 className="text-lg font-bold mb-4 gradient-text" style={{ fontFamily: 'Outfit, sans-serif' }}>

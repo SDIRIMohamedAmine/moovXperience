@@ -60,7 +60,7 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-10">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
             {t('admin.dashboard')}
@@ -70,12 +70,12 @@ export default function AdminDashboard() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Link to="/" className="text-xs px-3 py-1.5 transition-colors"
+          <Link to="/" className="text-xs px-3 py-2 transition-colors"
             style={{ color: '#666', border: '1px solid #222', fontFamily: 'Outfit, sans-serif' }}>
             {t('admin.site')}
           </Link>
           <button onClick={() => { adminLogout(); window.location.href = '/admin/login' }}
-            className="text-xs px-3 py-1.5 transition-colors"
+            className="text-xs px-3 py-2 transition-colors"
             style={{ color: '#FF5722', border: '1px solid #FF572230', fontFamily: 'Outfit, sans-serif' }}>
             {t('nav.logout')}
           </button>

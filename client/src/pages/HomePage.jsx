@@ -80,7 +80,7 @@ const useCases = (t) => [
 export default function HomePage() {
   const { user } = useAuth()
   const { t } = useTranslation()
-  const { colors } = useTheme()
+  const { colors, dark } = useTheme()
   const [featured, setFeatured] = useState([])
   const [galleryImages, setGalleryImages] = useState([])
 
@@ -125,6 +125,7 @@ export default function HomePage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-44">
           <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <motion.div initial="hidden" animate="visible" variants={stagger}>
+              <motion.img variants={fadeInUp} custom={-1} src={dark ? '/logo-dark.png' : '/logo-light.png'} alt="MoovXperience" className="h-36 md:h-52 w-auto mb-6 md:mb-10" />
               <motion.div variants={fadeInUp} custom={0}
                 className="inline-block px-4 py-1.5 mb-4 md:mb-8 text-xs uppercase tracking-[0.3em] font-medium"
                 style={{ border: '1px solid var(--accent)', color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
@@ -153,7 +154,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   to="/demand-status"
-                  className="inline-flex items-center gap-3 px-8 py-4 text-sm uppercase tracking-widest font-medium transition-all duration-300"
+                  className="inline-flex items-center gap-3 px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm uppercase tracking-widest font-medium transition-all duration-300"
                   style={{ border: '1px solid var(--border)', color: 'var(--text-on-accent)', fontFamily: 'Outfit, sans-serif' }}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-on-accent)' }}>
@@ -263,7 +264,7 @@ export default function HomePage() {
               { step: '3', title: t('home.step3_title'), desc: t('home.step3_desc'), icon: 'M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z' },
             ].map((item, i) => (
               <motion.div key={item.step} variants={fadeInUp} custom={i}
-                className="p-8 text-center"
+                className="p-5 md:p-8 text-center"
                 style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                 <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center text-lg font-bold"
                   style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)', fontFamily: 'Outfit, sans-serif' }}>
@@ -443,7 +444,7 @@ export default function HomePage() {
           <motion.div variants={fadeInUp}>
             <Link
               to="/catalog"
-              className="group inline-flex items-center gap-3 px-10 py-5 text-sm uppercase tracking-widest font-bold transition-all duration-300 hover:scale-105"
+              className="group inline-flex items-center gap-3 px-6 sm:px-8 md:px-10 py-4 md:py-5 text-xs sm:text-sm uppercase tracking-widest font-bold transition-all duration-300 hover:scale-105"
               style={{ backgroundColor: 'var(--bg-card)', color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
               {t('home.cta_bottom_btn')}
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">

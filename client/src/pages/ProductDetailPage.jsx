@@ -173,14 +173,14 @@ export default function ProductDetailPage() {
                   {images.length > 1 && (
                     <>
                       <button onClick={handlePrev}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-full backdrop-blur-sm transition-opacity opacity-0 group-hover:opacity-100"
+                        className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-full backdrop-blur-sm transition-opacity opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                         style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: '#FFFFFF', borderRadius: '50%' }}>
                         <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                         </svg>
                       </button>
                       <button onClick={handleNext}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-full backdrop-blur-sm transition-opacity opacity-0 group-hover:opacity-100"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-full backdrop-blur-sm transition-opacity opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                         style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: '#FFFFFF', borderRadius: '50%' }}>
                         <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -353,13 +353,13 @@ export default function ProductDetailPage() {
               </label>
               <div className="flex items-center gap-3">
                 <button onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  className="w-9 h-9 flex items-center justify-center text-sm font-bold"
+                  className="w-10 h-10 flex items-center justify-center text-sm font-bold"
                   style={{ border: '1px solid #222', color: '#FFFFFF' }}>−</button>
                 <span className="w-9 text-center text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
                   {quantity}
                 </span>
                 <button onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
-                  className="w-9 h-9 flex items-center justify-center text-sm font-bold"
+                  className="w-10 h-10 flex items-center justify-center text-sm font-bold"
                   style={{ border: '1px solid #222', color: '#FFFFFF' }}>+</button>
                 <span className="text-xs" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
                   {product.stock} {t('product.available')}

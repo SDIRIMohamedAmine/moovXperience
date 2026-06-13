@@ -108,7 +108,7 @@ export default function CartPage() {
                         </span>
                       </div>
                       <button onClick={() => removeItem(item.key)}
-                        className="p-1.5 transition-colors"
+                        className="p-2.5 transition-colors"
                         style={{ color: '#666' }}
                         onMouseEnter={(e) => (e.target.style.color = '#FF6B6B')}
                         onMouseLeave={(e) => (e.target.style.color = '#666')}>
@@ -156,13 +156,13 @@ export default function CartPage() {
                     <div className="mt-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <button onClick={() => updateQuantity(item.key, item.quantity - 1)}
-                          className="w-7 h-7 flex items-center justify-center text-sm"
+                          className="w-9 h-9 flex items-center justify-center text-sm"
                           style={{ border: '1px solid #222', color: '#FFFFFF' }}>−</button>
-                        <span className="w-7 text-center text-sm font-medium" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                        <span className="w-8 text-center text-sm font-medium" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
                           {item.quantity}
                         </span>
                         <button onClick={() => updateQuantity(item.key, item.quantity + 1)}
-                          className="w-7 h-7 flex items-center justify-center text-sm"
+                          className="w-9 h-9 flex items-center justify-center text-sm"
                           style={{ border: '1px solid #222', color: '#FFFFFF' }}>+</button>
                       </div>
                       <span className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>

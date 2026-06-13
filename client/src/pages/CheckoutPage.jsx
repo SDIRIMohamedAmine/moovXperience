@@ -145,17 +145,17 @@ export default function CheckoutPage() {
         <div className="flex items-center gap-2 mt-2">
           <button
             onClick={() => updateQuantity(item.key, item.quantity - 1)}
-            className="w-6 h-6 flex items-center justify-center text-xs"
+            className="w-8 h-8 flex items-center justify-center text-sm"
             style={{ backgroundColor: '#222', color: '#fff', border: '1px solid #333' }}
           >
             -
           </button>
-          <span className="text-xs w-6 text-center" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+          <span className="text-sm w-8 text-center" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
             {item.quantity}
           </span>
           <button
             onClick={() => updateQuantity(item.key, item.quantity + 1)}
-            className="w-6 h-6 flex items-center justify-center text-xs"
+            className="w-8 h-8 flex items-center justify-center text-sm"
             style={{ backgroundColor: '#222', color: '#fff', border: '1px solid #333' }}
           >
             +
@@ -170,7 +170,7 @@ export default function CheckoutPage() {
         </div>
         <button
           onClick={() => removeItem(item.key)}
-          className="text-xs px-2 py-1"
+          className="text-xs px-3 py-2"
           style={{ color: '#FF6B6B', border: '1px solid #FF6B6B33' }}
         >
           {t('checkout.remove')}
