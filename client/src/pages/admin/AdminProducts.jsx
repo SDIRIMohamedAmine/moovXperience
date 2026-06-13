@@ -74,18 +74,11 @@ export default function AdminProducts() {
         <div className="space-y-2">
           {products.map((product) => (
             <div key={product.id} className="flex items-center gap-4 p-4 transition-all"
-              style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a', opacity: product.deleted_at ? 0.5 : 1 }}>
+              style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium truncate" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-                    {product.name}
-                  </p>
-                  {product.deleted_at && (
-                    <span className="text-xs px-2 py-0.5" style={{ backgroundColor: 'rgba(255,107,107,0.1)', color: '#FF6B6B', fontFamily: 'Outfit, sans-serif' }}>
-                      {t('admin.deleted_label')}
-                    </span>
-                  )}
-                </div>
+                <p className="text-sm font-medium truncate" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                  {product.name}
+                </p>
                 <p className="text-xs" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
                   {product.categories?.name || '—'} · {product.profiles?.full_name || '—'} · {product.price_per_day} {t('admin.tnd_day')}
                   {product.price_purchase ? ` · ${product.price_purchase} ${t('admin.tnd_purchase')}` : ''}
@@ -108,20 +101,16 @@ export default function AdminProducts() {
                 }}>
                 {product.is_available ? t('admin.toggle_active') : t('admin.toggle_inactive')}
               </button>
-              {!product.deleted_at && (
-                <>
-                  <Link to={`/admin/products/${product.id}/edit`}
-                    className="text-xs px-3 py-1.5 uppercase tracking-wider font-medium transition-colors"
-                    style={{ border: '1px solid var(--accent)', color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
-                    {t('admin.edit')}
-                  </Link>
-                  <button onClick={() => handleDelete(product.id)}
-                    className="text-xs px-3 py-1.5 uppercase tracking-wider font-medium transition-colors"
-                    style={{ border: '1px solid #FF6B6B', color: '#FF6B6B', fontFamily: 'Outfit, sans-serif' }}>
-                    {t('admin.delete')}
-                  </button>
-                </>
-              )}
+              <Link to={`/admin/products/${product.id}/edit`}
+                className="text-xs px-3 py-1.5 uppercase tracking-wider font-medium transition-colors"
+                style={{ border: '1px solid var(--accent)', color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                {t('admin.edit')}
+              </Link>
+              <button onClick={() => handleDelete(product.id)}
+                className="text-xs px-3 py-1.5 uppercase tracking-wider font-medium transition-colors"
+                style={{ border: '1px solid #FF6B6B', color: '#FF6B6B', fontFamily: 'Outfit, sans-serif' }}>
+                {t('admin.delete')}
+              </button>
             </div>
           ))}
         </div>

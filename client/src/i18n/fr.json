@@ -569,7 +569,16 @@
     "rental_deleted": "Réservation supprimée",
     "status_changed": "Statut changé",
     "edit": "Modifier",
-    "pending": "En attente"
+    "pending": "En attente",
+    "products": "Solutions",
+    "categories": "Catégories",
+    "recent_bookings": "Réservations récentes",
+    "recent_demands": "Demandes récentes",
+    "view_all": "Voir tout",
+    "no_rentals": "Aucune réservation",
+    "no_demands": "Aucune demande",
+    "group_by_date": "Par date",
+    "group_by_user": "Par client"
   },
   "media": {
     "drag_drop": "Glissez vos fichiers ici ou",

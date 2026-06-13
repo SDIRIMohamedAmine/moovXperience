@@ -91,6 +91,7 @@ export async function deleteProductAdmin(id) {
 export async function fetchAllRentals(params = {}) {
   const qs = new URLSearchParams()
   if (params.status) qs.set('status', params.status)
+  if (params.client_id) qs.set('client_id', params.client_id)
   if (params.limit) qs.set('limit', params.limit)
   const res = await fetch(`${API_URL}/admin/rentals?${qs}`, { headers: authHeaders() })
   if (!res.ok) throw new Error('Failed to fetch rentals')

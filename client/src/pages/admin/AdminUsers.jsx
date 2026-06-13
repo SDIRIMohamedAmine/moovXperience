@@ -5,40 +5,57 @@ import { showToast } from '../../components/Toast'
 import { useTranslation } from '../../i18n/LanguageContext'
 import { getDateLocale } from '../../lib/locale'
 
-const roleColors = {
-  client: { bg: '#4CAF50' },
-  supplier: { bg: '#7B61FF' },
-  admin: { bg: '#D23AB0' },
-}
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 export default function AdminUsers() {
   const { t, lang } = useTranslation()
   const [users, setUsers] = useState([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('')
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [userDemands, setUserDemands] = useState([])
+  const [loadingDemands, setLoadingDemands] = useState(false)
 
   useEffect(() => {
     if (isAdminLoggedIn()) {
       setLoading(true)
-      fetchUsers({ role: filter || undefined })
-        .then((data) => { setUsers(data.users); setTotal(data.total) })
+      fetchUsers()
+        .then((data) => {
+          // Only show clients
+          const clients = (data.users || []).filter(u => u.role !== 'admin')
+          setUsers(clients)
+          setTotal(clients.length)
+        })
         .catch(console.error)
         .finally(() => setLoading(false))
     }
-  }, [filter])
+  }, [])
 
   if (!isAdminLoggedIn()) {
     return <Navigate to="/admin/login" replace />
   }
 
-  const handleRoleChange = async (userId, newRole) => {
+  const loadUserDemands = async (user) => {
+    if (selectedUser?.id === user.id) {
+      setSelectedUser(null)
+      setUserDemands([])
+      return
+    }
+    setSelectedUser(user)
+    setLoadingDemands(true)
     try {
-      await updateUserRole(userId, newRole)
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u))
-      showToast(t('admin.role_updated'), 'success')
+      const token = localStorage.getItem('admin-token')
+      const res = await fetch(`${API_URL}/quotes/all?client_id=${user.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setUserDemands(data.quotes || data || [])
+      }
     } catch (err) {
-      showToast(err.message, 'error')
+      console.error(err)
+    } finally {
+      setLoadingDemands(false)
     }
   }
 
@@ -53,22 +70,6 @@ export default function AdminUsers() {
         </h1>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-2 mb-6">
-        {['', 'client', 'supplier', 'admin'].map((r) => (
-          <button key={r} onClick={() => setFilter(r)}
-            className="px-4 py-2 text-xs uppercase tracking-wider font-medium transition-all"
-            style={{
-              backgroundColor: filter === r ? 'var(--accent)' : 'transparent',
-              color: filter === r ? '#FFFFFF' : '#666',
-              border: `1px solid ${filter === r ? 'var(--accent)' : '#222'}`,
-              fontFamily: 'Outfit, sans-serif',
-            }}>
-            {r === '' ? t('admin.all_roles') : t(`admin.user_role_${r}`)}
-          </button>
-        ))}
-      </div>
-
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <div className="w-8 h-8 border-2 animate-spin" style={{ borderColor: '#222', borderTopColor: 'var(--accent)' }} />
@@ -76,33 +77,76 @@ export default function AdminUsers() {
       ) : (
         <div className="space-y-2">
           {users.map((user) => {
-            const role = roleColors[user.role] || roleColors.client
+            const isSelected = selectedUser?.id === user.id
             return (
-              <div key={user.id} className="flex items-center gap-4 p-4 transition-all"
-                style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
-                <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
-                  style={{ background: 'linear-gradient(135deg, var(--accent), #AE59CE)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-                  {(user.full_name || 'U').charAt(0).toUpperCase()}
+              <div key={user.id}>
+                <div
+                  className="flex items-center gap-4 p-4 cursor-pointer transition-all"
+                  style={{ backgroundColor: isSelected ? '#1a1a1a' : '#141414', border: `1px solid ${isSelected ? 'var(--accent)' : '#1a1a1a'}` }}
+                  onClick={() => loadUserDemands(user)}
+                >
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
+                    style={{ background: 'linear-gradient(135deg, var(--accent), #AE59CE)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                    {(user.full_name || 'U').charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                      {user.full_name || t('admin.no_name')}
+                    </p>
+                    <p className="text-xs truncate" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                      {user.email || '—'} · {user.phone || '—'} · {new Date(user.created_at).toLocaleDateString(getDateLocale(lang))}
+                    </p>
+                  </div>
+                  {user.company_name && (
+                    <span className="text-xs px-2.5 py-1" style={{ backgroundColor: 'rgba(176,186,153,0.1)', color: '#B0BA99', fontFamily: 'Outfit, sans-serif' }}>
+                      {user.company_name}
+                    </span>
+                  )}
+                  <svg className={`w-4 h-4 transition-transform ${isSelected ? 'rotate-180' : ''}`} fill="none" stroke="#666" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
-                    {user.full_name || t('admin.no_name')}
-                  </p>
-                  <p className="text-xs truncate" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
-                    {user.phone || '—'} · {new Date(user.created_at).toLocaleDateString(getDateLocale(lang))}
-                  </p>
-                </div>
-                <select value={user.role} onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                  className="px-3 py-1.5 text-xs uppercase tracking-wider"
-                  style={{ backgroundColor: '#0D0D0D', border: '1px solid #222', color: role.bg, fontFamily: 'Outfit, sans-serif' }}>
-                  <option value="client">{t('admin.user_role_client')}</option>
-                  <option value="supplier">{t('admin.user_role_supplier')}</option>
-                  <option value="admin">{t('admin.user_role_admin')}</option>
-                </select>
-                <span className="text-xs px-2.5 py-1 uppercase tracking-wider font-semibold"
-                  style={{ backgroundColor: `${role.bg}20`, color: role.bg, fontFamily: 'Outfit, sans-serif', fontSize: '10px' }}>
-                  {t(`admin.user_role_${user.role}`)}
-                </span>
+
+                {/* Expanded: user demands */}
+                {isSelected && (
+                  <div className="px-4 pb-4" style={{ backgroundColor: '#141414', borderLeft: '1px solid var(--accent)', borderRight: '1px solid #1a1a1a', borderBottom: '1px solid #1a1a1a' }}>
+                    {loadingDemands ? (
+                      <div className="flex justify-center py-6">
+                        <div className="w-6 h-6 border-2 animate-spin" style={{ borderColor: '#222', borderTopColor: 'var(--accent)' }} />
+                      </div>
+                    ) : userDemands.length > 0 ? (
+                      <div className="space-y-2 pt-2">
+                        <p className="text-xs uppercase tracking-wider font-semibold mb-2" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                          {t('profile.my_demands')} ({userDemands.length})
+                        </p>
+                        {userDemands.map((demand) => (
+                          <div key={demand.id} className="flex items-center gap-3 p-3" style={{ backgroundColor: '#0D0D0D', border: '1px solid #222' }}>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                                {demand.products?.name || demand.product_name || '—'}
+                              </p>
+                              <p className="text-xs" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                                {demand.mode === 'rental' ? t('rentals.rental') : t('rentals.purchase')} · {demand.estimated_total} TND · {new Date(demand.created_at).toLocaleDateString(getDateLocale(lang))}
+                              </p>
+                            </div>
+                            <span className="text-xs px-2 py-0.5 uppercase tracking-wider font-semibold"
+                              style={{
+                                backgroundColor: demand.status === 'pending' ? 'rgba(255,152,0,0.1)' : demand.status === 'accepted' ? 'rgba(76,175,80,0.1)' : demand.status === 'refused' ? 'rgba(255,107,107,0.1)' : 'rgba(136,136,136,0.1)',
+                                color: demand.status === 'pending' ? '#FF9800' : demand.status === 'accepted' ? '#4CAF50' : demand.status === 'refused' ? '#FF6B6B' : '#888',
+                                fontFamily: 'Outfit, sans-serif', fontSize: '10px',
+                              }}>
+                              {t(`demand_status.status.${demand.status}`)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs py-4 text-center" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                        {t('profile.no_demands')}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             )
           })}
