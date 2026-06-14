@@ -1,0 +1,1 @@
+import{t as e}from"./supabase-CVgcG71A.js";var t=`http://localhost:3001/api`;async function n(n,r){let i=r||await e(),a={"Content-Type":`application/json`};i&&(a.Authorization=`Bearer ${i}`);let o=await fetch(`${t}/quotes`,{method:`POST`,headers:a,body:JSON.stringify(n)});if(!o.ok){let e=await o.json();throw Error(e.error||`Failed to submit quote`)}return o.json()}export{n as t};
