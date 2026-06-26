@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase.js'
 import { verifyAdminToken } from '../routes/adminAuth.js'
+import { cacheGet, cacheSet, cacheDel } from '../lib/cache.js'
 
 // Verify admin role - accepts both Supabase tokens and admin .env tokens
 async function requireAdmin(req, res) {
@@ -36,6 +37,9 @@ async function requireAdmin(req, res) {
 export async function getStats(req, res) {
   if (!(await requireAdmin(req, res))) return
 
+  const cached = await cacheGet('admin:stats')
+  if (cached) return res.json(cached)
+
   const [users, products, rentals, quotes] = await Promise.all([
     supabase.from('profiles').select('id', { count: 'exact', head: true }),
     supabase.from('products').select('id', { count: 'exact', head: true }).is('deleted_at', null),
@@ -63,7 +67,7 @@ export async function getStats(req, res) {
     .select('id', { count: 'exact', head: true })
     .eq('status', 'pending')
 
-  res.json({
+  const stats = {
     users: users.count || 0,
     suppliers: suppliers || 0,
     clients: clients || 0,
@@ -72,7 +76,9 @@ export async function getStats(req, res) {
     quotes: quotes.count || 0,
     pendingRentals: pendingRentals || 0,
     pendingQuotes: pendingQuotes || 0,
-  })
+  }
+  cacheSet('admin:stats', stats, 30)
+  res.json(stats)
 }
 
 export async function getUsers(req, res) {
@@ -121,6 +127,7 @@ export async function updateUserRole(req, res) {
     return res.status(400).json({ error: 'Operation failed' })
   }
 
+  cacheDel('admin:stats')
   res.json({ success: true })
 }
 
@@ -170,6 +177,9 @@ export async function toggleProductAvailability(req, res) {
     return res.status(400).json({ error: 'Operation failed' })
   }
 
+  cacheDel('products:*')
+  cacheDel(`product:${id}`)
+  cacheDel('admin:stats')
   res.json({ success: true, is_available: !product.is_available })
 }
 
@@ -188,6 +198,9 @@ export async function deleteProductAdmin(req, res) {
     return res.status(400).json({ error: 'Operation failed' })
   }
 
+  cacheDel('products:*')
+  cacheDel(`product:${id}`)
+  cacheDel('admin:stats')
   res.json({ success: true })
 }
 
@@ -254,6 +267,7 @@ export async function deleteRental(req, res) {
     return res.status(400).json({ error: 'Failed to delete rental' })
   }
 
+  cacheDel('admin:stats')
   res.json({ success: true })
 }
 
@@ -296,6 +310,8 @@ export async function createCategory(req, res) {
     return res.status(400).json({ error: 'Operation failed' })
   }
 
+  cacheDel('categories:*')
+  cacheDel('admin:stats')
   res.status(201).json(data)
 }
 
@@ -326,6 +342,9 @@ export async function updateCategory(req, res) {
     return res.status(400).json({ error: 'Operation failed' })
   }
 
+  cacheDel('categories:*')
+  cacheDel('products:*')
+  cacheDel('admin:stats')
   res.json(data)
 }
 
@@ -355,5 +374,179 @@ export async function deleteCategory(req, res) {
     return res.status(400).json({ error: 'Operation failed' })
   }
 
+  cacheDel('categories:*')
+  cacheDel('admin:stats')
   res.json({ success: true })
 }
+
+// --- Global Settings ---
+
+export async function getSettings(req, res) {
+  if (!(await requireAdmin(req, res))) return
+
+  const { data, error } = await supabase
+    .from('global_settings')
+    .select('key, value')
+
+  if (error) {
+    console.error('Admin operation error:', error.message)
+    return res.status(500).json({ error: 'Failed to fetch settings' })
+  }
+
+  const settings = {}
+  for (const row of data) settings[row.key] = row.value
+  res.json(settings)
+}
+
+export async function updateSetting(req, res) {
+  if (!(await requireAdmin(req, res))) return
+
+  const { key, value } = req.body
+  if (!key || value === undefined) {
+    return res.status(400).json({ error: 'key and value required' })
+  }
+
+  const { error } = await supabase
+    .from('global_settings')
+    .upsert({ key, value, updated_at: new Date().toISOString() })
+
+  if (error) {
+    console.error('Admin operation error:', error.message)
+    return res.status(500).json({ error: 'Failed to update setting' })
+  }
+
+  cacheDel('settings')
+  res.json({ success: true })
+}
+
+// --- Site Pages (CMS) ---
+
+export async function upsertPage(req, res) {
+  if (!(await requireAdmin(req, res))) return
+
+  const { slug } = req.params
+  const { lang, title, subtitle, tag, sections } = req.body
+
+  const { error } = await supabase
+    .from('site_pages')
+    .upsert({
+      slug,
+      lang: lang || 'fr',
+      title,
+      subtitle,
+      tag,
+      sections: sections || [],
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'slug,lang' })
+
+  if (error) {
+    console.error('Admin operation error:', error.message)
+    return res.status(500).json({ error: 'Failed to save page' })
+  }
+
+  cacheDel(`page:${slug}`)
+  res.json({ success: true })
+}
+
+// --- Blog Posts ---
+
+export async function createBlogPost(req, res) {
+  if (!(await requireAdmin(req, res))) return
+
+  const { slug, lang, title, excerpt, body, cover_image, status } = req.body
+  if (!slug || !title) {
+    return res.status(400).json({ error: 'slug and title required' })
+  }
+
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .insert({
+      slug,
+      lang: lang || 'fr',
+      title,
+      excerpt,
+      body,
+      cover_image,
+      status: status || 'draft',
+      published_at: status === 'published' ? new Date().toISOString() : null,
+    })
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Admin operation error:', error.message)
+    return res.status(500).json({ error: 'Failed to create post' })
+  }
+
+  cacheDel('blog:*')
+  res.json(data)
+}
+
+export async function updateBlogPost(req, res) {
+  if (!(await requireAdmin(req, res))) return
+
+  const { id } = req.params
+  const { slug, lang, title, excerpt, body, cover_image, status } = req.body
+
+  const updates = { updated_at: new Date().toISOString() }
+  if (slug !== undefined) updates.slug = slug
+  if (lang !== undefined) updates.lang = lang
+  if (title !== undefined) updates.title = title
+  if (excerpt !== undefined) updates.excerpt = excerpt
+  if (body !== undefined) updates.body = body
+  if (cover_image !== undefined) updates.cover_image = cover_image
+  if (status !== undefined) {
+    updates.status = status
+    if (status === 'published') updates.published_at = new Date().toISOString()
+  }
+
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Admin operation error:', error.message)
+    return res.status(500).json({ error: 'Failed to update post' })
+  }
+
+  cacheDel('blog:*')
+  res.json(data)
+}
+
+export async function deleteBlogPost(req, res) {
+  if (!(await requireAdmin(req, res))) return
+
+  const { id } = req.params
+  const { error } = await supabase
+    .from('blog_posts')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('Admin operation error:', error.message)
+    return res.status(500).json({ error: 'Failed to delete post' })
+  }
+
+  cacheDel('blog:*')
+  res.json({ success: true })
+}
+
+export async function getAllBlogPosts(req, res) {
+  if (!(await requireAdmin(req, res))) return
+
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Admin operation error:', error.message)
+    return res.status(500).json({ error: 'Failed to fetch posts' })
+  }
+
+  res.json(data)
+}
+

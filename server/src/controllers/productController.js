@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase.js'
+import { cacheGet, cacheSet, cacheDel } from '../lib/cache.js'
 
 function sanitizeSearch(input) {
   if (!input) return ''
@@ -10,6 +11,10 @@ export async function getProducts(req, res) {
 
   const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100)
   const safeOffset = Math.max(Number(offset) || 0, 0)
+
+  const cacheKey = `products:${category || ''}:${search || ''}:${mode || ''}:${min_price || ''}:${max_price || ''}:${safeLimit}:${safeOffset}`
+  const cached = await cacheGet(cacheKey)
+  if (cached) return res.json(cached)
 
   let query = supabase
     .from('products')
@@ -58,7 +63,9 @@ export async function getProducts(req, res) {
     return res.status(500).json({ error: 'Failed to fetch products' })
   }
 
-  res.json({ products: data, total: count })
+  const result = { products: data, total: count }
+  cacheSet(cacheKey, result, 60)
+  res.json(result)
 }
 
 export async function getProduct(req, res) {
@@ -67,6 +74,10 @@ export async function getProduct(req, res) {
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
     return res.status(400).json({ error: 'Invalid product ID' })
   }
+
+  const cacheKey = `product:${id}`
+  const cached = await cacheGet(cacheKey)
+  if (cached) return res.json(cached)
 
   const { data, error } = await supabase
     .from('products')
@@ -79,6 +90,7 @@ export async function getProduct(req, res) {
     return res.status(404).json({ error: 'Product not found' })
   }
 
+  cacheSet(cacheKey, data, 120)
   res.json(data)
 }
 
@@ -175,6 +187,8 @@ export async function createProduct(req, res) {
     return res.status(400).json({ error: 'Failed to create product' })
   }
 
+  cacheDel('products:*')
+  cacheDel('admin:stats')
   res.status(201).json(data)
 }
 
@@ -273,6 +287,9 @@ export async function updateProduct(req, res) {
     return res.status(400).json({ error: 'Failed to update product' })
   }
 
+  cacheDel('products:*')
+  cacheDel(`product:${id}`)
+  cacheDel('admin:stats')
   res.json(data)
 }
 
@@ -303,5 +320,8 @@ export async function deleteProduct(req, res) {
     return res.status(400).json({ error: 'Operation failed' })
   }
 
+  cacheDel('products:*')
+  cacheDel(`product:${id}`)
+  cacheDel('admin:stats')
   res.json({ success: true })
 }

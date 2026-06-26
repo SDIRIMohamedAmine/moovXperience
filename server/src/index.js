@@ -13,6 +13,9 @@ import reviewRoutes from './routes/reviews.js'
 import quoteRoutes from './routes/quotes.js'
 import adminRoutes from './routes/admin.js'
 import adminAuthRoutes from './routes/adminAuth.js'
+import { getPublicSettings } from './controllers/settingsController.js'
+import { getPage } from './controllers/pageController.js'
+import { getPublishedPosts, getPostBySlug } from './controllers/blogController.js'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerSpec } from './swagger.js'
 
@@ -101,6 +104,12 @@ app.use('/api/reviews', reviewRoutes)
 app.use('/api/quotes', quoteRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/admin-auth', authLimiter, adminAuthRoutes)
+
+// Public settings, pages, blog
+app.get('/api/settings', getPublicSettings)
+app.get('/api/pages/:slug', getPage)
+app.get('/api/blog', getPublishedPosts)
+app.get('/api/blog/:slug', getPostBySlug)
 
 // 404 handler
 app.use((req, res) => {
