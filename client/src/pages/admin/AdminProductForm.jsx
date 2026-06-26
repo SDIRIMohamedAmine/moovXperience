@@ -132,16 +132,16 @@ export default function AdminProductForm() {
     )
   }
 
-  const inputStyle = { backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }
-  const labelStyle = { color: '#666', fontFamily: 'Outfit, sans-serif' }
+  const inputStyle = { backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF' }
+  const labelStyle = { color: '#666' }
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-8">
-        <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+        <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)' }}>
           {t('admin.login_title')}
         </p>
-        <h1 className="text-3xl font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+        <h1 className="text-3xl font-bold" style={{  color: '#FFFFFF' }}>
           {isEdit ? t('admin.product_edit_title') : t('admin.product_new_title')}
         </h1>
       </div>
@@ -217,7 +217,7 @@ export default function AdminProductForm() {
         <div className="flex items-center gap-3">
           <input type="checkbox" id="is_available" checked={form.is_available} onChange={(e) => handleChange('is_available', e.target.checked)}
             className="w-4 h-4" style={{ accentColor: 'var(--accent)' }} />
-          <label htmlFor="is_available" className="text-sm" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+          <label htmlFor="is_available" className="text-sm" style={{ color: '#FFFFFF' }}>
             {t('admin.product_available_label')}
           </label>
         </div>
@@ -228,7 +228,7 @@ export default function AdminProductForm() {
             style={{
               background: 'linear-gradient(135deg, var(--accent), #AE59CE)',
               color: '#FFFFFF',
-              fontFamily: 'Outfit, sans-serif',
+              
               opacity: saving ? 0.6 : 1,
               cursor: saving ? 'not-allowed' : 'pointer',
             }}>
@@ -236,7 +236,7 @@ export default function AdminProductForm() {
           </button>
           <button type="button" onClick={() => navigate('/admin/products')}
             className="px-6 py-3 text-xs uppercase tracking-widest font-medium"
-            style={{ border: '1px solid #222', color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+            style={{ border: '1px solid #222', color: '#666' }}>
             {t('common.cancel')}
           </button>
         </div>

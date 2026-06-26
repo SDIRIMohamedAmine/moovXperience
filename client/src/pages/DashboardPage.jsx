@@ -5,6 +5,8 @@ import { getFreshToken } from '../lib/supabase'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
 import { fetchMyProducts } from '../services/productService'
+import { motion } from 'framer-motion'
+import { fadeInUp, stagger, scaleIn, viewportOnce } from '../lib/animations'
 import { fetchMyRentals } from '../services/rentalService'
 
 function StatCard({ icon, value, label, description, to, color, colors }) {
@@ -21,14 +23,14 @@ function StatCard({ icon, value, label, description, to, color, colors }) {
             <div className="w-10 h-10 flex items-center justify-center rounded-lg" style={{ backgroundColor: `${color}15` }}>
               {icon}
             </div>
-            <div className="text-2xl font-light" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: color }}>
+            <div className="text-2xl font-light" style={{ color: color }}>
               {value ?? '...'}
             </div>
           </div>
-          <p className="text-xs uppercase tracking-[0.15em] mb-1 font-medium" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="text-xs uppercase tracking-[0.15em] mb-1 font-medium" style={{ color: colors.primary }}>
             {label}
           </p>
-          <p className="text-xs" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="text-xs" style={{ color: colors.textLight }}>
             {description}
           </p>
         </div>
@@ -47,7 +49,7 @@ function QuickAction({ icon, label, to, colors }) {
       <div className="w-9 h-9 flex items-center justify-center rounded-lg" style={{ backgroundColor: colors.accentLight }}>
         {icon}
       </div>
-      <span className="text-sm font-medium" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+      <span className="text-sm font-medium" style={{ color: colors.primary }}>
         {label}
       </span>
       <svg className="w-4 h-4 ml-auto" fill="none" stroke={colors.textLight} strokeWidth="1.5" viewBox="0 0 24 24">
@@ -114,14 +116,14 @@ export default function DashboardPage() {
       {/* Welcome section */}
       <div className="flex items-center gap-4 mb-10">
         <div className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-medium"
-          style={{ backgroundColor: colors.accent, color: colors.textWhite, fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+          style={{ backgroundColor: colors.accent, color: colors.textWhite }}>
           {initial}
         </div>
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] mb-1" style={{ color: colors.accent, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="text-xs uppercase tracking-[0.2em] mb-1" style={{ color: colors.accent }}>
             {isSupplier ? t('dashboard.supplier_space') : t('dashboard.client_space')}
           </p>
-          <h1 className="text-2xl md:text-3xl" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary, fontWeight: 500 }}>
+          <h1 className="text-2xl md:text-3xl" style={{ color: colors.primary, fontWeight: 500 }}>
             {t('dashboard.welcome')}, {displayName}
           </h1>
         </div>
@@ -186,7 +188,7 @@ export default function DashboardPage() {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Recent activity */}
         <div className="lg:col-span-2">
-          <h2 className="text-sm uppercase tracking-[0.2em] mb-4 font-medium" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <h2 className="text-sm uppercase tracking-[0.2em] mb-4 font-medium" style={{ color: colors.primary }}>
             {t('dashboard.recent_activity')}
           </h2>
           <div className="space-y-3">
@@ -198,28 +200,27 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 rounded-full" style={{
-                    backgroundColor: rental.status === 'pending' ? '#FF9800' : rental.status === 'confirmed' ? '#4CAF50' : rental.status === 'cancelled' ? '#F44336' : colors.accent
+                    backgroundColor: rental.status === 'pending' ? 'var(--status-pending-text)' : rental.status === 'confirmed' ? 'var(--status-accepted-text)' : rental.status === 'cancelled' ? 'var(--status-refused-text)' : colors.accent
                   }} />
                   <div>
-                    <p className="text-sm font-medium" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <p className="text-sm font-medium" style={{ color: colors.primary }}>
                       {rental.rental_items?.[0]?.products?.name || `#${rental.id.slice(0, 8)}`}
                     </p>
-                    <p className="text-xs" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <p className="text-xs" style={{ color: colors.textLight }}>
                       {new Date(rental.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </p>
                   </div>
                 </div>
                 <span className="text-xs px-2 py-1 uppercase tracking-wider" style={{
-                  backgroundColor: rental.status === 'pending' ? '#FFF3E0' : rental.status === 'confirmed' ? '#E8F5E9' : rental.status === 'cancelled' ? '#FFEBEE' : colors.accentLight,
-                  color: rental.status === 'pending' ? '#E65100' : rental.status === 'confirmed' ? '#2E7D32' : rental.status === 'cancelled' ? '#C62828' : colors.accent,
-                  fontFamily: 'DM Sans, system-ui, sans-serif',
+                  backgroundColor: rental.status === 'pending' ? 'var(--status-pending-bg)' : rental.status === 'confirmed' ? 'var(--status-accepted-bg)' : rental.status === 'cancelled' ? 'var(--status-refused-bg)' : colors.accentLight,
+                  color: rental.status === 'pending' ? 'var(--status-pending-text)' : rental.status === 'confirmed' ? 'var(--status-accepted-text)' : rental.status === 'cancelled' ? 'var(--status-refused-text)' : colors.accent,
                 }}>
                   {t(`rentals.status.${rental.status}`)}
                 </span>
               </div>
             )) : (
               <div className="p-8 text-center" style={{ backgroundColor: colors.bgWhite, border: `1px solid ${colors.border}` }}>
-                <p className="text-sm" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                <p className="text-sm" style={{ color: colors.textLight }}>
                   {t('dashboard.no_activity')}
                 </p>
               </div>
@@ -229,7 +230,7 @@ export default function DashboardPage() {
 
         {/* Quick actions */}
         <div>
-          <h2 className="text-sm uppercase tracking-[0.2em] mb-4 font-medium" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <h2 className="text-sm uppercase tracking-[0.2em] mb-4 font-medium" style={{ color: colors.primary }}>
             {t('dashboard.quick_actions')}
           </h2>
           <div className="space-y-2">

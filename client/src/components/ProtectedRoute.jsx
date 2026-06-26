@@ -28,10 +28,10 @@ export default function ProtectedRoute({ children, allowedRoles }) {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
-        <p className="text-sm" style={{ color: '#8A939B', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+        <p className="text-sm" style={{ color: '#8A939B' }}>
           {t('auth.login_required_action')}
         </p>
-        <Link to="/" className="text-sm" style={{ color: '#76ABAE', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+        <Link to="/" className="text-sm" style={{ color: '#76ABAE' }}>
           {t('common.back_home')}
         </Link>
       </div>
@@ -41,20 +41,20 @@ export default function ProtectedRoute({ children, allowedRoles }) {
   if (allowedRoles) {
     if (!profile) return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
-        <p className="text-sm" style={{ color: '#8A939B', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+        <p className="text-sm" style={{ color: '#8A939B' }}>
           {t('common.forbidden_desc')}
         </p>
-        <Link to="/" className="text-sm" style={{ color: '#76ABAE', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+        <Link to="/" className="text-sm" style={{ color: '#76ABAE' }}>
           {t('common.back_home')}
         </Link>
       </div>
     )
     if (!allowedRoles.includes(profile.role)) return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
-        <p className="text-sm" style={{ color: '#8A939B', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+        <p className="text-sm" style={{ color: '#8A939B' }}>
           {t('common.forbidden_desc')}
         </p>
-        <Link to="/" className="text-sm" style={{ color: '#76ABAE', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+        <Link to="/" className="text-sm" style={{ color: '#76ABAE' }}>
           {t('common.back_home')}
         </Link>
       </div>

@@ -67,17 +67,17 @@ export default function SupplierProductsPage() {
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: colors.accent, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: colors.accent }}>
             {t('supplier_products.tag')}
           </p>
-          <h1 className="text-3xl" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary, fontWeight: 600 }}>
+          <h1 className="text-3xl" style={{  color: colors.primary, fontWeight: 600 }}>
             {t('supplier_products.title')}
           </h1>
         </div>
         <Link
           to="/supplier/products/new"
           className="px-6 py-2.5 text-sm uppercase tracking-widest font-medium"
-          style={{ backgroundColor: colors.cta, color: colors.textWhite, fontFamily: 'DM Sans, system-ui, sans-serif' }}
+          style={{ backgroundColor: colors.cta, color: colors.textWhite }}
           onMouseEnter={(e) => (e.target.style.backgroundColor = colors.ctaHover)}
           onMouseLeave={(e) => (e.target.style.backgroundColor = colors.cta)}
         >
@@ -87,16 +87,16 @@ export default function SupplierProductsPage() {
 
       {products.length === 0 ? (
         <div className="text-center py-16" style={{ backgroundColor: colors.bgWhite, border: `1px solid ${colors.border}` }}>
-          <h3 className="text-xl mb-2" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary, fontWeight: 600 }}>
+          <h3 className="text-xl mb-2" style={{  color: colors.primary, fontWeight: 600 }}>
             {t('supplier_products.no_products')}
           </h3>
-          <p className="text-sm mb-6" style={{ color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="text-sm mb-6" style={{ color: colors.textSecondary }}>
             {t('supplier_products.no_products_desc')}
           </p>
           <Link
             to="/supplier/products/new"
             className="inline-block px-6 py-2.5 text-sm uppercase tracking-widest font-medium"
-            style={{ backgroundColor: colors.cta, color: colors.textWhite, fontFamily: 'DM Sans, system-ui, sans-serif' }}
+            style={{ backgroundColor: colors.cta, color: colors.textWhite }}
           >
             {t('supplier_products.add_product')}
           </Link>
@@ -127,7 +127,7 @@ export default function SupplierProductsPage() {
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-medium truncate" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <h3 className="text-sm font-medium truncate" style={{ color: colors.primary }}>
                       {product.name}
                     </h3>
                     {product.video_url && (
@@ -136,20 +136,20 @@ export default function SupplierProductsPage() {
                       </svg>
                     )}
                   </div>
-                  <p className="text-xs" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                  <p className="text-xs" style={{ color: colors.textLight }}>
                     {product.categories?.name || '—'} · {product.price_per_day} {t('catalog.currency')}/{t('catalog.price_per_day').toLowerCase()}
                     {product.price_purchase && (product.mode === 'sale' || product.mode === 'both')
                       ? ` · ${product.price_purchase} ${t('catalog.currency')} achat`
                       : ''}
                   </p>
-                  <p className="text-xs mt-0.5" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                  <p className="text-xs mt-0.5" style={{ color: colors.textLight }}>
                     Stock: {product.stock} · Min: {product.min_duration || 1}j
                   </p>
                 </div>
 
                 {/* Mode badge */}
                 <span className="text-xs px-2.5 py-1 flex-shrink-0"
-                  style={{ backgroundColor: mode.color, color: '#fff', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                  style={{ backgroundColor: mode.color, color: '#fff' }}>
                   {mode.label}
                 </span>
 
@@ -158,7 +158,7 @@ export default function SupplierProductsPage() {
                   style={{
                     backgroundColor: product.is_available ? colors.accentLight : '#FFF3E0',
                     color: product.is_available ? colors.accent : '#E64A19',
-                    fontFamily: 'DM Sans, system-ui, sans-serif',
+                    
                   }}>
                   {product.is_available ? t('catalog.available') : t('catalog.unavailable')}
                 </span>
@@ -168,7 +168,7 @@ export default function SupplierProductsPage() {
                   <Link
                     to={`/supplier/products/${product.id}/edit`}
                     className="text-xs px-3 py-1.5 uppercase tracking-wider transition-colors"
-                    style={{ border: `1px solid ${colors.border}`, color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }}
+                    style={{ border: `1px solid ${colors.border}`, color: colors.textSecondary }}
                     onMouseEnter={(e) => { e.target.style.borderColor = colors.accent; e.target.style.color = colors.accent }}
                     onMouseLeave={(e) => { e.target.style.borderColor = colors.border; e.target.style.color = colors.textSecondary }}
                   >
@@ -177,7 +177,7 @@ export default function SupplierProductsPage() {
                   <button
                     onClick={() => handleDelete(product.id)}
                     className="text-xs px-3 py-1.5 uppercase tracking-wider transition-colors"
-                    style={{ border: `1px solid ${colors.border}`, color: '#E64A19', fontFamily: 'DM Sans, system-ui, sans-serif' }}
+                    style={{ border: `1px solid ${colors.border}`, color: '#E64A19' }}
                     onMouseEnter={(e) => { e.target.style.borderColor = '#E64A19'; e.target.style.backgroundColor = '#FFF3E0' }}
                     onMouseLeave={(e) => { e.target.style.borderColor = colors.border; e.target.style.backgroundColor = 'transparent' }}
                   >

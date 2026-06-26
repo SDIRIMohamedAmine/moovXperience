@@ -13,13 +13,17 @@ const HomePage = lazy(() => import('./pages/HomePage'))
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/RegisterPage'))
 const ProfilePage = lazy(() => import('./pages/ProfilePage'))
-const CatalogPage = lazy(() => import('./pages/CatalogPage'))
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'))
 const CartPage = lazy(() => import('./pages/CartPage'))
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'))
 const QuotePage = lazy(() => import('./pages/QuotePage'))
 const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'))
 const DemandStatusPage = lazy(() => import('./pages/DemandStatusPage'))
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+const ContactPage = lazy(() => import('./pages/ContactPage'))
+const BlogPage = lazy(() => import('./pages/BlogPage'))
+const ProductsPage = lazy(() => import('./pages/ProductsPage'))
+const RentalsPage = lazy(() => import('./pages/RentalsPage'))
 
 // Supplier pages
 const DashboardPage = lazy(() => import('./pages/DashboardPage'))
@@ -35,6 +39,10 @@ const AdminRentals = lazy(() => import('./pages/admin/AdminRentals'))
 const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'))
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
 const AdminProductForm = lazy(() => import('./pages/admin/AdminProductForm'))
+const AdminAppearance = lazy(() => import('./pages/admin/AdminAppearance'))
+const AdminPageEditor = lazy(() => import('./pages/admin/AdminPageEditor'))
+const AdminBlog = lazy(() => import('./pages/admin/AdminBlog'))
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
 
 function LoadingFallback() {
   return (
@@ -58,9 +66,17 @@ function App() {
         </Route>
 
         {/* Public catalog */}
-        <Route path="/catalog" element={<CatalogPage />} />
+        <Route path="/catalog" element={<Navigate to="/products" replace />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/rentals" element={<RentalsPage />} />
         <Route path="/products/:id" element={<ProductDetailPage />} />
         <Route path="/products/:id/quote" element={<QuotePage />} />
+
+        {/* New pages */}
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
 
         {/* Cart — public */}
         <Route path="/cart" element={<CartPage />} />
@@ -82,6 +98,9 @@ function App() {
         <Route path="/admin/products/:id/edit" element={<AdminRoute><AdminProductForm /></AdminRoute>} />
         <Route path="/admin/rentals" element={<AdminRoute><AdminRentals /></AdminRoute>} />
         <Route path="/admin/categories" element={<AdminRoute><AdminCategories /></AdminRoute>} />
+        <Route path="/admin/appearance" element={<AdminRoute><AdminAppearance /></AdminRoute>} />
+        <Route path="/admin/page-editor" element={<AdminRoute><AdminPageEditor /></AdminRoute>} />
+        <Route path="/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

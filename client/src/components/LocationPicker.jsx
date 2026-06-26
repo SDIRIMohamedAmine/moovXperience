@@ -83,7 +83,7 @@ function SearchBox({ onSelect }) {
           onChange={(e) => handleSearch(e.target.value)}
           placeholder={t('checkout.search_location')}
           className="w-full pl-9 pr-4 py-2.5 text-sm"
-          style={{ border: `1px solid ${colors.border}`, color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif', backgroundColor: colors.bgWhite }}
+          style={{ border: `1px solid ${colors.border}`, color: colors.primary,  backgroundColor: colors.bgWhite }}
           onFocus={(e) => (e.target.style.borderColor = colors.accent)}
           onBlur={(e) => setTimeout(() => (e.target.style.borderColor = colors.border), 200)}
         />
@@ -101,7 +101,7 @@ function SearchBox({ onSelect }) {
             <button key={i}
               onClick={() => handleSelect(result)}
               className="w-full text-left px-3 py-2 text-sm transition-colors"
-              style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif', borderBottom: `1px solid ${colors.border}` }}
+              style={{ color: colors.primary,  borderBottom: `1px solid ${colors.border}` }}
               onMouseEnter={(e) => (e.target.style.backgroundColor = colors.accentLight)}
               onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}>
               {result.display_name}
@@ -162,7 +162,7 @@ export default function LocationPicker({ value, onChange }) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
           </svg>
-          <span className="text-sm" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <span className="text-sm" style={{ color: colors.primary,  }}>
             {value.text}
           </span>
         </div>

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { fadeInUp, stagger, viewportOnce } from '../lib/animations'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useCartStore } from '../stores/cartStore'
 import { useAuth } from '../hooks/useAuth'
@@ -49,7 +51,7 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="w-8 h-8 border-2 animate-spin" style={{ borderColor: '#222', borderTopColor: 'var(--accent)' }} />
+        <div className="w-8 h-8 border-2 animate-spin" style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }} />
       </div>
     )
   }
@@ -57,7 +59,7 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-xl font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+        <h2 className="text-xl font-bold" style={{  color: 'var(--text-primary)' }}>
           {t('product.not_found')}
         </h2>
         <Link to="/catalog" className="text-sm mt-4 inline-block" style={{ color: 'var(--accent)' }}>
@@ -99,31 +101,31 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div style={{ backgroundColor: '#0D0D0D' }}>
+    <div style={{ backgroundColor: 'var(--bg)' }}>
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center gap-2 text-xs" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+        <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--text-muted)',  }}>
           <Link to="/catalog" style={{ color: 'var(--accent)' }}>{t('catalog.title')}</Link>
           <span>/</span>
           {product.categories && <span>{product.categories.name}</span>}
           <span>/</span>
-          <span style={{ color: '#FFFFFF' }}>{product.name}</span>
+          <span style={{ color: 'var(--text-primary)' }}>{product.name}</span>
         </div>
       </div>
 
       {/* Product detail */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <motion.div initial="hidden" animate="visible" variants={stagger} className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Media gallery */}
-          <div>
+          <motion.div variants={fadeInUp}>
             <div className="flex gap-1 mb-3">
               <button onClick={() => setActiveTab('gallery')}
                 className="px-4 py-2 text-xs uppercase tracking-wider font-medium transition-all"
                 style={{
                   backgroundColor: activeTab === 'gallery' ? 'var(--accent)' : 'transparent',
-                  color: activeTab === 'gallery' ? '#FFFFFF' : '#666',
-                  border: `1px solid ${activeTab === 'gallery' ? 'var(--accent)' : '#222'}`,
-                  fontFamily: 'Outfit, sans-serif',
+                  color: activeTab === 'gallery' ? 'var(--text-primary)' : 'var(--text-muted)',
+                  border: `1px solid ${activeTab === 'gallery' ? 'var(--accent)' : 'var(--border)'}`,
+                  
                 }}>
                 {t('product.gallery')}
               </button>
@@ -132,9 +134,9 @@ export default function ProductDetailPage() {
                   className="px-4 py-2 text-xs uppercase tracking-wider font-medium transition-all flex items-center gap-1.5"
                   style={{
                     backgroundColor: activeTab === 'video' ? 'var(--accent)' : 'transparent',
-                    color: activeTab === 'video' ? '#FFFFFF' : '#666',
-                    border: `1px solid ${activeTab === 'video' ? 'var(--accent)' : '#222'}`,
-                    fontFamily: 'Outfit, sans-serif',
+                    color: activeTab === 'video' ? 'var(--text-primary)' : 'var(--text-muted)',
+                    border: `1px solid ${activeTab === 'video' ? 'var(--accent)' : 'var(--border)'}`,
+                    
                   }}>
                   <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" />
@@ -147,7 +149,7 @@ export default function ProductDetailPage() {
             {activeTab === 'gallery' && (
               <>
                 <div className="relative w-full h-80 lg:h-[480px] flex items-center justify-center overflow-hidden group cursor-pointer"
-                  style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}
+                  style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
                   onClick={() => hasImages && setLightboxIndex(activeImage)}>
                   {hasImages ? (
                     <>
@@ -166,7 +168,7 @@ export default function ProductDetailPage() {
                       </div>
                     </>
                   ) : (
-                    <svg className="w-20 h-20" fill="none" stroke="#333" strokeWidth="1" viewBox="0 0 24 24">
+                    <svg className="w-20 h-20" fill="none" stroke="var(--border-light)" strokeWidth="1" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v13.5A1.5 1.5 0 003.75 21z" />
                     </svg>
                   )}
@@ -174,20 +176,20 @@ export default function ProductDetailPage() {
                     <>
                       <button onClick={handlePrev}
                         className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-full backdrop-blur-sm transition-opacity opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
-                        style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: '#FFFFFF', borderRadius: '50%' }}>
+                        style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: 'var(--text-primary)', borderRadius: '50%' }}>
                         <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                         </svg>
                       </button>
                       <button onClick={handleNext}
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-full backdrop-blur-sm transition-opacity opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
-                        style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: '#FFFFFF', borderRadius: '50%' }}>
+                        style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: 'var(--text-primary)', borderRadius: '50%' }}>
                         <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                         </svg>
                       </button>
                       <div className="absolute bottom-3 right-3 px-2.5 py-1 text-xs backdrop-blur-sm"
-                        style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                        style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: 'var(--text-primary)',  }}>
                         {activeImage + 1} / {images.length}
                       </div>
                     </>
@@ -198,7 +200,7 @@ export default function ProductDetailPage() {
                     {images.map((img, i) => (
                       <button key={i} onClick={() => setActiveImage(i)}
                         className="flex-shrink-0 w-16 h-16 overflow-hidden transition-all"
-                        style={{ border: `2px solid ${i === activeImage ? 'var(--accent)' : '#1a1a1a'}`, opacity: i === activeImage ? 1 : 0.5 }}>
+                        style={{ border: `2px solid ${i === activeImage ? 'var(--accent)' : 'var(--border)'}`, opacity: i === activeImage ? 1 : 0.5 }}>
                         <img src={img} alt="" className="w-full h-full object-cover" />
                       </button>
                     ))}
@@ -208,7 +210,7 @@ export default function ProductDetailPage() {
             )}
 
             {activeTab === 'video' && hasVideo && (
-              <div className="relative w-full" style={{ aspectRatio: '16/9', backgroundColor: '#000' }}>
+              <div className="relative w-full" style={{ aspectRatio: '16/9', backgroundColor: 'var(--bg-overlay)' }}>
                 {videoId ? (
                   <iframe src={`https://www.youtube.com/embed/${videoId}?rel=0`}
                     className="absolute inset-0 w-full h-full"
@@ -219,18 +221,18 @@ export default function ProductDetailPage() {
                 )}
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* Info panel */}
-          <div>
+          <motion.div variants={fadeInUp}>
             {/* Category */}
             {product.categories && (
               <p className="text-xs uppercase tracking-[0.25em] mb-2 font-semibold"
-                style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif', fontSize: '10px' }}>
+                style={{ color: 'var(--accent)',  fontSize: '10px' }}>
                 {product.categories.name}
               </p>
             )}
-            <h1 className="text-3xl mb-3 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+            <h1 className="text-3xl mb-3 font-bold" style={{  color: 'var(--text-primary)' }}>
               {product.name}
             </h1>
 
@@ -238,10 +240,10 @@ export default function ProductDetailPage() {
             {product.product_ratings?.[0] && (
               <div className="flex items-center gap-2 mb-5">
                 <StarDisplay rating={Math.round(product.product_ratings[0].avg_rating)} size={14} />
-                <span className="text-sm font-medium" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                <span className="text-sm font-medium" style={{ color: 'var(--text-primary)',  }}>
                   {product.product_ratings[0].avg_rating}
                 </span>
-                <span className="text-xs" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                <span className="text-xs" style={{ color: 'var(--text-muted)',  }}>
                   ({product.product_ratings[0].review_count} {t('reviews.reviews')})
                 </span>
               </div>
@@ -249,7 +251,7 @@ export default function ProductDetailPage() {
 
             {/* Description */}
             {product.description && (
-              <p className="text-sm leading-relaxed mb-6" style={{ color: '#A0A0A0', fontFamily: 'Outfit, sans-serif', fontWeight: 300 }}>
+              <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)',  fontWeight: 300 }}>
                 {product.description}
               </p>
             )}
@@ -258,7 +260,7 @@ export default function ProductDetailPage() {
             {(canRent || canPurchase) && (
               <div className="mb-6">
                 <label className="block text-xs uppercase tracking-wider mb-3 font-semibold"
-                  style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ color: 'var(--text-muted)',  }}>
                   {t('product.mode')}
                 </label>
                 <div className="flex gap-3">
@@ -266,13 +268,13 @@ export default function ProductDetailPage() {
                     <button onClick={() => setSelectedMode('rental')}
                       className="flex-1 p-4 text-left transition-all"
                       style={{
-                        backgroundColor: selectedMode === 'rental' ? 'var(--accent-bg)' : '#141414',
-                        border: `2px solid ${selectedMode === 'rental' ? 'var(--accent)' : '#1a1a1a'}`,
+                        backgroundColor: selectedMode === 'rental' ? 'var(--accent-bg)' : 'var(--bg-card)',
+                        border: `2px solid ${selectedMode === 'rental' ? 'var(--accent)' : 'var(--border)'}`,
                       }}>
-                      <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                      <div className="text-sm font-bold" style={{ color: 'var(--text-primary)',  }}>
                         {t('quote.rental')}
                       </div>
-                      <div className="text-xs mt-1" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                      <div className="text-xs mt-1" style={{ color: 'var(--text-muted)',  }}>
                         {product.price_per_day} TND/{t('catalog.price_per_day').toLowerCase()}
                       </div>
                     </button>
@@ -281,14 +283,14 @@ export default function ProductDetailPage() {
                     <button onClick={() => setSelectedMode('purchase')}
                       className="flex-1 p-4 text-left transition-all"
                       style={{
-                        backgroundColor: selectedMode === 'purchase' ? 'var(--accent-bg)' : '#141414',
-                        border: `2px solid ${selectedMode === 'purchase' ? 'var(--accent)' : '#1a1a1a'}`,
+                        backgroundColor: selectedMode === 'purchase' ? 'var(--accent-bg)' : 'var(--bg-card)',
+                        border: `2px solid ${selectedMode === 'purchase' ? 'var(--accent)' : 'var(--border)'}`,
                       }}>
-                      <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                      <div className="text-sm font-bold" style={{ color: 'var(--text-primary)',  }}>
                         {t('quote.purchase')}
                       </div>
                       {product.price_purchase && (
-                        <div className="text-xs mt-1" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                        <div className="text-xs mt-1" style={{ color: 'var(--text-muted)',  }}>
                           {product.price_purchase} TND
                         </div>
                       )}
@@ -302,7 +304,7 @@ export default function ProductDetailPage() {
             {selectedMode === 'rental' && (
               <div className="mb-5">
                 <label className="block text-xs uppercase tracking-wider mb-2 font-semibold"
-                  style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ color: 'var(--text-muted)',  }}>
                   {t('product.select_dates')}
                 </label>
                 <DateRangePicker productId={product.id} selectedRange={selectedRange} onSelect={setSelectedRange} />
@@ -313,7 +315,7 @@ export default function ProductDetailPage() {
             {options.length > 0 && (
               <div className="mb-5">
                 <label className="block text-xs uppercase tracking-wider mb-3 font-semibold"
-                  style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ color: 'var(--text-muted)',  }}>
                   {t('product.customization')}
                 </label>
                 <div className="space-y-2">
@@ -321,22 +323,22 @@ export default function ProductDetailPage() {
                     <label key={opt.name}
                       className="flex items-start gap-3 p-3 cursor-pointer transition-all"
                       style={{
-                        backgroundColor: selectedOptions[opt.name] ? 'var(--accent-bg)' : '#141414',
-                        border: `1px solid ${selectedOptions[opt.name] ? 'var(--accent)' : '#1a1a1a'}`,
+                        backgroundColor: selectedOptions[opt.name] ? 'var(--accent-bg)' : 'var(--bg-card)',
+                        border: `1px solid ${selectedOptions[opt.name] ? 'var(--accent)' : 'var(--border)'}`,
                       }}>
                       <input type="checkbox" checked={!!selectedOptions[opt.name]} onChange={() => toggleOption(opt.name)}
                         className="mt-0.5 accent-[var(--accent)]" />
                       <div className="flex-1">
-                        <span className="text-sm font-medium" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                        <span className="text-sm font-medium" style={{ color: 'var(--text-primary)',  }}>
                           {opt.name}
                         </span>
                         {opt.description && (
-                          <p className="text-xs mt-0.5" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                          <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)',  }}>
                             {opt.description}
                           </p>
                         )}
                       </div>
-                      <span className="text-sm font-bold whitespace-nowrap" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                      <span className="text-sm font-bold whitespace-nowrap" style={{ color: 'var(--accent)',  }}>
                         +{opt.price} TND
                       </span>
                     </label>
@@ -348,20 +350,20 @@ export default function ProductDetailPage() {
             {/* Quantity */}
             <div className="mb-6">
               <label className="block text-xs uppercase tracking-wider mb-2 font-semibold"
-                style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                style={{ color: 'var(--text-muted)',  }}>
                 {t('product.quantity')}
               </label>
               <div className="flex items-center gap-3">
                 <button onClick={() => setQuantity(q => Math.max(1, q - 1))}
                   className="w-10 h-10 flex items-center justify-center text-sm font-bold"
-                  style={{ border: '1px solid #222', color: '#FFFFFF' }}>−</button>
-                <span className="w-9 text-center text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ border: '1px solid var(--border)', color: 'var(--text-primary)' }}>−</button>
+                <span className="w-9 text-center text-sm font-bold" style={{ color: 'var(--text-primary)',  }}>
                   {quantity}
                 </span>
                 <button onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
                   className="w-10 h-10 flex items-center justify-center text-sm font-bold"
-                  style={{ border: '1px solid #222', color: '#FFFFFF' }}>+</button>
-                <span className="text-xs" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ border: '1px solid var(--border)', color: 'var(--text-primary)' }}>+</button>
+                <span className="text-xs" style={{ color: 'var(--text-muted)',  }}>
                   {product.stock} {t('product.available')}
                 </span>
               </div>
@@ -374,7 +376,7 @@ export default function ProductDetailPage() {
                   background: product.pricing_type === 'fixed' ? 'rgba(76,175,80,0.15)' : product.pricing_type === 'negotiable' ? 'rgba(255,152,0,0.15)' : 'rgba(123,97,255,0.15)',
                   color: product.pricing_type === 'fixed' ? '#4CAF50' : product.pricing_type === 'negotiable' ? '#FF9800' : 'var(--accent-tertiary)',
                   border: `1px solid ${product.pricing_type === 'fixed' ? 'rgba(76,175,80,0.3)' : product.pricing_type === 'negotiable' ? 'rgba(255,152,0,0.3)' : 'rgba(123,97,255,0.3)'}`,
-                  fontFamily: 'Outfit, sans-serif',
+                  
                   fontSize: '10px',
                 }}>
                 {product.pricing_type === 'fixed' ? t('product.pricing_fixed') : product.pricing_type === 'negotiable' ? t('product.pricing_negotiable') : t('product.pricing_suggestion')}
@@ -382,32 +384,32 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Price display */}
-            <div className="mb-6 p-4" style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
+            <div className="mb-6 p-4" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
               {product.pricing_type === 'suggestion' ? (
                 <div>
-                  <p className="text-xs mb-2 font-medium" style={{ color: 'var(--accent-tertiary)', fontFamily: 'Outfit, sans-serif' }}>
+                  <p className="text-xs mb-2 font-medium" style={{ color: 'var(--accent-tertiary)',  }}>
                     {t('product.suggest_price_hint')}
                   </p>
                   <input type="number" value={suggestedPrice} onChange={(e) => setSuggestedPrice(e.target.value)}
                     placeholder={t('product.suggest_price_placeholder')} min="0" step="0.01"
                     className="w-full px-4 py-3 text-sm"
-                    style={{ backgroundColor: '#0D0D0D', border: '1px solid var(--accent-tertiary)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }} />
+                    style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--accent-tertiary)', color: 'var(--text-primary)',  }} />
                 </div>
               ) : selectedMode === 'rental' ? (
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold gradient-text" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                  <span className="text-3xl font-bold gradient-text" style={{  }}>
                     {product.price_per_day}
                   </span>
-                  <span className="text-sm" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                  <span className="text-sm" style={{ color: 'var(--text-muted)',  }}>
                     {t('product.per_day')} × {quantity}
                   </span>
                 </div>
               ) : (
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold gradient-text" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                  <span className="text-3xl font-bold gradient-text" style={{  }}>
                     {product.price_purchase || product.price_per_day}
                   </span>
-                  <span className="text-sm" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                  <span className="text-sm" style={{ color: 'var(--text-muted)',  }}>
                     TND × {quantity}
                   </span>
                 </div>
@@ -417,7 +419,7 @@ export default function ProductDetailPage() {
             {/* Add to Cart button */}
             <button onClick={handleAddToCart}
               className="w-full py-4 text-sm uppercase tracking-widest font-bold transition-all hover:scale-[1.02] flex items-center justify-center gap-3"
-              style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+              style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: 'var(--text-primary)',  }}>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
               </svg>
@@ -426,26 +428,26 @@ export default function ProductDetailPage() {
 
             {/* Supplier info */}
             {product.profiles && (
-              <div className="mt-5 p-4" style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
+              <div className="mt-5 p-4" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                 <span className="text-xs uppercase tracking-wider block mb-2 font-semibold"
-                  style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ color: 'var(--text-muted)',  }}>
                   {t('product.supplier')}
                 </span>
-                <p className="text-sm font-medium" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                <p className="text-sm font-medium" style={{ color: 'var(--text-primary)',  }}>
                   {product.profiles.full_name || 'Maker Skills'}
                 </p>
               </div>
             )}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Reviews */}
-        <div className="mt-16">
-          <h2 className="text-xl mb-6 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+        <motion.div variants={fadeInUp} viewport={viewportOnce} whileInView="visible" initial="hidden" className="mt-16">
+          <h2 className="text-xl mb-6 font-bold" style={{  color: 'var(--text-primary)' }}>
             {t('reviews.title')}
           </h2>
           <ReviewList productId={product.id} />
-        </div>
+        </motion.div>
       </div>
 
       {/* Lightbox */}

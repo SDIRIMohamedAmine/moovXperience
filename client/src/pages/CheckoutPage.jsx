@@ -8,6 +8,8 @@ import { createRental } from '../services/rentalService'
 import { createQuote } from '../services/quoteService'
 import LocationPicker from '../components/LocationPicker'
 import { showToast } from '../components/Toast'
+import { motion } from 'framer-motion'
+import { fadeInUp, stagger } from '../lib/animations'
 import { getDateLocale } from '../lib/locale'
 
 export default function CheckoutPage() {
@@ -28,7 +30,7 @@ export default function CheckoutPage() {
   if (!user) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-xl mb-4 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+        <h2 className="text-xl mb-4 font-bold" style={{ color: 'var(--text-primary)' }}>
           {t('checkout.login_required')}
         </h2>
         <Link to="/login" className="text-sm" style={{ color: 'var(--accent)' }}>
@@ -41,7 +43,7 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-xl mb-4 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+        <h2 className="text-xl mb-4 font-bold" style={{ color: 'var(--text-primary)' }}>
           {t('checkout.empty')}
         </h2>
         <Link to="/catalog" className="text-sm" style={{ color: 'var(--accent)' }}>
@@ -118,9 +120,9 @@ export default function CheckoutPage() {
 
   const renderItem = (item, showDates) => (
     <div key={item.key} className="p-4 flex items-center gap-3"
-      style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
+      style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
       {/* Image */}
-      <div className="w-12 h-12 flex-shrink-0" style={{ backgroundColor: '#1a1a1a' }}>
+      <div className="w-12 h-12 flex-shrink-0" style={{ backgroundColor: 'var(--border)' }}>
         {item.images?.[0] ? (
           <img src={item.images[0]} alt="" className="w-full h-full object-cover" />
         ) : null}
@@ -128,17 +130,17 @@ export default function CheckoutPage() {
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+        <div className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
           {item.name}
         </div>
-        <div className="text-xs mt-0.5" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+        <div className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
           {item.mode === 'rental'
             ? `${item.quantity} × ${item.price_per_day} TND/${t('checkout.day')}${getDays(item) > 0 ? ` × ${getDays(item)} ${t('checkout.days')}` : ''}`
             : `${item.quantity} × ${item.price_purchase || item.price_per_day} TND`
           }
         </div>
         {showDates && item.startDate && item.endDate && (
-          <div className="text-xs mt-0.5" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+          <div className="text-xs mt-0.5" style={{ color: 'var(--accent)' }}>
             {formatDate(item.startDate)} → {formatDate(item.endDate)}
           </div>
         )}
@@ -147,17 +149,17 @@ export default function CheckoutPage() {
           <button
             onClick={() => updateQuantity(item.key, item.quantity - 1)}
             className="w-8 h-8 flex items-center justify-center text-sm"
-            style={{ backgroundColor: '#222', color: '#fff', border: '1px solid #333' }}
+            style={{ backgroundColor: 'var(--border)', color: 'var(--text-primary)', border: '1px solid var(--border-light)' }}
           >
             -
           </button>
-          <span className="text-sm w-8 text-center" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+          <span className="text-sm w-8 text-center" style={{ color: 'var(--text-primary)' }}>
             {item.quantity}
           </span>
           <button
             onClick={() => updateQuantity(item.key, item.quantity + 1)}
             className="w-8 h-8 flex items-center justify-center text-sm"
-            style={{ backgroundColor: '#222', color: '#fff', border: '1px solid #333' }}
+            style={{ backgroundColor: 'var(--border)', color: 'var(--text-primary)', border: '1px solid var(--border-light)' }}
           >
             +
           </button>
@@ -166,7 +168,7 @@ export default function CheckoutPage() {
 
       {/* Price + Remove */}
       <div className="flex flex-col items-end gap-2">
-        <div className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+        <div className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
           {getItemTotal(item).toFixed(2)} TND
         </div>
         <button
@@ -182,14 +184,14 @@ export default function CheckoutPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="text-3xl mb-8 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+      <h1 className="text-3xl mb-8 font-bold" style={{ color: 'var(--text-primary)' }}>
         {t('checkout.title')}
       </h1>
 
       {/* Rental items */}
       {rentalItems.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-xs uppercase tracking-wider mb-4 font-semibold" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+          <h2 className="text-xs uppercase tracking-wider mb-4 font-semibold" style={{ color: 'var(--accent)' }}>
             {t('checkout.rentals')}
           </h2>
           <div className="space-y-3">
@@ -201,7 +203,7 @@ export default function CheckoutPage() {
       {/* Purchase items */}
       {purchaseItems.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-xs uppercase tracking-wider mb-4 font-semibold" style={{ color: 'var(--accent-tertiary)', fontFamily: 'Outfit, sans-serif' }}>
+          <h2 className="text-xs uppercase tracking-wider mb-4 font-semibold" style={{ color: 'var(--accent-tertiary)' }}>
             {t('checkout.purchases')}
           </h2>
           <div className="space-y-3">
@@ -212,10 +214,10 @@ export default function CheckoutPage() {
 
       {/* Delivery location */}
       <div className="mb-6">
-        <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+        <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: 'var(--text-muted)' }}>
           {t('checkout.delivery_location')}
         </label>
-        <p className="text-xs mb-3" style={{ color: '#444', fontFamily: 'Outfit, sans-serif' }}>
+        <p className="text-xs mb-3" style={{ color: 'var(--text-muted)' }}>
           {t('checkout.delivery_location_hint')}
         </p>
         <LocationPicker value={location} onChange={setLocation} />
@@ -223,31 +225,31 @@ export default function CheckoutPage() {
 
       {/* Notes */}
       <div className="mb-6">
-        <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+        <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: 'var(--text-muted)' }}>
           {t('checkout.notes_label')}
         </label>
         <textarea value={notes} onChange={e => setNotes(e.target.value)}
           placeholder={t('checkout.notes_placeholder')} rows={3} maxLength={2000}
           className="w-full px-4 py-3 text-sm resize-none"
-          style={{ backgroundColor: '#141414', border: '1px solid #222', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}
+          style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
           onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-          onBlur={e => e.target.style.borderColor = '#222'} />
+          onBlur={e => e.target.style.borderColor = 'var(--border)'} />
       </div>
 
       {/* Total */}
       <div className="mb-6 p-5 flex items-center justify-between"
-        style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
-        <div className="text-sm font-semibold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+        <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
           {t('checkout.total')}
         </div>
-        <div className="text-2xl font-bold gradient-text" style={{ fontFamily: 'Outfit, sans-serif' }}>
+        <div className="text-2xl font-bold gradient-text">
           {total.toFixed(2)} TND
         </div>
       </div>
 
       {error && (
         <div className="mb-4 text-sm px-4 py-3" role="alert"
-          style={{ backgroundColor: 'rgba(255,107,107,0.1)', color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.2)', fontFamily: 'Outfit, sans-serif' }}>
+          style={{ backgroundColor: 'rgba(255,107,107,0.1)', color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.2)' }}>
           {error}
         </div>
       )}
@@ -256,8 +258,7 @@ export default function CheckoutPage() {
         className="w-full py-4 text-sm uppercase tracking-widest font-bold transition-all hover:scale-[1.02]"
         style={{
           background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))',
-          color: '#FFFFFF',
-          fontFamily: 'Outfit, sans-serif',
+          color: 'var(--text-primary)',
           opacity: loading ? 0.6 : 1,
           cursor: loading ? 'not-allowed' : 'pointer',
         }}>
@@ -281,13 +282,13 @@ export default function CheckoutPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold mb-3" style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+            <h2 className="text-2xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
               {t('checkout.success_heading')}
             </h2>
-            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
+            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
               {t('checkout.success_desc')}
             </p>
-            <p className="text-xs mb-4" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+            <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
               {t('checkout.redirecting') || 'Redirection vers vos demandes...'}
             </p>
             <div className="w-full h-1 overflow-hidden" style={{ backgroundColor: 'var(--border)' }}>

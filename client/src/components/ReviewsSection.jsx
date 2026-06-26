@@ -55,11 +55,11 @@ export default function ReviewsSection() {
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={stagger}
           className="text-center mb-12">
           <motion.p variants={fadeInUp} className="text-xs uppercase tracking-[0.3em] mb-2 font-medium"
-            style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+            style={{ color: 'var(--accent)' }}>
             {t('reviews.tag')}
           </motion.p>
           <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-bold"
-            style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+            style={{  color: 'var(--text-primary)' }}>
             {t('reviews.title')}
           </motion.h2>
         </motion.div>
@@ -72,26 +72,26 @@ export default function ReviewsSection() {
               style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
               <div className="flex items-center justify-between mb-4">
                 <StarRating rating={review.rating} />
-                <span className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
                   {new Date(review.created_at).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}
                 </span>
               </div>
               {review.comment && (
-                <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', fontWeight: 300 }}>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)', fontWeight: 300 }}>
                   "{review.comment}"
                 </p>
               )}
               <div className="flex items-center gap-3 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
                 <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                  style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)' }}>
                   {review.profiles?.full_name?.charAt(0)?.toUpperCase() || '?'}
                 </div>
                 <div>
-                  <p className="text-sm font-medium" style={{ color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>
+                  <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                     {review.profiles?.full_name || t('reviews.anonymous')}
                   </p>
                   {review.products && (
-                    <p className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                       {review.products.name}
                     </p>
                   )}

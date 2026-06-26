@@ -198,16 +198,16 @@ export default function ProductFormPage() {
 
   const tf = (key) => t(`supplier_products.form.${key}`)
 
-  const inputStyle = { border: `1px solid ${colors.border}`, fontFamily: 'DM Sans, system-ui, sans-serif', color: colors.primary }
-  const labelStyle = { color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }
+  const inputStyle = { border: `1px solid ${colors.border}`, color: colors.primary }
+  const labelStyle = { color: colors.textSecondary }
 
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: colors.accent, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+        <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: colors.accent }}>
           {isEdit ? t('supplier_products.edit_product') : t('supplier_products.add_product')}
         </p>
-        <h1 className="text-3xl" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary, fontWeight: 600 }}>
+        <h1 className="text-3xl" style={{  color: colors.primary, fontWeight: 600 }}>
           {isEdit ? t('supplier_products.edit_product') : t('supplier_products.add_product')}
         </h1>
       </div>
@@ -403,7 +403,7 @@ export default function ProductFormPage() {
           )}
 
           <label className="inline-flex items-center gap-2 px-4 py-2 text-sm cursor-pointer transition-opacity"
-            style={{ backgroundColor: colors.bg, border: `1px solid ${colors.border}`, color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif', opacity: uploading ? 0.6 : 1 }}>
+            style={{ backgroundColor: colors.bg, border: `1px solid ${colors.border}`, color: colors.primary, opacity: uploading ? 0.6 : 1 }}>
             {uploading ? (
               <span className="w-4 h-4 border-2 animate-spin" style={{ borderColor: colors.border, borderTopColor: colors.accent }} />
             ) : (
@@ -432,7 +432,7 @@ export default function ProductFormPage() {
             </label>
             <button type="button" onClick={addOption}
               className="text-xs px-3 py-1 transition-colors"
-              style={{ color: colors.accent, border: `1px solid ${colors.accent}`, fontFamily: 'DM Sans, system-ui, sans-serif' }}
+              style={{ color: colors.accent, border: `1px solid ${colors.accent}` }}
               onMouseEnter={(e) => { e.target.style.backgroundColor = colors.accent; e.target.style.color = '#fff' }}
               onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; e.target.style.color = colors.accent }}
             >
@@ -473,7 +473,7 @@ export default function ProductFormPage() {
           <input type="checkbox" id="is_available" checked={form.is_available} onChange={(e) => handleChange('is_available', e.target.checked)}
             className="w-4 h-4 accent-[#76ABAE]"
           />
-          <label htmlFor="is_available" className="text-sm" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <label htmlFor="is_available" className="text-sm" style={{ color: colors.primary }}>
             {tf('is_available')}
           </label>
         </div>
@@ -482,7 +482,7 @@ export default function ProductFormPage() {
         <div className="flex gap-3 pt-4">
           <button type="submit" disabled={saving}
             className="px-8 py-3 text-sm uppercase tracking-widest font-medium"
-            style={{ backgroundColor: colors.cta, color: colors.textWhite, fontFamily: 'DM Sans, system-ui, sans-serif', opacity: saving ? 0.7 : 1, cursor: saving ? 'not-allowed' : 'pointer' }}
+            style={{ backgroundColor: colors.cta, color: colors.textWhite, opacity: saving ? 0.7 : 1, cursor: saving ? 'not-allowed' : 'pointer' }}
             onMouseEnter={(e) => !saving && (e.target.style.backgroundColor = colors.ctaHover)}
             onMouseLeave={(e) => (e.target.style.backgroundColor = colors.cta)}
           >
@@ -498,7 +498,7 @@ export default function ProductFormPage() {
           </button>
           <button type="button" onClick={() => navigate('/supplier/products')}
             className="px-6 py-3 text-sm uppercase tracking-widest font-medium"
-            style={{ border: `1px solid ${colors.border}`, color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }}
+            style={{ border: `1px solid ${colors.border}`, color: colors.textSecondary }}
           >
             {t('profile.cancel')}
           </button>

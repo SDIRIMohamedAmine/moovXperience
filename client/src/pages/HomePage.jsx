@@ -5,32 +5,10 @@ import { useAuth } from '../hooks/useAuth'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
 import { fetchProducts } from '../services/productService'
+import { fadeInUp, stagger, scaleIn, EASE } from '../lib/animations'
 import ProductCard from '../components/ProductCard'
 import InfiniteGallery from '../components/InfiniteGallery'
 import ReviewsSection from '../components/ReviewsSection'
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] },
-  }),
-}
-
-const stagger = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
-}
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.92 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  },
-}
 
 const solutions = (t) => [
   {
@@ -122,31 +100,31 @@ export default function HomePage() {
         <div className="absolute inset-0 opacity-[0.04]"
           style={{ backgroundImage: 'linear-gradient(var(--hero-grid) 1px, transparent 1px), linear-gradient(90deg, var(--hero-grid) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-44">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-36">
           <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <motion.div initial="hidden" animate="visible" variants={stagger}>
               <motion.img variants={fadeInUp} custom={-1} src={dark ? '/logo-dark.png' : '/logo-light.png'} alt="MoovXperience" className="h-36 md:h-52 w-auto mb-6 md:mb-10" />
               <motion.div variants={fadeInUp} custom={0}
-                className="inline-block px-4 py-1.5 mb-4 md:mb-8 text-xs uppercase tracking-[0.3em] font-medium"
-                style={{ border: '1px solid var(--accent)', color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                className="inline-block px-5 py-1.5 mb-4 md:mb-8 text-xs uppercase tracking-[0.3em] font-medium"
+                style={{ border: '1px solid var(--accent)', color: 'var(--accent)',  borderRadius: '9999px' }}>
                 {t('home.tagline')}
               </motion.div>
               <motion.h1 variants={fadeInUp} custom={1}
                 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] mb-6 md:mb-8"
-                style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-on-accent)', fontWeight: 800, letterSpacing: '-0.03em' }}>
+                style={{  color: 'var(--text-on-accent)', fontWeight: 800, letterSpacing: '-0.03em' }}>
                 {t('home.title_start')}{' '}
                 <span className="gradient-text">{t('home.title_highlight')}</span>
               </motion.h1>
               <motion.p variants={fadeInUp} custom={2}
                 className="text-base md:text-xl leading-relaxed mb-8 md:mb-12 max-w-xl"
-                style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', fontWeight: 300 }}>
+                style={{ color: 'var(--text-secondary)',  fontWeight: 300 }}>
                 {t('home.subtitle')}
               </motion.p>
               <motion.div variants={fadeInUp} custom={3} className="flex flex-wrap gap-3 md:gap-5">
                 <Link
                   to="/catalog"
                   className="group inline-flex items-center gap-3 px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm uppercase tracking-widest font-semibold transition-all duration-300 hover:scale-105"
-                  style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)',  borderRadius: '9999px' }}>
                   {t('home.cta_start')}
                   <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -202,11 +180,11 @@ export default function HomePage() {
                               <path strokeLinecap="round" strokeLinejoin="round" d={sol.icon} />
                             </svg>
                           </div>
-                          <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>
+                          <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)',  }}>
                             {sol.title}
                           </span>
                         </div>
-                        <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                        <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)',  }}>
                           {sol.desc.slice(0, 80)}...
                         </p>
                       </motion.div>
@@ -233,15 +211,15 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={stagger}>
             <motion.p variants={fadeInUp} className="text-xs uppercase tracking-[0.3em] mb-4 font-medium"
-              style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+              style={{ color: 'var(--accent)',  }}>
               {t('home.how_tag')}
             </motion.p>
             <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-bold mb-6"
-              style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+              style={{  color: 'var(--text-primary)' }}>
               {t('home.how_title')}
             </motion.h2>
             <motion.p variants={fadeInUp} className="text-base leading-relaxed max-w-3xl mx-auto mb-12"
-              style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', fontWeight: 300 }}>
+              style={{ color: 'var(--text-secondary)',  fontWeight: 300 }}>
               {t('home.how_paragraph')}
             </motion.p>
           </motion.div>
@@ -254,18 +232,18 @@ export default function HomePage() {
             ].map((item, i) => (
               <motion.div key={item.step} variants={fadeInUp} custom={i}
                 className="p-5 md:p-8 text-center"
-                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px' }}>
                 <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center text-lg font-bold"
-                  style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)',  borderRadius: '12px' }}>
                   {item.step}
                 </div>
                 <svg className="w-8 h-8 mx-auto mb-3" fill="none" stroke="var(--accent)" strokeWidth="1.5" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
                 </svg>
-                <h3 className="text-lg font-bold mb-2" style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+                <h3 className="text-lg font-bold mb-2" style={{  color: 'var(--text-primary)' }}>
                   {item.title}
                 </h3>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', fontWeight: 300 }}>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)',  fontWeight: 300 }}>
                   {item.desc}
                 </p>
               </motion.div>
@@ -280,15 +258,15 @@ export default function HomePage() {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={stagger}
             className="text-center mb-16">
             <motion.p variants={fadeInUp} className="text-xs uppercase tracking-[0.3em] mb-4 font-medium"
-              style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+              style={{ color: 'var(--accent)',  }}>
               {t('home.solutions_tag')}
             </motion.p>
             <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-bold"
-              style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+              style={{  color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
               {t('home.solutions_title')}
             </motion.h2>
             <motion.p variants={fadeInUp} className="text-base mt-4 max-w-2xl mx-auto"
-              style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', fontWeight: 300 }}>
+              style={{ color: 'var(--text-secondary)',  fontWeight: 300 }}>
               {t('home.solutions_subtitle')}
             </motion.p>
           </motion.div>
@@ -297,18 +275,10 @@ export default function HomePage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {allSolutions.map((sol) => (
               <motion.div key={sol.key} variants={scaleIn}
-                className="group relative overflow-hidden transition-all duration-500 cursor-pointer"
-                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)'
-                  e.currentTarget.style.boxShadow = 'var(--shadow-accent)'
-                  e.currentTarget.style.borderColor = 'var(--accent)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = 'none'
-                  e.currentTarget.style.borderColor = 'var(--border)'
-                }}>
+                className="group relative overflow-hidden cursor-pointer"
+                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px' }}
+                whileHover={{ y: -8, boxShadow: 'var(--shadow-accent)', borderColor: 'var(--accent)' }}
+                transition={{ duration: 0.25, ease: EASE }}>
                 {/* Gradient top bar */}
                 <div className="h-1" style={{ background: sol.gradient }} />
                 <div className="p-8">
@@ -319,11 +289,11 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <h3 className="text-xl mb-3 font-bold"
-                    style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+                    style={{  color: 'var(--text-primary)' }}>
                     {sol.title}
                   </h3>
                   <p className="text-sm leading-relaxed"
-                    style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', fontWeight: 300 }}>
+                    style={{ color: 'var(--text-secondary)',  fontWeight: 300 }}>
                     {sol.desc}
                   </p>
                 </div>
@@ -339,11 +309,11 @@ export default function HomePage() {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={stagger}
             className="text-center mb-16">
             <motion.p variants={fadeInUp} className="text-xs uppercase tracking-[0.3em] mb-4 font-medium"
-              style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+              style={{ color: 'var(--accent)',  }}>
               {t('home.use_cases_tag')}
             </motion.p>
             <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-bold"
-              style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+              style={{  color: 'var(--text-primary)' }}>
               {t('home.use_cases_title')}
             </motion.h2>
           </motion.div>
@@ -352,17 +322,17 @@ export default function HomePage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {allUseCases.map((uc, i) => (
               <motion.div key={uc.key} variants={fadeInUp} custom={i}
-                className="group p-6 transition-all duration-300"
-                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.transform = 'translateY(-4px)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)' }}>
+                className="group p-6"
+                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px' }}
+                whileHover={{ y: -4, borderColor: 'var(--accent)' }}
+                transition={{ duration: 0.25, ease: EASE }}>
                 <div className="w-3 h-3 rounded-full mb-4" style={{ background: 'var(--accent-gradient)' }} />
                 <h3 className="text-lg mb-2 font-bold"
-                  style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+                  style={{  color: 'var(--text-primary)' }}>
                   {uc.title}
                 </h3>
                 <p className="text-sm leading-relaxed"
-                  style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', fontWeight: 300 }}>
+                  style={{ color: 'var(--text-secondary)',  fontWeight: 300 }}>
                   {uc.desc}
                 </p>
               </motion.div>
@@ -380,16 +350,16 @@ export default function HomePage() {
               className="flex items-end justify-between mb-14">
               <div>
                 <motion.p variants={fadeInUp} className="text-xs uppercase tracking-[0.3em] mb-4 font-medium"
-                  style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ color: 'var(--accent)',  }}>
                   {t('home.featured_tag')}
                 </motion.p>
                 <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-bold"
-                  style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+                  style={{  color: 'var(--text-primary)' }}>
                   {t('home.featured_title')}
                 </motion.h2>
               </div>
               <Link to="/catalog" className="hidden md:inline-flex items-center gap-2 text-sm font-medium transition-colors group"
-                style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                style={{ color: 'var(--accent)',  }}>
                 {t('home.view_all')}
                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -419,22 +389,22 @@ export default function HomePage() {
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
           className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.p variants={fadeInUp} className="text-xs uppercase tracking-[0.3em] mb-5 font-medium"
-            style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'Outfit, sans-serif' }}>
+            style={{ color: 'rgba(255,255,255,0.7)',  }}>
             {t('home.cta_bottom_tag')}
           </motion.p>
           <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl mb-8 font-bold"
-            style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-on-accent)', letterSpacing: '-0.02em' }}>
+            style={{  color: 'var(--text-on-accent)', letterSpacing: '-0.02em' }}>
             {t('home.cta_bottom_title')}
           </motion.h2>
           <motion.p variants={fadeInUp} className="text-lg leading-relaxed mb-12 max-w-lg mx-auto"
-            style={{ color: 'rgba(255,255,255,0.8)', fontFamily: 'Outfit, sans-serif', fontWeight: 300 }}>
+            style={{ color: 'rgba(255,255,255,0.8)',  fontWeight: 300 }}>
             {t('home.cta_bottom_desc')}
           </motion.p>
           <motion.div variants={fadeInUp}>
             <Link
               to="/catalog"
               className="group inline-flex items-center gap-3 px-6 sm:px-8 md:px-10 py-4 md:py-5 text-xs sm:text-sm uppercase tracking-widest font-bold transition-all duration-300 hover:scale-105"
-              style={{ backgroundColor: 'var(--bg-card)', color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+              style={{ backgroundColor: 'var(--bg-card)', color: 'var(--accent)',  borderRadius: '9999px' }}>
               {t('home.cta_bottom_btn')}
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />

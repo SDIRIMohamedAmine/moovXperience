@@ -57,7 +57,7 @@ export default function DateRangePicker({ productId, selectedRange, onSelect }) 
   return (
     <div>
       {loading && (
-        <div className="text-xs mb-2" style={{ color: '#8A939B', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+        <div className="text-xs mb-2" style={{ color: '#8A939B',  }}>
           {t('common.loading')}
         </div>
       )}
@@ -71,14 +71,14 @@ export default function DateRangePicker({ productId, selectedRange, onSelect }) 
           onMonthChange={setCurrentMonth}
           navLayout="around"
           styles={{
-            caption_label: { color: '#303841', fontFamily: 'DM Sans, system-ui, sans-serif', fontWeight: 500, fontSize: '14px' },
-            weekday: { color: '#8A939B', fontFamily: 'DM Sans, system-ui, sans-serif', fontSize: '11px', textTransform: 'uppercase' },
-            day: { fontFamily: 'DM Sans, system-ui, sans-serif', fontSize: '13px', borderRadius: '0', margin: 0 },
+            caption_label: { color: '#303841',  fontWeight: 500, fontSize: '14px' },
+            weekday: { color: '#8A939B',  fontSize: '11px', textTransform: 'uppercase' },
+            day: {  fontSize: '13px', borderRadius: '0', margin: 0 },
           }}
         />
       </div>
       {selectedRange?.from && selectedRange?.to && (
-        <div className="mt-2 text-xs" style={{ color: '#303841', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+        <div className="mt-2 text-xs" style={{ color: '#303841',  }}>
           {formatShort(selectedRange.from)} — {formatShort(selectedRange.to)}
         </div>
       )}

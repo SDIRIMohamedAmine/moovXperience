@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useTheme } from '../theme/ThemeContext'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useAuth } from '../hooks/useAuth'
 import { getFreshToken } from '../lib/supabase'
@@ -8,7 +7,6 @@ import { showToast } from './Toast'
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 export default function ReviewForm({ productId, rentalId, onSuccess }) {
-  const { colors } = useTheme()
   const { t } = useTranslation()
   const { session } = useAuth()
   const [rating, setRating] = useState(0)
@@ -31,12 +29,7 @@ export default function ReviewForm({ productId, rentalId, onSuccess }) {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${await getFreshToken()}`,
         },
-        body: JSON.stringify({
-          rental_id: rentalId,
-          product_id: productId,
-          rating,
-          comment: comment || null,
-        }),
+        body: JSON.stringify({ rental_id: rentalId, product_id: productId, rating, comment: comment || null }),
       })
 
       if (!res.ok) {
@@ -58,48 +51,42 @@ export default function ReviewForm({ productId, rentalId, onSuccess }) {
   const displayRating = hoveredRating || rating
 
   return (
-    <form onSubmit={handleSubmit} className="p-4" style={{ border: `1px solid ${colors.border}`, backgroundColor: colors.bgWhite }}>
-      <h3 className="text-sm uppercase tracking-wider mb-3" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif', fontWeight: 500 }}>
+    <form onSubmit={handleSubmit} className="p-5"
+      style={{ border: '1px solid var(--border)', backgroundColor: 'var(--bg-card)', borderRadius: '12px' }}>
+      <h3 className="text-sm uppercase tracking-wider mb-3 font-medium" style={{ color: 'var(--text-primary)' }}>
         {t('reviews.write_review')}
       </h3>
 
-      {/* Star selector */}
       <div className="flex gap-1 mb-3">
         {[1, 2, 3, 4, 5].map((star) => (
           <button key={star} type="button"
             onClick={() => setRating(star)}
             onMouseEnter={() => setHoveredRating(star)}
             onMouseLeave={() => setHoveredRating(0)}
-            className="p-0.5 transition-transform hover:scale-110">
+            className="p-0.5 transition-transform hover:scale-110" style={{ cursor: 'pointer' }}>
             <svg width="24" height="24" fill={star <= displayRating ? '#FFC107' : 'none'}
-              stroke={star <= displayRating ? '#FFC107' : colors.border} strokeWidth="1.5" viewBox="0 0 24 24">
+              stroke={star <= displayRating ? '#FFC107' : 'var(--border)'} strokeWidth="1.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
             </svg>
           </button>
         ))}
       </div>
 
-      {/* Comment */}
-      <textarea
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        placeholder={t('reviews.comment_placeholder')}
-        rows={3}
-        maxLength={2000}
+      <textarea value={comment} onChange={(e) => setComment(e.target.value)}
+        placeholder={t('reviews.comment_placeholder')} rows={3} maxLength={2000}
         className="w-full px-3 py-2 text-sm resize-none mb-3"
-        style={{ border: `1px solid ${colors.border}`, color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}
-        onFocus={(e) => (e.target.style.borderColor = colors.accent)}
-        onBlur={(e) => (e.target.style.borderColor = colors.border)}
-      />
+        style={{ border: '1px solid var(--border)', color: 'var(--text-primary)', backgroundColor: 'var(--bg-input)', borderRadius: '8px', outline: 'none' }}
+        onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
+        onBlur={(e) => (e.target.style.borderColor = 'var(--border)')} />
 
       <button type="submit" disabled={loading || rating === 0}
-        className="px-4 py-2 text-sm font-medium transition-opacity"
+        className="px-5 py-2.5 text-sm font-medium transition-all"
         style={{
-          backgroundColor: colors.cta,
-          color: colors.textWhite,
-          fontFamily: 'DM Sans, system-ui, sans-serif',
+          background: 'var(--accent-gradient)',
+          color: 'var(--text-on-accent)',
           opacity: loading || rating === 0 ? 0.5 : 1,
           cursor: loading || rating === 0 ? 'not-allowed' : 'pointer',
+          borderRadius: '9999px',
         }}>
         {loading ? (
           <span className="inline-flex items-center gap-2">

@@ -102,7 +102,7 @@ export default function OrdersPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl mb-6" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary }}>
+      <h1 className="text-2xl mb-6" style={{  color: colors.primary }}>
         {t('orders.title')}
       </h1>
 
@@ -116,7 +116,7 @@ export default function OrdersPage() {
             style={{
               backgroundColor: filter === status ? colors.primary : colors.bg,
               color: filter === status ? colors.textWhite : colors.primary,
-              fontFamily: 'DM Sans, system-ui, sans-serif',
+              
               fontWeight: 500,
             }}
           >
@@ -131,7 +131,7 @@ export default function OrdersPage() {
         </div>
       ) : orders.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-sm" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="text-sm" style={{ color: colors.textLight }}>
             {t('orders.empty')}
           </p>
         </div>
@@ -151,7 +151,7 @@ export default function OrdersPage() {
                       style={{
                         backgroundColor: STATUS_COLORS[order.status]?.bg || colors.bg,
                         color: STATUS_COLORS[order.status]?.text || colors.primary,
-                        fontFamily: 'DM Sans, system-ui, sans-serif',
+                        
                       }}
                     >
                       {t(`rentals.status.${order.status}`)}
@@ -162,17 +162,17 @@ export default function OrdersPage() {
                         style={{
                           backgroundColor: PAYMENT_COLORS[order.payment_status]?.bg || colors.bg,
                           color: PAYMENT_COLORS[order.payment_status]?.text || colors.primary,
-                          fontFamily: 'DM Sans, system-ui, sans-serif',
+                          
                         }}
                       >
                         {t(`payment.status.${order.payment_status}`)}
                       </span>
                     )}
-                    <span className="text-xs" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <span className="text-xs" style={{ color: colors.textLight }}>
                       {formatDate(order.start_date)} — {formatDate(order.end_date)}
                     </span>
                   </div>
-                  <div className="text-sm font-bold" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                  <div className="text-sm font-bold" style={{ color: colors.primary }}>
                     {Number(order.total_price).toFixed(2)} TND
                   </div>
                 </div>
@@ -180,14 +180,14 @@ export default function OrdersPage() {
                 {/* Client info */}
                 {order.profiles && (
                   <div className="mb-3 px-3 py-2" style={{ backgroundColor: colors.bg }}>
-                    <span className="text-xs" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <span className="text-xs" style={{ color: colors.textLight }}>
                       {t('orders.client')}: {' '}
                     </span>
-                    <span className="text-sm font-medium" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <span className="text-sm font-medium" style={{ color: colors.primary }}>
                       {order.profiles.full_name || '—'}
                     </span>
                     {order.profiles.phone && (
-                      <span className="text-xs ml-2" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                      <span className="text-xs ml-2" style={{ color: colors.textLight }}>
                         {order.profiles.phone}
                       </span>
                     )}
@@ -197,14 +197,14 @@ export default function OrdersPage() {
                 {/* Items */}
                 <div className="space-y-1">
                   {(order.rental_items || []).map(item => (
-                    <div key={item.id} className="text-sm" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <div key={item.id} className="text-sm" style={{ color: colors.primary }}>
                       {item.products?.name || 'Produit'} × {item.quantity}
                     </div>
                   ))}
                 </div>
 
                 {order.notes && (
-                  <p className="text-xs mt-2" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                  <p className="text-xs mt-2" style={{ color: colors.textLight }}>
                     {t('orders.note')}: {order.notes}
                   </p>
                 )}
@@ -218,7 +218,7 @@ export default function OrdersPage() {
                       key={action.status}
                       onClick={() => handleStatus(order.id, action.status)}
                       className="px-4 py-1.5 text-xs font-medium"
-                      style={{ ...action.style, fontFamily: 'DM Sans, system-ui, sans-serif' }}
+                      style={{ ...action.style }}
                     >
                       {action.label}
                     </button>

@@ -66,24 +66,24 @@ export default function PaymentResultPage() {
         </div>
 
         <h1 className="text-2xl mb-3"
-          style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary, fontWeight: 600 }}>
+          style={{  color: colors.primary, fontWeight: 600 }}>
           {config.title}
         </h1>
 
         <p className="text-sm mb-8"
-          style={{ color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          style={{ color: colors.textSecondary }}>
           {config.desc}
         </p>
 
         <div className="flex flex-col gap-3">
           <Link to="/my-rentals"
             className="px-6 py-3 text-sm font-medium text-center"
-            style={{ backgroundColor: colors.cta, color: colors.textWhite, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+            style={{ backgroundColor: colors.cta, color: colors.textWhite }}>
             {t('payment.view_rentals')}
           </Link>
           <Link to="/catalog"
             className="text-sm text-center"
-            style={{ color: colors.accent, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+            style={{ color: colors.accent }}>
             {t('payment.back_catalog')}
           </Link>
         </div>

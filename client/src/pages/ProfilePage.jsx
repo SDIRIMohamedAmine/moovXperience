@@ -4,16 +4,18 @@ import { useAuth } from '../hooks/useAuth'
 import { getFreshToken } from '../lib/supabase'
 import { useTranslation } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
+import { motion } from 'framer-motion'
+import { fadeInUp, stagger } from '../lib/animations'
 import { getDateLocale } from '../lib/locale'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 const getStatusColors = (t) => ({
-  pending: { bg: '#FEF3C7', text: '#92400E', label: t('profile.status.pending') },
-  reviewing: { bg: '#DBEAFE', text: '#1E40AF', label: t('profile.status.reviewing') },
-  accepted: { bg: '#D1FAE5', text: '#065F46', label: t('profile.status.accepted') },
-  refused: { bg: '#FEE2E2', text: '#991B1B', label: t('profile.status.refused') },
-  expired: { bg: '#F3F4F6', text: '#374151', label: t('profile.status.expired') },
+  pending: { bg: 'var(--status-pending-bg)', text: 'var(--status-pending-text)', label: t('profile.status.pending') },
+  reviewing: { bg: 'var(--status-pending-bg)', text: 'var(--status-pending-text)', label: t('profile.status.reviewing') },
+  accepted: { bg: 'var(--status-accepted-bg)', text: 'var(--status-accepted-text)', label: t('profile.status.accepted') },
+  refused: { bg: 'var(--status-refused-bg)', text: 'var(--status-refused-text)', label: t('profile.status.refused') },
+  expired: { bg: 'var(--status-pending-bg)', text: 'var(--status-pending-text)', label: t('profile.status.expired') },
 })
 
 export default function ProfilePage() {
@@ -94,10 +96,10 @@ export default function ProfilePage() {
       {/* Header */}
       <section className="py-12" style={{ backgroundColor: 'var(--bg-overlay)', borderBottom: '1px solid var(--border)' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)' }}>
             {t('profile.my_account')}
           </p>
-          <h1 className="text-3xl font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+          <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
             {profile?.full_name || t('profile.title')}
           </h1>
         </div>
@@ -105,7 +107,7 @@ export default function ProfilePage() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {message && (
-          <div className="mb-6 p-4 text-sm" style={{ backgroundColor: '#152D1A', color: '#4CAF50', border: '1px solid #2A5D2A', fontFamily: 'Outfit, sans-serif' }}>
+          <div className="mb-6 p-4 text-sm" style={{ backgroundColor: '#152D1A', color: '#4CAF50', border: '1px solid #2A5D2A' }}>
             {message}
           </div>
         )}
@@ -116,17 +118,17 @@ export default function ProfilePage() {
             <div className="p-6" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
               <div className="text-center mb-6">
                 <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
-                  style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF' }}>
                   {profile?.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
                 </div>
-                <h2 className="text-lg font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+                <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
                   {profile?.full_name || t('profile.name_not_set')}
                 </h2>
-                <p className="text-sm" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
                   {user?.email}
                 </p>
                 {profile?.company_name && (
-                  <p className="text-xs mt-1" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                  <p className="text-xs mt-1" style={{ color: 'var(--accent)' }}>
                     {profile.company_name}
                   </p>
                 )}
@@ -134,12 +136,12 @@ export default function ProfilePage() {
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between py-2" style={{ borderBottom: '1px solid var(--border)' }}>
-                  <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('profile.phone')}</span>
-                  <span className="text-sm" style={{ color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>{profile?.phone || '—'}</span>
+                  <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{t('profile.phone')}</span>
+                  <span className="text-sm" style={{ color: 'var(--text-primary)' }}>{profile?.phone || '—'}</span>
                 </div>
                 <div className="flex items-center justify-between py-2">
-                  <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('profile.my_demands')}</span>
-                  <span className="text-sm font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>{demands.length}</span>
+                  <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{t('profile.my_demands')}</span>
+                  <span className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>{demands.length}</span>
                 </div>
               </div>
 
@@ -148,8 +150,7 @@ export default function ProfilePage() {
                 style={{
                   background: editing ? 'linear-gradient(135deg, var(--accent), var(--accent-secondary))' : 'transparent',
                   border: editing ? 'none' : '1px solid var(--border)',
-                  color: editing ? '#FFFFFF' : 'var(--text-secondary)',
-                  fontFamily: 'Outfit, sans-serif',
+                  color: editing ? 'var(--text-primary)' : 'var(--text-secondary)',
                   cursor: saving ? 'not-allowed' : 'pointer',
                   opacity: saving ? 0.7 : 1,
                 }}>
@@ -158,7 +159,7 @@ export default function ProfilePage() {
               {editing && (
                 <button onClick={() => setEditing(false)}
                   className="w-full mt-2 py-2.5 text-xs uppercase tracking-widest font-medium"
-                  style={{ border: '1px solid var(--border)', color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif', cursor: 'pointer' }}>
+                  style={{ border: '1px solid var(--border)', color: 'var(--text-muted)', cursor: 'pointer' }}>
                   {t('profile.cancel')}
                 </button>
               )}
@@ -170,31 +171,31 @@ export default function ProfilePage() {
             {/* Edit form */}
             {editing && (
               <div className="p-6" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                <h3 className="text-sm uppercase tracking-wider font-medium mb-4" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                <h3 className="text-sm uppercase tracking-wider font-medium mb-4" style={{ color: 'var(--text-muted)' }}>
                   {t('profile.personal_info')}
                 </h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('profile.full_name')}</label>
+                    <label className="block text-xs uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>{t('profile.full_name')}</label>
                     <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)}
                       className="w-full px-4 py-3 text-sm"
-                      style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}
+                      style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                       onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
                       onBlur={(e) => (e.target.style.borderColor = 'var(--border)')} />
                   </div>
                   <div>
-                    <label className="block text-xs uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('profile.phone')}</label>
+                    <label className="block text-xs uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>{t('profile.phone')}</label>
                     <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
                       className="w-full px-4 py-3 text-sm"
-                      style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}
+                      style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                       onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
                       onBlur={(e) => (e.target.style.borderColor = 'var(--border)')} />
                   </div>
                   <div>
-                    <label className="block text-xs uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('profile.company')}</label>
+                    <label className="block text-xs uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>{t('profile.company')}</label>
                     <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)}
                       className="w-full px-4 py-3 text-sm"
-                      style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}
+                      style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                       onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
                       onBlur={(e) => (e.target.style.borderColor = 'var(--border)')} />
                   </div>
@@ -205,11 +206,11 @@ export default function ProfilePage() {
             {/* Demands section */}
             <div className="p-6" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-sm uppercase tracking-wider font-medium" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                <h3 className="text-sm uppercase tracking-wider font-medium" style={{ color: 'var(--text-muted)' }}>
                   {t('profile.my_demands')}
                 </h3>
                 <Link to="/catalog" className="text-xs uppercase tracking-wider font-medium"
-                  style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                  style={{ color: 'var(--accent)' }}>
                   + {t('profile.new_demand')}
                 </Link>
               </div>
@@ -227,10 +228,10 @@ export default function ProfilePage() {
                         style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)' }}>
                         <div className="flex items-start justify-between mb-3">
                           <div>
-                            <p className="text-sm font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+                            <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
                               {demand.products?.name || t('profile.demand_solution')}
                             </p>
-                            <p className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                               #{String(demand.id).slice(0, 8)} — {new Date(demand.created_at).toLocaleDateString(getDateLocale(lang))}
                             </p>
                           </div>
@@ -252,10 +253,10 @@ export default function ProfilePage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-4">
-                          <span className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
                             {demand.mode === 'rental' ? t('rentals.rental') : t('rentals.purchase')}
                           </span>
-                          <span className="text-sm font-bold" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                          <span className="text-sm font-bold" style={{ color: 'var(--accent)' }}>
                             {Number(demand.estimated_total).toFixed(2)} TND
                           </span>
                         </div>
@@ -268,11 +269,11 @@ export default function ProfilePage() {
                   <svg className="w-12 h-12 mx-auto mb-3" fill="none" stroke="var(--border)" strokeWidth="1" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12H9.75m3 0H8.25m0 0H6.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V12.75" />
                   </svg>
-                  <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
+                  <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
                     {t('profile.no_demands')}
                   </p>
                   <Link to="/catalog" className="text-xs uppercase tracking-wider font-medium"
-                    style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                    style={{ color: 'var(--accent)' }}>
                     {t('profile.browse_catalog')}
                   </Link>
                 </div>

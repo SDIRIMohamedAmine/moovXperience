@@ -29,7 +29,7 @@ export default function PasswordStrength({ password }) {
             style={{ backgroundColor: i < strength ? COLORS[strength - 1] : colors.border }} />
         ))}
       </div>
-      <span className="text-xs" style={{ color: COLORS[strength - 1] || colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+      <span className="text-xs" style={{ color: COLORS[strength - 1] || colors.textLight,  }}>
         {LABELS[strength - 1] || ''}
       </span>
     </div>

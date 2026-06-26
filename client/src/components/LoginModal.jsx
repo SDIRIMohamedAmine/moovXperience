@@ -73,13 +73,13 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
 
         <div className="p-8">
           <div className="mb-6">
-            <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: colors.accent, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+            <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: colors.accent }}>
               {t('auth.welcome')}
             </p>
-            <h2 className="text-2xl" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary, fontWeight: 600 }}>
+            <h2 className="text-2xl" style={{  color: colors.primary, fontWeight: 600 }}>
               {t('auth.login_title')}
             </h2>
-            <p className="text-sm mt-1" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+            <p className="text-sm mt-1" style={{ color: colors.textLight }}>
               {t('auth.login_required_action')}
             </p>
           </div>
@@ -92,25 +92,25 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs uppercase tracking-wider mb-2" style={{ color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+              <label className="block text-xs uppercase tracking-wider mb-2" style={{ color: colors.textSecondary }}>
                 {t('auth.email')}
               </label>
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus
                 className="w-full px-4 py-3 text-sm transition-colors"
-                style={{ border: `1px solid ${colors.border}`, fontFamily: 'DM Sans, system-ui, sans-serif', color: colors.primary }}
+                style={{ border: `1px solid ${colors.border}`, color: colors.primary }}
                 onFocus={(e) => (e.target.style.borderColor = colors.inputFocus)}
                 onBlur={(e) => (e.target.style.borderColor = colors.border)}
               />
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider mb-2" style={{ color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+              <label className="block text-xs uppercase tracking-wider mb-2" style={{ color: colors.textSecondary }}>
                 {t('auth.password')}
               </label>
               <div className="relative">
                 <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} required
                   className="w-full px-4 py-3 pr-12 text-sm transition-colors"
-                  style={{ border: `1px solid ${colors.border}`, fontFamily: 'DM Sans, system-ui, sans-serif', color: colors.primary }}
+                  style={{ border: `1px solid ${colors.border}`, color: colors.primary }}
                   onFocus={(e) => (e.target.style.borderColor = colors.inputFocus)}
                   onBlur={(e) => (e.target.style.borderColor = colors.border)}
                 />
@@ -133,14 +133,14 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
 
             <div className="flex items-center gap-3">
               <input type="checkbox" id="modal-remember" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="w-4 h-4" />
-              <label htmlFor="modal-remember" className="text-sm cursor-pointer" style={{ color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+              <label htmlFor="modal-remember" className="text-sm cursor-pointer" style={{ color: colors.textSecondary }}>
                 {t('auth.remember_me')}
               </label>
             </div>
 
             <button type="submit" disabled={loading}
               className="w-full py-3 text-sm uppercase tracking-widest font-medium transition-colors"
-              style={{ backgroundColor: colors.cta, color: colors.textWhite, fontFamily: 'DM Sans, system-ui, sans-serif', opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+              style={{ backgroundColor: colors.cta, color: colors.textWhite, opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
               onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = colors.ctaHover)}
               onMouseLeave={(e) => (e.target.style.backgroundColor = colors.cta)}>
               {loading ? (
@@ -155,7 +155,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
             </button>
           </form>
 
-          <p className="mt-4 text-sm text-center" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="mt-4 text-sm text-center" style={{ color: colors.textLight }}>
             {t('auth.no_account')}{' '}
             <Link to="/register" onClick={onClose} className="font-medium" style={{ color: colors.accent }}>
               {t('nav.register')}

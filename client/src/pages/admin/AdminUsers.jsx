@@ -62,10 +62,10 @@ export default function AdminUsers() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-8">
-        <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+        <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)' }}>
           {t('admin.login_title')}
         </p>
-        <h1 className="text-3xl font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+        <h1 className="text-3xl font-bold" style={{  color: '#FFFFFF' }}>
           {t('admin.users')} <span className="text-lg font-normal" style={{ color: '#666' }}>({total})</span>
         </h1>
       </div>
@@ -86,19 +86,19 @@ export default function AdminUsers() {
                   onClick={() => loadUserDemands(user)}
                 >
                   <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
-                    style={{ background: 'linear-gradient(135deg, var(--accent), #AE59CE)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                    style={{ background: 'linear-gradient(135deg, var(--accent), #AE59CE)', color: '#FFFFFF' }}>
                     {(user.full_name || 'U').charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                    <p className="text-sm font-medium truncate" style={{ color: '#FFFFFF' }}>
                       {user.full_name || t('admin.no_name')}
                     </p>
-                    <p className="text-xs truncate" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                    <p className="text-xs truncate" style={{ color: '#666' }}>
                       {user.email || '—'} · {user.phone || '—'} · {new Date(user.created_at).toLocaleDateString(getDateLocale(lang))}
                     </p>
                   </div>
                   {user.company_name && (
-                    <span className="text-xs px-2.5 py-1" style={{ backgroundColor: 'rgba(176,186,153,0.1)', color: '#B0BA99', fontFamily: 'Outfit, sans-serif' }}>
+                    <span className="text-xs px-2.5 py-1" style={{ backgroundColor: 'rgba(176,186,153,0.1)', color: '#B0BA99' }}>
                       {user.company_name}
                     </span>
                   )}
@@ -116,16 +116,16 @@ export default function AdminUsers() {
                       </div>
                     ) : userDemands.length > 0 ? (
                       <div className="space-y-2 pt-2">
-                        <p className="text-xs uppercase tracking-wider font-semibold mb-2" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                        <p className="text-xs uppercase tracking-wider font-semibold mb-2" style={{ color: '#666' }}>
                           {t('profile.my_demands')} ({userDemands.length})
                         </p>
                         {userDemands.map((demand) => (
                           <div key={demand.id} className="flex items-center gap-3 p-3" style={{ backgroundColor: '#0D0D0D', border: '1px solid #222' }}>
                             <div className="flex-1">
-                              <p className="text-sm font-medium" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                              <p className="text-sm font-medium" style={{ color: '#FFFFFF' }}>
                                 {demand.products?.name || demand.product_name || '—'}
                               </p>
-                              <p className="text-xs" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                              <p className="text-xs" style={{ color: '#666' }}>
                                 {demand.mode === 'rental' ? t('rentals.rental') : t('rentals.purchase')} · {demand.estimated_total} TND · {new Date(demand.created_at).toLocaleDateString(getDateLocale(lang))}
                               </p>
                             </div>
@@ -133,7 +133,7 @@ export default function AdminUsers() {
                               style={{
                                 backgroundColor: demand.status === 'pending' ? 'rgba(255,152,0,0.1)' : demand.status === 'accepted' ? 'rgba(76,175,80,0.1)' : demand.status === 'refused' ? 'rgba(255,107,107,0.1)' : 'rgba(136,136,136,0.1)',
                                 color: demand.status === 'pending' ? '#FF9800' : demand.status === 'accepted' ? '#4CAF50' : demand.status === 'refused' ? '#FF6B6B' : '#888',
-                                fontFamily: 'Outfit, sans-serif', fontSize: '10px',
+                                 fontSize: '10px',
                               }}>
                               {t(`demand_status.status.${demand.status}`)}
                             </span>
@@ -141,7 +141,7 @@ export default function AdminUsers() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-xs py-4 text-center" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                      <p className="text-xs py-4 text-center" style={{ color: '#666' }}>
                         {t('profile.no_demands')}
                       </p>
                     )}

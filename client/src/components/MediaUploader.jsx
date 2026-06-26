@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import { showToast } from './Toast'
 import { useTranslation } from '../i18n/LanguageContext'
 
-export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
+export default function MediaUploader({ files = [], onChange, maxFiles = 10, folder = 'products' }) {
   const { t } = useTranslation()
   const { session } = useAuth()
   const fileInputRef = useRef(null)
@@ -36,7 +36,7 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
       }
 
       const ext = file.name.split('.').pop()
-      const fileName = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
       try {
         const { data, error } = await supabase.storage
@@ -110,7 +110,7 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
         {uploading ? (
           <div className="flex flex-col items-center gap-3">
             <div className="w-10 h-10 border-2 animate-spin" style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }} />
-            <p className="text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
               {t('media.uploading')}
             </p>
           </div>
@@ -119,10 +119,10 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
             <svg className="w-10 h-10" fill="none" stroke="var(--text-muted)" strokeWidth="1" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
             </svg>
-            <p className="text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif' }}>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
               {t('media.drag_drop')} <span style={{ color: 'var(--accent)' }}>{t('media.browse')}</span>
             </p>
-            <p className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
               {t('media.accepted_formats')} — {t('media.max_files', { count: maxFiles })}
             </p>
           </div>
@@ -183,7 +183,7 @@ export default function MediaUploader({ files = [], onChange, maxFiles = 10 }) {
 
               {/* Order number */}
               <div className="absolute bottom-1 left-1 w-5 h-5 flex items-center justify-center text-xs font-bold rounded-full"
-                style={{ backgroundColor: 'rgba(0,0,0,0.7)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif', fontSize: '10px' }}>
+                style={{ backgroundColor: 'rgba(0,0,0,0.7)', color: '#FFFFFF', fontSize: '10px' }}>
                 {index + 1}
               </div>
             </div>

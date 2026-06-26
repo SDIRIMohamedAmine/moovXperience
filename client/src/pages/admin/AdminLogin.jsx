@@ -47,38 +47,38 @@ export default function AdminLogin() {
     <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#0D0D0D' }}>
       <div className="w-full max-w-md p-8" style={{ backgroundColor: '#141414', border: '1px solid #222' }}>
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold gradient-text mb-2" style={{ fontFamily: 'Outfit, sans-serif' }}>
+          <h1 className="text-2xl font-bold gradient-text mb-2" style={{  }}>
             MoovXperience
           </h1>
-          <p className="text-xs uppercase tracking-[0.3em] font-medium" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+          <p className="text-xs uppercase tracking-[0.3em] font-medium" style={{ color: 'var(--accent)' }}>
             {t('admin.login_title')}
           </p>
         </div>
 
         {error && (
           <div className="mb-6 p-4 text-sm text-center"
-            style={{ backgroundColor: 'rgba(255,107,107,0.1)', color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.2)', fontFamily: 'Outfit, sans-serif' }}>
+            style={{ backgroundColor: 'rgba(255,107,107,0.1)', color: '#FF6B6B', border: '1px solid rgba(255,107,107,0.2)' }}>
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#666' }}>
               {t('auth.email')}
             </label>
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-              className="w-full px-4 py-3 text-sm" style={{ backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}
+              className="w-full px-4 py-3 text-sm" style={{ backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF' }}
               onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
               onBlur={(e) => (e.target.style.borderColor = '#222')} />
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+            <label className="block text-xs uppercase tracking-wider mb-2 font-semibold" style={{ color: '#666' }}>
               {t('auth.password')}
             </label>
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
-              className="w-full px-4 py-3 text-sm" style={{ backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}
+              className="w-full px-4 py-3 text-sm" style={{ backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF' }}
               onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
               onBlur={(e) => (e.target.style.borderColor = '#222')} />
           </div>
@@ -88,7 +88,7 @@ export default function AdminLogin() {
             style={{
               background: 'linear-gradient(135deg, var(--accent), #AE59CE)',
               color: '#FFFFFF',
-              fontFamily: 'Outfit, sans-serif',
+              
               opacity: loading ? 0.6 : 1,
               cursor: loading ? 'not-allowed' : 'pointer',
             }}>

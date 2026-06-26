@@ -97,12 +97,12 @@ export default function MyRentalsPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl mb-6" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary }}>
+      <h1 className="text-2xl mb-6" style={{  color: colors.primary }}>
         {t('rentals.title')}
       </h1>
 
       {success && (
-        <div className="mb-4 text-sm px-4 py-3" style={{ backgroundColor: '#E8F5E9', color: '#2E7D32', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+        <div className="mb-4 text-sm px-4 py-3" style={{ backgroundColor: '#E8F5E9', color: '#2E7D32' }}>
           {t('rentals.booking_success')}
         </div>
       )}
@@ -117,7 +117,7 @@ export default function MyRentalsPage() {
             style={{
               backgroundColor: filter === status ? colors.primary : colors.bg,
               color: filter === status ? colors.textWhite : colors.primary,
-              fontFamily: 'DM Sans, system-ui, sans-serif',
+              
               fontWeight: 500,
             }}
           >
@@ -132,7 +132,7 @@ export default function MyRentalsPage() {
         </div>
       ) : rentals.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-sm mb-4" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="text-sm mb-4" style={{ color: colors.textLight }}>
             {t('rentals.empty')}
           </p>
           <Link to="/catalog" className="text-sm" style={{ color: colors.accent }}>
@@ -155,7 +155,7 @@ export default function MyRentalsPage() {
                       style={{
                         backgroundColor: STATUS_COLORS[rental.status]?.bg || colors.bg,
                         color: STATUS_COLORS[rental.status]?.text || colors.primary,
-                        fontFamily: 'DM Sans, system-ui, sans-serif',
+                        
                       }}
                     >
                       {t(`rentals.status.${rental.status}`)}
@@ -166,34 +166,34 @@ export default function MyRentalsPage() {
                         style={{
                           backgroundColor: PAYMENT_COLORS[rental.payment_status]?.bg || colors.bg,
                           color: PAYMENT_COLORS[rental.payment_status]?.text || colors.primary,
-                          fontFamily: 'DM Sans, system-ui, sans-serif',
+                          
                         }}
                       >
                         {t(`payment.status.${rental.payment_status}`)}
                       </span>
                     )}
-                    <span className="text-xs" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <span className="text-xs" style={{ color: colors.textLight }}>
                       {formatDate(rental.start_date)} — {formatDate(rental.end_date)}
                     </span>
                   </div>
 
                   <div className="space-y-1">
                     {(rental.rental_items || []).map(item => (
-                      <div key={item.id} className="text-sm" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                      <div key={item.id} className="text-sm" style={{ color: colors.primary }}>
                         {item.products?.name || 'Produit'} × {item.quantity}
                       </div>
                     ))}
                   </div>
 
                   {rental.notes && (
-                    <p className="text-xs mt-2" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <p className="text-xs mt-2" style={{ color: colors.textLight }}>
                       {rental.notes}
                     </p>
                   )}
                 </div>
 
                 <div className="text-right ml-4">
-                  <div className="text-sm font-bold" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                  <div className="text-sm font-bold" style={{ color: colors.primary }}>
                     {Number(rental.total_price).toFixed(2)} TND
                   </div>
                 </div>
@@ -204,7 +204,7 @@ export default function MyRentalsPage() {
                   <button
                     onClick={() => handleCancel(rental.id)}
                     className="px-4 py-1.5 text-xs font-medium"
-                    style={{ backgroundColor: '#FFEBEE', color: '#C62828', fontFamily: 'DM Sans, system-ui, sans-serif' }}
+                    style={{ backgroundColor: '#FFEBEE', color: '#C62828' }}
                   >
                     {t('rentals.cancel')}
                   </button>
@@ -216,7 +216,7 @@ export default function MyRentalsPage() {
                   <button
                     onClick={() => handlePay(rental.id)}
                     className="px-5 py-1.5 text-xs font-medium"
-                    style={{ backgroundColor: colors.cta, color: colors.textWhite, fontFamily: 'DM Sans, system-ui, sans-serif' }}
+                    style={{ backgroundColor: colors.cta, color: colors.textWhite }}
                   >
                     {t('payment.pay_now')}
                   </button>

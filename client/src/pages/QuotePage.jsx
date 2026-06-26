@@ -128,7 +128,7 @@ export default function QuotePage() {
   if (!product) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-xl" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary }}>
+        <h2 className="text-xl" style={{  color: colors.primary }}>
           Solution non trouvée
         </h2>
         <Link to="/catalog" className="text-sm mt-4 inline-block" style={{ color: colors.accent }}>
@@ -148,15 +148,15 @@ export default function QuotePage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h2 className="text-2xl mb-3" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary, fontWeight: 600 }}>
+          <h2 className="text-2xl mb-3" style={{  color: colors.primary, fontWeight: 600 }}>
             {t('quote.success_title')}
           </h2>
-          <p className="text-sm mb-8" style={{ color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="text-sm mb-8" style={{ color: colors.textSecondary }}>
             {t('quote.success_desc')}
           </p>
           <Link to="/catalog"
             className="inline-block px-8 py-3 text-sm uppercase tracking-widest font-medium"
-            style={{ backgroundColor: colors.cta, color: colors.textWhite, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+            style={{ backgroundColor: colors.cta, color: colors.textWhite }}>
             {t('product.back_to_catalog')}
           </Link>
         </motion.div>
@@ -164,21 +164,21 @@ export default function QuotePage() {
     )
   }
 
-  const inputStyle = { border: `1px solid ${colors.border}`, fontFamily: 'DM Sans, system-ui, sans-serif', color: colors.primary }
-  const labelStyle = { color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }
+  const inputStyle = { border: `1px solid ${colors.border}`, color: colors.primary }
+  const labelStyle = { color: colors.textSecondary }
 
   return (
     <div>
       {/* Header */}
       <section className="py-10" style={{ backgroundColor: colors.bgWhite, borderBottom: `1px solid ${colors.border}` }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: colors.accent, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: colors.accent }}>
             {t('quote.title')}
           </p>
-          <h1 className="text-3xl" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary, fontWeight: 600 }}>
+          <h1 className="text-3xl" style={{  color: colors.primary, fontWeight: 600 }}>
             {product.name}
           </h1>
-          <p className="text-sm mt-2" style={{ color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+          <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
             {t('quote.subtitle')}
           </p>
         </div>
@@ -202,10 +202,10 @@ export default function QuotePage() {
                         backgroundColor: form.mode === 'rental' ? colors.accentLight : colors.bgWhite,
                         border: `2px solid ${form.mode === 'rental' ? colors.accent : colors.border}`,
                       }}>
-                      <div className="text-sm font-medium" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                      <div className="text-sm font-medium" style={{ color: colors.primary }}>
                         {t('quote.rental')}
                       </div>
-                      <div className="text-xs mt-1" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                      <div className="text-xs mt-1" style={{ color: colors.textLight }}>
                         {product.price_per_day} {t('catalog.currency')}/{t('catalog.price_per_day').toLowerCase()}
                       </div>
                     </button>
@@ -217,10 +217,10 @@ export default function QuotePage() {
                         backgroundColor: form.mode === 'purchase' ? colors.accentLight : colors.bgWhite,
                         border: `2px solid ${form.mode === 'purchase' ? colors.accent : colors.border}`,
                       }}>
-                      <div className="text-sm font-medium" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                      <div className="text-sm font-medium" style={{ color: colors.primary }}>
                         {t('quote.purchase')}
                       </div>
-                      <div className="text-xs mt-1" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                      <div className="text-xs mt-1" style={{ color: colors.textLight }}>
                         {product.price_purchase} {t('catalog.currency')}
                       </div>
                     </button>
@@ -240,7 +240,7 @@ export default function QuotePage() {
                       className="w-24 px-4 py-3 text-sm text-center"
                       style={inputStyle}
                     />
-                    <span className="text-sm" style={{ color: colors.textSecondary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <span className="text-sm" style={{ color: colors.textSecondary }}>
                       {t('quote.duration_days')}
                     </span>
                     <div className="flex gap-2 ml-auto">
@@ -251,7 +251,7 @@ export default function QuotePage() {
                             backgroundColor: form.duration_days === d ? colors.primary : 'transparent',
                             color: form.duration_days === d ? colors.textWhite : colors.textSecondary,
                             border: `1px solid ${form.duration_days === d ? colors.primary : colors.border}`,
-                            fontFamily: 'DM Sans, system-ui, sans-serif',
+                            
                           }}>
                           {d}j
                         </button>
@@ -278,16 +278,16 @@ export default function QuotePage() {
                         <input type="checkbox" checked={!!selectedOptions[opt.name]} onChange={() => toggleOption(opt.name)}
                           className="mt-0.5 accent-[#76ABAE]" />
                         <div className="flex-1">
-                          <span className="text-sm font-medium" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                          <span className="text-sm font-medium" style={{ color: colors.primary }}>
                             {opt.name}
                           </span>
                           {opt.description && (
-                            <p className="text-xs mt-0.5" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                            <p className="text-xs mt-0.5" style={{ color: colors.textLight }}>
                               {opt.description}
                             </p>
                           )}
                         </div>
-                        <span className="text-sm font-medium whitespace-nowrap" style={{ color: colors.accent, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                        <span className="text-sm font-medium whitespace-nowrap" style={{ color: colors.accent }}>
                           +{opt.price} {t('catalog.currency')}
                         </span>
                       </label>
@@ -351,7 +351,7 @@ export default function QuotePage() {
             {/* Right — Summary */}
             <div className="lg:col-span-1">
               <div className="sticky top-24 p-6" style={{ backgroundColor: colors.bgWhite, border: `1px solid ${colors.border}` }}>
-                <h3 className="text-lg mb-4" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.primary, fontWeight: 600 }}>
+                <h3 className="text-lg mb-4" style={{  color: colors.primary, fontWeight: 600 }}>
                   {t('quote.price_breakdown')}
                 </h3>
 
@@ -369,10 +369,10 @@ export default function QuotePage() {
                     )}
                   </div>
                   <div>
-                    <p className="text-sm font-medium" style={{ color: colors.primary, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <p className="text-sm font-medium" style={{ color: colors.primary }}>
                       {product.name}
                     </p>
-                    <p className="text-xs" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <p className="text-xs" style={{ color: colors.textLight }}>
                       {form.mode === 'rental' ? t('quote.rental') : t('quote.purchase')}
                     </p>
                   </div>
@@ -381,21 +381,21 @@ export default function QuotePage() {
                 {/* Line items */}
                 <div className="space-y-2 mb-4">
                   {form.mode === 'rental' ? (
-                    <div className="flex justify-between text-sm" style={{ fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <div className="flex justify-between text-sm" style={{  }}>
                       <span style={{ color: colors.textSecondary }}>
                         {product.price_per_day} × {duration} {t('quote.duration_days')}
                       </span>
                       <span style={{ color: colors.primary }}>{basePrice.toFixed(2)} {t('catalog.currency')}</span>
                     </div>
                   ) : (
-                    <div className="flex justify-between text-sm" style={{ fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <div className="flex justify-between text-sm" style={{  }}>
                       <span style={{ color: colors.textSecondary }}>{t('quote.purchase')}</span>
                       <span style={{ color: colors.primary }}>{basePrice.toFixed(2)} {t('catalog.currency')}</span>
                     </div>
                   )}
 
                   {options.filter(opt => selectedOptions[opt.name]).map(opt => (
-                    <div key={opt.name} className="flex justify-between text-sm" style={{ fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <div key={opt.name} className="flex justify-between text-sm" style={{  }}>
                       <span style={{ color: colors.textSecondary }}>{opt.name}</span>
                       <span style={{ color: colors.primary }}>+{opt.price.toFixed(2)} {t('catalog.currency')}</span>
                     </div>
@@ -405,10 +405,10 @@ export default function QuotePage() {
                 {/* Total */}
                 <div className="pt-4" style={{ borderTop: `2px solid ${colors.primary}` }}>
                   <div className="flex justify-between items-baseline">
-                    <span className="text-xs uppercase tracking-wider" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                    <span className="text-xs uppercase tracking-wider" style={{ color: colors.textLight }}>
                       {t('quote.estimated_total')}
                     </span>
-                    <span className="text-2xl" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: colors.cta, fontWeight: 600 }}>
+                    <span className="text-2xl" style={{  color: colors.cta, fontWeight: 600 }}>
                       {estimatedTotal.toFixed(2)} {t('catalog.currency')}
                     </span>
                   </div>
@@ -420,7 +420,7 @@ export default function QuotePage() {
                   style={{
                     backgroundColor: colors.cta,
                     color: colors.textWhite,
-                    fontFamily: 'DM Sans, system-ui, sans-serif',
+                    
                     opacity: (submitting || !form.client_name || !form.client_email) ? 0.5 : 1,
                     cursor: (submitting || !form.client_name || !form.client_email) ? 'not-allowed' : 'pointer',
                   }}>
@@ -435,7 +435,7 @@ export default function QuotePage() {
                   ) : t('quote.submit')}
                 </button>
 
-                <p className="text-xs text-center mt-3" style={{ color: colors.textLight, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                <p className="text-xs text-center mt-3" style={{ color: colors.textLight }}>
                   {t('quote.success_desc')}
                 </p>
               </div>

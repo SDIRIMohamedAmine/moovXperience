@@ -60,13 +60,13 @@ export default function DemandStatusPage() {
       {/* Header */}
       <section className="py-12" style={{ backgroundColor: 'var(--bg-overlay)', borderBottom: '1px solid var(--border)' }}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)' }}>
             {t('demand_status.title')}
           </p>
-          <h1 className="text-3xl mb-2 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: 'var(--text-primary)' }}>
+          <h1 className="text-3xl mb-2 font-bold" style={{  color: 'var(--text-primary)' }}>
             {t('demand_status.heading')}
           </h1>
-          <p className="text-sm" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
             {t('demand_status.description')}
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function DemandStatusPage() {
           <div className="p-8" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
-                <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
                   {t('demand_status.email')}
                 </label>
                 <input
@@ -87,13 +87,13 @@ export default function DemandStatusPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="votre@email.com"
                   className="w-full px-4 py-3 text-sm"
-                  style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}
+                  style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
                   onBlur={(e) => (e.target.style.borderColor = 'var(--border)')}
                 />
               </div>
               <div>
-                <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
                   {t('demand_status.ref_number')}
                 </label>
                 <input
@@ -102,7 +102,7 @@ export default function DemandStatusPage() {
                   onChange={(e) => setQuoteId(e.target.value)}
                   placeholder="ex: a1b2c3d4"
                   className="w-full px-4 py-3 text-sm"
-                  style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}
+                  style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
                   onBlur={(e) => (e.target.style.borderColor = 'var(--border)')}
                 />
@@ -115,7 +115,7 @@ export default function DemandStatusPage() {
               style={{
                 background: loading ? 'var(--border)' : 'linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%)',
                 color: '#FFFFFF',
-                fontFamily: 'Outfit, sans-serif',
+                
                 cursor: loading ? 'not-allowed' : 'pointer',
                 opacity: loading ? 0.7 : 1,
               }}>
@@ -127,7 +127,7 @@ export default function DemandStatusPage() {
         {/* Error */}
         {error && (
           <div className="p-4 mb-6" style={{ backgroundColor: '#3D1515', border: '1px solid #5D2A2A' }}>
-            <p className="text-sm" style={{ color: '#FF6B6B', fontFamily: 'Outfit, sans-serif' }}>
+            <p className="text-sm" style={{ color: '#FF6B6B' }}>
               {error}
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function DemandStatusPage() {
         {/* Results */}
         {results && results.length > 0 && (
           <div className="space-y-4">
-            <p className="text-sm font-medium" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+            <p className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>
               {results.length} {results.length > 1 ? t('demand_status.demands') : t('demand_status.demand')} {results.length > 1 ? t('demand_status.found_plural') : t('demand_status.found')}
             </p>
             {results.map((quote) => {
@@ -145,10 +145,10 @@ export default function DemandStatusPage() {
                 <div key={quote.id} className="p-6" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>
                         {t('demand_status.ref')}
                       </p>
-                      <p className="text-sm font-mono" style={{ color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>
+                      <p className="text-sm font-mono" style={{ color: 'var(--text-primary)' }}>
                         #{String(quote.id).slice(0, 8)}
                       </p>
                     </div>
@@ -159,26 +159,26 @@ export default function DemandStatusPage() {
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
-                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('demand_status.solution')}</p>
-                      <p className="text-sm font-medium" style={{ color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>{t('demand_status.solution')}</p>
+                      <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                         {quote.products?.name || 'N/A'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('demand_status.type')}</p>
-                      <p className="text-sm" style={{ color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>{t('demand_status.type')}</p>
+                      <p className="text-sm" style={{ color: 'var(--text-primary)' }}>
                         {quote.mode === 'rental' ? t('rentals.rental') : t('rentals.purchase')}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('demand_status.estimated_total')}</p>
-                      <p className="text-sm font-bold" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>{t('demand_status.estimated_total')}</p>
+                      <p className="text-sm font-bold" style={{ color: 'var(--accent)' }}>
                         {Number(quote.estimated_total).toFixed(2)} TND
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif' }}>{t('demand_status.date')}</p>
-                      <p className="text-sm" style={{ color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>
+                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>{t('demand_status.date')}</p>
+                      <p className="text-sm" style={{ color: 'var(--text-primary)' }}>
                         {new Date(quote.created_at).toLocaleDateString(getDateLocale(lang))}
                       </p>
                     </div>

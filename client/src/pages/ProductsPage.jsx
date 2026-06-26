@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { fadeInUp, stagger, scaleIn, viewportOnce } from '../lib/animations'
 import { useTranslation } from '../i18n/LanguageContext'
 import { fetchProducts } from '../services/productService'
 import ProductCard from '../components/ProductCard'
@@ -24,8 +22,8 @@ const getPricingLabels = (t) => ({
   suggestion: t('catalog.pricing_suggestion'),
 })
 
-export default function CatalogPage() {
-  const { t, lang } = useTranslation()
+export default function ProductsPage() {
+  const { t } = useTranslation()
   const categoryLabels = getCategoryLabels(t)
   const pricingLabels = getPricingLabels(t)
   const [searchParams, setSearchParams] = useSearchParams()
@@ -41,7 +39,7 @@ export default function CatalogPage() {
   useEffect(() => {
     let cancelled = false
     setLoading(true)
-    const filters = {}
+    const filters = { mode: 'sale' }
     if (search) filters.search = search
     if (selectedCategory) filters.category = selectedCategory
     if (selectedPricing) filters.pricing_type = selectedPricing
@@ -95,7 +93,6 @@ export default function CatalogPage() {
 
   const FilterSidebar = () => (
     <div className="space-y-6">
-      {/* Search */}
       <div>
         <label className="block text-xs uppercase tracking-wider font-medium mb-3" style={{ color: 'var(--text-muted)' }}>
           {t('catalog.search_placeholder').replace('...', '')}
@@ -113,7 +110,6 @@ export default function CatalogPage() {
         </div>
       </div>
 
-      {/* Categories */}
       <div>
         <label className="block text-xs uppercase tracking-wider font-medium mb-3" style={{ color: 'var(--text-muted)' }}>
           {t('catalog.categories')}
@@ -142,7 +138,6 @@ export default function CatalogPage() {
         </div>
       </div>
 
-      {/* Pricing */}
       <div>
         <label className="block text-xs uppercase tracking-wider font-medium mb-3" style={{ color: 'var(--text-muted)' }}>
           {t('catalog.pricing_type')}
@@ -171,7 +166,6 @@ export default function CatalogPage() {
         </div>
       </div>
 
-      {/* Clear filters */}
       {hasActiveFilters && (
         <button onClick={clearFilters}
           className="w-full py-2.5 text-xs uppercase tracking-wider font-medium transition-all"
@@ -184,23 +178,21 @@ export default function CatalogPage() {
 
   return (
     <div style={{ backgroundColor: 'var(--bg)' }}>
-      {/* Header */}
       <section className="py-12" style={{ backgroundColor: 'var(--bg-overlay)', borderBottom: '1px solid var(--border)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)' }}>
-            {t('catalog.tag')}
+            {t('products_page.tag')}
           </p>
           <h1 className="text-3xl mb-2 font-bold" style={{  color: 'var(--text-primary)' }}>
-            {t('catalog.title')}
+            {t('products_page.title')}
           </h1>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-            {t('catalog.subtitle')}
+            {t('products_page.subtitle')}
           </p>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Mobile filter toggle */}
         <div className="lg:hidden mb-4">
           <button onClick={() => setSidebarOpen(!sidebarOpen)}
             className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium"
@@ -213,16 +205,13 @@ export default function CatalogPage() {
         </div>
 
         <div className="flex gap-8">
-          {/* Sidebar — desktop always visible, mobile collapsible */}
           <aside className={`${sidebarOpen ? 'block' : 'hidden'} lg:block w-full lg:w-64 flex-shrink-0`}>
             <div className="sticky top-24 p-5" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
               <FilterSidebar />
             </div>
           </aside>
 
-          {/* Main content */}
           <div className="flex-1 min-w-0">
-            {/* Sort bar */}
             <div className="flex items-center justify-between mb-6">
               <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
                 {loading ? '...' : `${total} ${t('catalog.results')}`}
@@ -242,7 +231,6 @@ export default function CatalogPage() {
               </div>
             </div>
 
-            {/* Grid */}
             {loading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                 {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}

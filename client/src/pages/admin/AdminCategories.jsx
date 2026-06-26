@@ -68,10 +68,10 @@ export default function AdminCategories() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-8">
-        <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+        <p className="text-xs uppercase tracking-[0.3em] mb-2 font-medium" style={{ color: 'var(--accent)' }}>
           {t('admin.login_title')}
         </p>
-        <h1 className="text-3xl font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+        <h1 className="text-3xl font-bold" style={{  color: '#FFFFFF' }}>
           {t('admin.categories')}
         </h1>
       </div>
@@ -80,13 +80,13 @@ export default function AdminCategories() {
       <form onSubmit={handleCreate} className="flex gap-3 mb-8">
         <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)}
           placeholder={t('admin.category_name')} className="flex-1 px-4 py-3 text-sm"
-          style={{ backgroundColor: '#141414', border: '1px solid #222', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }} />
+          style={{ backgroundColor: '#141414', border: '1px solid #222', color: '#FFFFFF' }} />
         <input type="text" value={newSlug} onChange={(e) => setNewSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
           placeholder="slug" className="w-40 px-4 py-3 text-sm"
-          style={{ backgroundColor: '#141414', border: '1px solid #222', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }} />
+          style={{ backgroundColor: '#141414', border: '1px solid #222', color: '#FFFFFF' }} />
         <button type="submit"
           className="px-6 py-3 text-xs uppercase tracking-widest font-semibold"
-          style={{ background: 'linear-gradient(135deg, var(--accent), #AE59CE)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+          style={{ background: 'linear-gradient(135deg, var(--accent), #AE59CE)', color: '#FFFFFF' }}>
           {t('admin.add_category')}
         </button>
       </form>
@@ -104,37 +104,37 @@ export default function AdminCategories() {
                 <>
                   <input type="text" value={editName} onChange={(e) => setEditName(e.target.value)}
                     className="flex-1 px-3 py-2 text-sm"
-                    style={{ backgroundColor: '#0D0D0D', border: '1px solid var(--accent)', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}
+                    style={{ backgroundColor: '#0D0D0D', border: '1px solid var(--accent)', color: '#FFFFFF' }}
                     autoFocus onKeyDown={(e) => e.key === 'Enter' && handleUpdate(cat.id)} />
                   <button onClick={() => handleUpdate(cat.id)}
                     className="text-xs px-3 py-1.5 uppercase tracking-wider font-medium"
-                    style={{ border: '1px solid #4CAF50', color: '#4CAF50', fontFamily: 'Outfit, sans-serif' }}>
+                    style={{ border: '1px solid #4CAF50', color: '#4CAF50' }}>
                     {t('admin.save')}
                   </button>
                   <button onClick={() => setEditing(null)}
                     className="text-xs px-3 py-1.5 uppercase tracking-wider font-medium"
-                    style={{ border: '1px solid #666', color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                    style={{ border: '1px solid #666', color: '#666' }}>
                     {t('common.cancel')}
                   </button>
                 </>
               ) : (
                 <>
                   <div className="flex-1">
-                    <p className="text-sm font-medium" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                    <p className="text-sm font-medium" style={{ color: '#FFFFFF' }}>
                       {cat.name}
                     </p>
-                    <p className="text-xs" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                    <p className="text-xs" style={{ color: '#666' }}>
                       {cat.slug}
                     </p>
                   </div>
                   <button onClick={() => { setEditing(cat.id); setEditName(cat.name) }}
                     className="text-xs px-3 py-1.5 uppercase tracking-wider font-medium"
-                    style={{ border: '1px solid #222', color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                    style={{ border: '1px solid #222', color: '#666' }}>
                     {t('admin.rename_category')}
                   </button>
                   <button onClick={() => handleDelete(cat.id, cat.name)}
                     className="text-xs px-3 py-1.5 uppercase tracking-wider font-medium"
-                    style={{ border: '1px solid #FF6B6B', color: '#FF6B6B', fontFamily: 'Outfit, sans-serif' }}>
+                    style={{ border: '1px solid #FF6B6B', color: '#FF6B6B' }}>
                     {t('admin.delete')}
                   </button>
                 </>

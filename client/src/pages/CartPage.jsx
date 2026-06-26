@@ -38,15 +38,15 @@ export default function CartPage() {
         <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="#333" strokeWidth="1" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
         </svg>
-        <h2 className="text-xl mb-2 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+        <h2 className="text-xl mb-2 font-bold" style={{  color: '#FFFFFF' }}>
           {t('checkout.empty')}
         </h2>
-        <p className="text-sm mb-6" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+        <p className="text-sm mb-6" style={{ color: '#666' }}>
           {t('rentals.empty_desc')}
         </p>
         <Link to="/catalog"
           className="inline-flex items-center gap-2 px-6 py-3 text-xs uppercase tracking-widest font-semibold"
-          style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+          style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF' }}>
           {t('catalog.title')}
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -58,7 +58,7 @@ export default function CartPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="text-3xl mb-8 font-bold" style={{ fontFamily: 'Outfit, sans-serif', color: '#FFFFFF' }}>
+      <h1 className="text-3xl mb-8 font-bold" style={{  color: '#FFFFFF' }}>
         {t('nav.cart')}
         <span className="text-sm ml-3 font-normal" style={{ color: '#666' }}>
           ({items.length} {items.length > 1 ? t('rentals.items') : t('rentals.item')})
@@ -94,14 +94,14 @@ export default function CartPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <h3 className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                        <h3 className="text-sm font-bold" style={{ color: '#FFFFFF' }}>
                           {item.name}
                         </h3>
                         <span className="inline-block mt-1 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider"
                           style={{
                             background: item.mode === 'rental' ? 'linear-gradient(135deg, var(--accent), var(--accent-secondary))' : 'linear-gradient(135deg, var(--accent-tertiary), var(--accent-secondary))',
                             color: '#FFFFFF',
-                            fontFamily: 'Outfit, sans-serif',
+                            
                             fontSize: '10px',
                           }}>
                           {item.mode === 'rental' ? t('rentals.rental') : t('rentals.purchase')}
@@ -124,16 +124,16 @@ export default function CartPage() {
                         <input type="date" value={item.startDate || ''} min={new Date().toISOString().split('T')[0]}
                           onChange={(e) => updateDates(item.key, e.target.value, item.endDate)}
                           className="px-2 py-1 text-xs"
-                          style={{ backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}
+                          style={{ backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF' }}
                         />
                         <span className="text-xs" style={{ color: '#666' }}>→</span>
                         <input type="date" value={item.endDate || ''} min={item.startDate || new Date().toISOString().split('T')[0]}
                           onChange={(e) => updateDates(item.key, item.startDate, e.target.value)}
                           className="px-2 py-1 text-xs"
-                          style={{ backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}
+                          style={{ backgroundColor: '#0D0D0D', border: '1px solid #222', color: '#FFFFFF' }}
                         />
                         {days > 0 && (
-                          <span className="text-xs" style={{ color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                          <span className="text-xs" style={{ color: 'var(--accent)' }}>
                             ({days}{t('rentals.days_short')})
                           </span>
                         )}
@@ -145,7 +145,7 @@ export default function CartPage() {
                       <div className="mt-2 flex flex-wrap gap-1.5">
                         {item.options.map((opt) => (
                           <span key={opt.name} className="px-2 py-0.5 text-xs"
-                            style={{ backgroundColor: 'var(--accent-bg)', border: '1px solid var(--accent-bg)', color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+                            style={{ backgroundColor: 'var(--accent-bg)', border: '1px solid var(--accent-bg)', color: 'var(--accent)' }}>
                             {opt.name} +{opt.price} TND
                           </span>
                         ))}
@@ -158,14 +158,14 @@ export default function CartPage() {
                         <button onClick={() => updateQuantity(item.key, item.quantity - 1)}
                           className="w-9 h-9 flex items-center justify-center text-sm"
                           style={{ border: '1px solid #222', color: '#FFFFFF' }}>−</button>
-                        <span className="w-8 text-center text-sm font-medium" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                        <span className="w-8 text-center text-sm font-medium" style={{ color: '#FFFFFF' }}>
                           {item.quantity}
                         </span>
                         <button onClick={() => updateQuantity(item.key, item.quantity + 1)}
                           className="w-9 h-9 flex items-center justify-center text-sm"
                           style={{ border: '1px solid #222', color: '#FFFFFF' }}>+</button>
                       </div>
-                      <span className="text-sm font-bold" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+                      <span className="text-sm font-bold" style={{ color: '#FFFFFF' }}>
                         {total.toFixed(2)} TND
                       </span>
                     </div>
@@ -179,13 +179,13 @@ export default function CartPage() {
         {/* Summary */}
         <div className="lg:col-span-1">
           <div className="sticky top-24 p-6" style={{ backgroundColor: '#141414', border: '1px solid #1a1a1a' }}>
-            <h3 className="text-lg font-bold mb-5" style={{ color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+            <h3 className="text-lg font-bold mb-5" style={{ color: '#FFFFFF' }}>
               {t('rentals.summary')}
             </h3>
 
             <div className="space-y-3 mb-5">
               {items.map((item) => (
-                <div key={item.key} className="flex justify-between text-sm" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                <div key={item.key} className="flex justify-between text-sm" style={{  }}>
                   <span style={{ color: '#666' }}>{item.name} × {item.quantity}</span>
                   <span style={{ color: '#FFFFFF' }}>{getItemTotal(item).toFixed(2)} TND</span>
                 </div>
@@ -194,10 +194,10 @@ export default function CartPage() {
 
             <div className="pt-4 mb-6" style={{ borderTop: '1px solid #222' }}>
               <div className="flex justify-between items-baseline">
-                <span className="text-xs uppercase tracking-wider" style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}>
+                <span className="text-xs uppercase tracking-wider" style={{ color: '#666' }}>
                   {t('rentals.total')}
                 </span>
-                <span className="text-2xl font-bold gradient-text" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                <span className="text-2xl font-bold gradient-text" style={{  }}>
                   {getTotal().toFixed(2)} TND
                 </span>
               </div>
@@ -205,12 +205,12 @@ export default function CartPage() {
 
             <button onClick={handleCheckout}
               className="w-full py-3.5 text-xs uppercase tracking-widest font-semibold transition-all hover:scale-[1.02]"
-              style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF', fontFamily: 'Outfit, sans-serif' }}>
+              style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#FFFFFF' }}>
               {t('checkout.confirm')}
             </button>
 
             <Link to="/catalog" className="block text-center text-xs mt-3 transition-colors"
-              style={{ color: '#666', fontFamily: 'Outfit, sans-serif' }}
+              style={{ color: '#666' }}
               onMouseEnter={(e) => (e.target.style.color = 'var(--accent)')}
               onMouseLeave={(e) => (e.target.style.color = '#666')}>
               ← {t('product.back_to_catalog')}

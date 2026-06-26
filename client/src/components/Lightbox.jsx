@@ -36,7 +36,7 @@ export default function Lightbox({ files = [], activeIndex = 0, onClose, onNavig
 
       {/* Counter */}
       <div className="absolute top-4 left-4 text-sm font-medium z-10"
-        style={{ color: 'rgba(255,255,255,0.6)', fontFamily: 'Outfit, sans-serif' }}>
+        style={{ color: 'rgba(255,255,255,0.6)',  }}>
         {activeIndex + 1} / {files.length}
       </div>
 
