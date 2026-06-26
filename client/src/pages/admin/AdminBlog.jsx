@@ -207,9 +207,9 @@ export default function AdminBlog() {
   const fetchPosts = () => {
     const token = localStorage.getItem('admin-token')
     fetch(`${API_URL}/admin/blog`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => r.json())
-      .then((data) => { setPosts(data); setLoading(false) })
-      .catch(() => setLoading(false))
+      .then((r) => { if (!r.ok) throw new Error('Unauthorized'); return r.json() })
+      .then((data) => { setPosts(Array.isArray(data) ? data : []); setLoading(false) })
+      .catch(() => { setPosts([]); setLoading(false) })
   }
 
   useEffect(() => { if (isAdminLoggedIn()) fetchPosts() }, [])

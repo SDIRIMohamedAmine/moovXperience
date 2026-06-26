@@ -205,6 +205,7 @@ export default function RegisterPage() {
               background: 'var(--accent-gradient)',
               color: 'var(--text-on-accent)',
               borderRadius: '9999px',
+              boxShadow: '0 4px 20px rgba(196,30,94,0.3)',
               opacity: loading ? 0.6 : 1,
               cursor: loading ? 'not-allowed' : 'pointer',
             }}>

@@ -116,19 +116,25 @@ export default function HomePage() {
                 <span className="gradient-text">{t('home.title_highlight')}</span>
               </motion.h1>
               <motion.p variants={fadeInUp} custom={2}
-                className="text-base md:text-xl leading-relaxed mb-8 md:mb-12 max-w-xl"
-                style={{ color: 'var(--text-secondary)',  fontWeight: 300 }}>
+                className="text-base md:text-xl mb-8 md:mb-12 max-w-xl"
+                style={{ color: 'var(--text-secondary)', fontWeight: 300, lineHeight: '1.8' }}>
                 {t('home.subtitle')}
               </motion.p>
-              <motion.div variants={fadeInUp} custom={3} className="flex flex-wrap gap-3 md:gap-5">
+              <motion.div variants={fadeInUp} custom={3} className="flex flex-wrap gap-4">
                 <Link
-                  to="/catalog"
-                  className="group inline-flex items-center gap-3 px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm uppercase tracking-widest font-semibold transition-all duration-300 hover:scale-105"
-                  style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)',  borderRadius: '9999px' }}>
+                  to="/products"
+                  className="group inline-flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 text-sm md:text-base uppercase tracking-widest font-bold transition-all duration-300 hover:scale-105"
+                  style={{ background: 'var(--accent-gradient)', color: 'var(--text-on-accent)', borderRadius: '9999px', boxShadow: '0 4px 24px rgba(196,30,94,0.35)' }}>
                   {t('home.cta_start')}
-                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
+                </Link>
+                <Link
+                  to="/rentals"
+                  className="group inline-flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 text-sm md:text-base uppercase tracking-widest font-semibold transition-all duration-300 hover:scale-105"
+                  style={{ border: '2px solid var(--accent)', color: 'var(--accent)', borderRadius: '9999px' }}>
+                  {t('nav.rentals')}
                 </Link>
               </motion.div>
             </motion.div>
@@ -402,9 +408,9 @@ export default function HomePage() {
           </motion.p>
           <motion.div variants={fadeInUp}>
             <Link
-              to="/catalog"
-              className="group inline-flex items-center gap-3 px-6 sm:px-8 md:px-10 py-4 md:py-5 text-xs sm:text-sm uppercase tracking-widest font-bold transition-all duration-300 hover:scale-105"
-              style={{ backgroundColor: 'var(--bg-card)', color: 'var(--accent)',  borderRadius: '9999px' }}>
+              to="/products"
+              className="group inline-flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 text-sm uppercase tracking-widest font-bold transition-all duration-300 hover:scale-105"
+              style={{ backgroundColor: 'var(--bg-card)', color: 'var(--accent)', borderRadius: '9999px', boxShadow: 'var(--shadow-lg)' }}>
               {t('home.cta_bottom_btn')}
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
