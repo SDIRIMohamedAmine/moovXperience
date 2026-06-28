@@ -81,7 +81,7 @@ export default function BlogPostPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
             </svg>
           </div>
-          <p className="text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Post not found</p>
+          <p className="text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{t('blog.not_found', 'Post not found')}</p>
           <Link to="/blog" className="text-sm inline-flex items-center gap-2 transition-colors"
             style={{ color: 'var(--accent)' }}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

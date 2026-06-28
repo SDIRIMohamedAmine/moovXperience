@@ -20,14 +20,6 @@ export async function createQuote(data, token) {
   return res.json()
 }
 
-export async function fetchSupplierQuotes(token) {
-  const res = await fetch(`${API_URL}/quotes/supplier/me`, {
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  if (!res.ok) throw new Error('Failed to fetch quotes')
-  return res.json()
-}
-
 export async function fetchClientQuotes(token) {
   const res = await fetch(`${API_URL}/quotes/client/me`, {
     headers: { Authorization: `Bearer ${token}` },

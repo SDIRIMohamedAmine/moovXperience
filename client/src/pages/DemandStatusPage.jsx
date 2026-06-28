@@ -85,7 +85,7 @@ export default function DemandStatusPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="votre@email.com"
+                  placeholder={t('contact.email_placeholder')}
                   className="w-full px-4 py-3 text-sm"
                   style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
@@ -100,7 +100,7 @@ export default function DemandStatusPage() {
                   type="text"
                   value={quoteId}
                   onChange={(e) => setQuoteId(e.target.value)}
-                  placeholder="ex: a1b2c3d4"
+                  placeholder={t('demand_status.id_placeholder', 'ex: a1b2c3d4')}
                   className="w-full px-4 py-3 text-sm"
                   style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}

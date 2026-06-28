@@ -129,7 +129,7 @@ export default function QuotePage() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <h2 className="text-xl" style={{  color: colors.primary }}>
-          Solution non trouvée
+          {t('product.not_found', 'Product not found')}
         </h2>
         <Link to="/catalog" className="text-sm mt-4 inline-block" style={{ color: colors.accent }}>
           {t('product.back_to_catalog')}

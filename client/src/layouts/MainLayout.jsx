@@ -79,7 +79,7 @@ export default function MainLayout() {
               </button>
 
               {/* Cart */}
-              <Link to="/checkout" className="relative p-2 transition-colors"
+              <Link to="/cart" className="relative p-2 transition-colors"
                 aria-label={`${t('nav.cart')} (${cartCount})`}
                 style={{ color: 'var(--text-secondary)' }}
                 onMouseEnter={(e) => (e.target.style.color = 'var(--text-primary)')}
@@ -268,7 +268,7 @@ export default function MainLayout() {
                 {t('footer.contact')}
               </h4>
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>contact@makerskills.tn</p>
-              <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>+216 XX XXX XXX</p>
+              <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>{t('contact.phone')}</p>
               <p className="text-xs mt-4" style={{ color: 'var(--text-muted)' }}>{t('footer.maker_skills')}</p>
             </div>
           </div>
@@ -278,13 +278,7 @@ export default function MainLayout() {
               {new Date().getFullYear()} {t('footer.brand')}. {t('footer.rights')}
             </p>
             <div className="flex gap-6">
-              {[t('footer.terms'), t('footer.privacy')].map((label) => (
-                <span key={label} className="text-xs cursor-pointer transition-colors" style={{ color: 'var(--text-muted)' }}
-                  onMouseEnter={(e) => (e.target.style.color = 'var(--text-primary)')}
-                  onMouseLeave={(e) => (e.target.style.color = 'var(--text-muted)')}>
-                  {label}
-                </span>
-              ))}
+
             </div>
           </div>
         </div>

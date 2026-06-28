@@ -23,14 +23,6 @@ export async function fetchProduct(id) {
   return res.json()
 }
 
-export async function fetchMyProducts(token) {
-  const res = await fetch(`${API_URL}/products/supplier/me`, {
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  if (!res.ok) throw new Error('Failed to fetch products')
-  return res.json()
-}
-
 export async function createProduct(data, token) {
   const res = await fetch(`${API_URL}/products`, {
     method: 'POST',

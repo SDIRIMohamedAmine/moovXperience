@@ -19,17 +19,13 @@ const CheckoutPage = lazy(() => import('./pages/CheckoutPage'))
 const QuotePage = lazy(() => import('./pages/QuotePage'))
 const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'))
 const DemandStatusPage = lazy(() => import('./pages/DemandStatusPage'))
+const MyRentalsPage = lazy(() => import('./pages/MyRentalsPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
 const BlogPage = lazy(() => import('./pages/BlogPage'))
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
 const ProductsPage = lazy(() => import('./pages/ProductsPage'))
 const RentalsPage = lazy(() => import('./pages/RentalsPage'))
-
-// Supplier pages
-const DashboardPage = lazy(() => import('./pages/DashboardPage'))
-const SupplierProductsPage = lazy(() => import('./pages/supplier/SupplierProductsPage'))
-const ProductFormPage = lazy(() => import('./pages/supplier/ProductFormPage'))
-const OrdersPage = lazy(() => import('./pages/supplier/OrdersPage'))
 
 // Admin pages
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
@@ -42,12 +38,11 @@ const AdminProductForm = lazy(() => import('./pages/admin/AdminProductForm'))
 const AdminAppearance = lazy(() => import('./pages/admin/AdminAppearance'))
 const AdminPageEditor = lazy(() => import('./pages/admin/AdminPageEditor'))
 const AdminBlog = lazy(() => import('./pages/admin/AdminBlog'))
-const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
 
 function LoadingFallback() {
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
-      <div className="w-8 h-8 border-2 animate-spin" style={{ borderColor: '#222', borderTopColor: '#D23AB0' }} />
+      <div className="w-8 h-8 border-2 animate-spin" style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }} />
     </div>
   )
 }
@@ -86,6 +81,7 @@ function App() {
 
         {/* Protected — any role */}
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        <Route path="/my-rentals" element={<ProtectedRoute><MyRentalsPage /></ProtectedRoute>} />
         <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
         <Route path="/payment-result" element={<ProtectedRoute><PaymentResultPage /></ProtectedRoute>} />
 

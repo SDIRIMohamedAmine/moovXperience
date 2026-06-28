@@ -83,7 +83,7 @@ function PostEditor({ post, onSave, onCancel }) {
           <div className="mb-4">
             <label style={labelStyle}>{t('admin.blog_title')}</label>
             <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value, slug: e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') })}
-              style={{ ...inputStyle, fontSize: '20px', fontWeight: '700', padding: '14px' }} placeholder="Post title..." />
+              style={{ ...inputStyle, fontSize: '20px', fontWeight: '700', padding: '14px' }} placeholder={t('admin.blog_title_placeholder', 'Post title...')} />
           </div>
           <div>
             <label style={labelStyle}>Slug</label>
@@ -95,7 +95,7 @@ function PostEditor({ post, onSave, onCancel }) {
         <div style={card} className="p-5">
           <label style={labelStyle}>{t('admin.blog_excerpt')}</label>
           <textarea rows={2} value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-            style={{ ...inputStyle, resize: 'none' }} placeholder="Short summary for previews..." />
+            style={{ ...inputStyle, resize: 'none' }} placeholder={t('admin.blog_excerpt_placeholder', 'Short summary for previews...')} />
         </div>
 
         {/* Body editor */}
@@ -137,14 +137,14 @@ function PostEditor({ post, onSave, onCancel }) {
             <div className="mb-3 p-3" style={{ backgroundColor: dark ? '#0F0F14' : '#F5F5F5', borderRadius: '8px' }}>
               <MediaUploader files={[]} onChange={(files) => { if (files.length > 0) insertMediaUrl(files[files.length - 1].url) }} maxFiles={1} folder="blog" />
               <p className="text-xs mt-2" style={{ color: dark ? '#555' : '#999' }}>
-                Upload then click to insert into post body
+                {t('admin.blog_upload_hint', 'Upload then click to insert into post body')}
               </p>
             </div>
           )}
 
           <textarea ref={bodyRef} id="blog-body" rows={16} value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })}
             style={{ ...inputStyle, resize: 'vertical', fontFamily: 'JetBrains Mono, monospace', fontSize: '13px', lineHeight: '1.6' }}
-            placeholder="Write your post in Markdown..." />
+            placeholder={t('admin.blog_body_placeholder', 'Write your post in Markdown...')} />
         </div>
       </div>
 
@@ -165,7 +165,7 @@ function PostEditor({ post, onSave, onCancel }) {
           <button onClick={onCancel}
             className="w-full py-2.5 text-xs font-medium transition-colors"
             style={{ color: dark ? '#666' : '#999', cursor: 'pointer' }}>
-            Cancel
+            {t('common.cancel')}
           </button>
         </div>
 
