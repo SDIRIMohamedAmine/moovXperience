@@ -433,25 +433,6 @@
     "reviews": "avis",
     "anonymous": "Anonyme"
   },
-  "payment": {
-    "pay_now": "Payer maintenant",
-    "status": {
-      "pending": "En attente",
-      "paid": "Payé",
-      "failed": "Échoué",
-      "refunded": "Remboursé"
-    },
-    "success_title": "Paiement réussi",
-    "success_desc": "Votre paiement a été confirmé. Votre réservation est en cours de traitement.",
-    "failed_title": "Paiement échoué",
-    "failed_desc": "Le paiement n'a pas pu être traité. Veuillez réessayer.",
-    "pending_title": "Paiement en attente",
-    "pending_desc": "Votre paiement est en cours de traitement.",
-    "error_title": "Erreur",
-    "error_desc": "Une erreur est survenue lors du traitement de votre paiement.",
-    "view_rentals": "Voir mes réservations",
-    "back_catalog": "Retour au catalogue"
-  },
   "rentals": {
     "title": "Mes Réservations",
     "empty": "Vous n'avez aucune réservation.",
@@ -567,12 +548,9 @@
     "action_return": "Marquer retournée",
     "action_complete": "Terminer",
     "section_client": "Client",
-    "section_payment": "Paiement",
     "section_delivery_address": "Adresse de livraison",
     "section_notes": "Notes",
     "section_products": "Produits",
-    "paid": "Payé",
-    "ref_prefix": "Réf:",
     "qty_prefix": "Qté:",
     "product_activated": "Solution activée",
     "product_deactivated": "Solution désactivée",

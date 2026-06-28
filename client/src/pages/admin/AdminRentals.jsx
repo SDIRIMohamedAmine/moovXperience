@@ -174,13 +174,6 @@ export default function AdminRentals() {
                     <p className="text-sm" style={{ color: '#FFFFFF' }}>{details.profiles?.full_name || '—'}</p>
                     {details.profiles?.phone && <p className="text-xs" style={{ color: '#888' }}>{details.profiles.phone}</p>}
                   </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-wider mb-1 font-semibold" style={{ color: '#666' }}>{t('admin.section_payment')}</p>
-                    <p className="text-sm" style={{ color: details.payment_status === 'paid' ? '#4CAF50' : '#FF9800' }}>
-                      {details.payment_status === 'paid' ? t('admin.paid') : details.payment_status || t('admin.status_pending')}
-                    </p>
-                    {details.payment_ref && <p className="text-xs" style={{ color: '#888' }}>{t('admin.ref_prefix')} {details.payment_ref}</p>}
-                  </div>
                 </div>
 
                 {details.delivery_address && (

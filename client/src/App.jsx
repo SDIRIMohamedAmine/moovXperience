@@ -17,7 +17,6 @@ const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'))
 const CartPage = lazy(() => import('./pages/CartPage'))
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'))
 const QuotePage = lazy(() => import('./pages/QuotePage'))
-const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'))
 const DemandStatusPage = lazy(() => import('./pages/DemandStatusPage'))
 const MyRentalsPage = lazy(() => import('./pages/MyRentalsPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
@@ -83,7 +82,6 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="/my-rentals" element={<ProtectedRoute><MyRentalsPage /></ProtectedRoute>} />
         <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
-        <Route path="/payment-result" element={<ProtectedRoute><PaymentResultPage /></ProtectedRoute>} />
 
         {/* Admin routes */}
         <Route path="/admin/login" element={<AdminLogin />} />

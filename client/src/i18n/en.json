@@ -433,25 +433,6 @@
     "reviews": "reviews",
     "anonymous": "Anonymous"
   },
-  "payment": {
-    "pay_now": "Pay Now",
-    "status": {
-      "pending": "Pending",
-      "paid": "Paid",
-      "failed": "Failed",
-      "refunded": "Refunded"
-    },
-    "success_title": "Payment Successful",
-    "success_desc": "Your payment has been confirmed. Your booking is being processed.",
-    "failed_title": "Payment Failed",
-    "failed_desc": "The payment could not be processed. Please try again.",
-    "pending_title": "Payment Pending",
-    "pending_desc": "Your payment is being processed.",
-    "error_title": "Error",
-    "error_desc": "An error occurred while processing your payment.",
-    "view_rentals": "View My Bookings",
-    "back_catalog": "Back to Catalog"
-  },
   "rentals": {
     "title": "My Bookings",
     "empty": "You have no bookings.",
@@ -567,12 +548,9 @@
     "action_return": "Mark returned",
     "action_complete": "Complete",
     "section_client": "Client",
-    "section_payment": "Payment",
     "section_delivery_address": "Delivery address",
     "section_notes": "Notes",
     "section_products": "Products",
-    "paid": "Paid",
-    "ref_prefix": "Ref:",
     "qty_prefix": "Qty:",
     "product_activated": "Solution activated",
     "product_deactivated": "Solution deactivated",

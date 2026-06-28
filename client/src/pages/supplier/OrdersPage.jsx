@@ -16,13 +16,6 @@ const STATUS_COLORS = {
   cancelled: { bg: '#FFEBEE', text: '#C62828' },
 }
 
-const PAYMENT_COLORS = {
-  pending: { bg: '#FFF8E1', text: '#F57F17' },
-  paid: { bg: '#E8F5E9', text: '#2E7D32' },
-  failed: { bg: '#FFEBEE', text: '#C62828' },
-  refunded: { bg: '#E3F2FD', text: '#1565C0' },
-}
-
 export default function OrdersPage() {
   const { t } = useTranslation()
   const { session } = useAuth()
@@ -156,19 +149,7 @@ export default function OrdersPage() {
                     >
                       {t(`rentals.status.${order.status}`)}
                     </span>
-                    {order.payment_status && order.payment_status !== 'pending' && (
-                      <span
-                        className="px-2 py-0.5 text-xs font-medium"
-                        style={{
-                          backgroundColor: PAYMENT_COLORS[order.payment_status]?.bg || colors.bg,
-                          color: PAYMENT_COLORS[order.payment_status]?.text || colors.primary,
-                          
-                        }}
-                      >
-                        {t(`payment.status.${order.payment_status}`)}
-                      </span>
-                    )}
-                    <span className="text-xs" style={{ color: colors.textLight }}>
+<span className="text-xs" style={{ color: colors.textLight }}>
                       {formatDate(order.start_date)} — {formatDate(order.end_date)}
                     </span>
                   </div>

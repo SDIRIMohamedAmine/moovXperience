@@ -5,7 +5,6 @@ import { useAuth } from '../hooks/useAuth'
 import { getFreshToken } from '../lib/supabase'
 import { useTheme } from '../theme/ThemeContext'
 import { fetchMyRentals, updateRentalStatus } from '../services/rentalService'
-import { initiatePayment } from '../services/paymentService'
 import { showToast } from '../components/Toast'
 import { showConfirm } from '../components/ConfirmModal'
 
@@ -18,16 +17,8 @@ const STATUS_COLORS = {
   cancelled: { bg: '#FFEBEE', text: '#C62828' },
 }
 
-const PAYMENT_COLORS = {
-  pending: { bg: '#FFF8E1', text: '#F57F17' },
-  paid: { bg: '#E8F5E9', text: '#2E7D32' },
-  failed: { bg: '#FFEBEE', text: '#C62828' },
-  refunded: { bg: '#E3F2FD', text: '#1565C0' },
-}
-
 export default function MyRentalsPage() {
   const { t } = useTranslation()
-  const { session } = useAuth()
   const { colors } = useTheme()
   const location = useLocation()
   const [rentals, setRentals] = useState([])
@@ -73,20 +64,6 @@ export default function MyRentalsPage() {
         showToast(err.message, 'error')
       }
     })
-  }
-
-  async function handlePay(rentalId) {
-    try {
-      const { payUrl } = await initiatePayment(rentalId, session.access_token)
-      // Validate URL is from Konnect before redirecting
-      if (payUrl && (payUrl.startsWith('https://api.sandbox.konnect.network') || payUrl.startsWith('https://api.konnect.network') || payUrl.startsWith('https://konnect.network'))) {
-        window.location.href = payUrl
-      } else {
-        showToast(t('payment.error_desc'), 'error')
-      }
-    } catch (err) {
-      showToast(err.message, 'error')
-    }
   }
 
   const formatDate = (dateStr) => {
@@ -160,19 +137,7 @@ export default function MyRentalsPage() {
                     >
                       {t(`rentals.status.${rental.status}`)}
                     </span>
-                    {rental.payment_status && rental.payment_status !== 'pending' && (
-                      <span
-                        className="px-2 py-0.5 text-xs font-medium"
-                        style={{
-                          backgroundColor: PAYMENT_COLORS[rental.payment_status]?.bg || colors.bg,
-                          color: PAYMENT_COLORS[rental.payment_status]?.text || colors.primary,
-                          
-                        }}
-                      >
-                        {t(`payment.status.${rental.payment_status}`)}
-                      </span>
-                    )}
-                    <span className="text-xs" style={{ color: colors.textLight }}>
+<span className="text-xs" style={{ color: colors.textLight }}>
                       {formatDate(rental.start_date)} — {formatDate(rental.end_date)}
                     </span>
                   </div>
@@ -207,18 +172,6 @@ export default function MyRentalsPage() {
                     style={{ backgroundColor: '#FFEBEE', color: '#C62828' }}
                   >
                     {t('rentals.cancel')}
-                  </button>
-                </div>
-              )}
-
-              {rental.status === 'confirmed' && rental.payment_status === 'pending' && (
-                <div className="px-4 py-3 flex justify-end gap-2" style={{ borderTop: `1px solid ${colors.border}`, backgroundColor: colors.bg }}>
-                  <button
-                    onClick={() => handlePay(rental.id)}
-                    className="px-5 py-1.5 text-xs font-medium"
-                    style={{ backgroundColor: colors.cta, color: colors.textWhite }}
-                  >
-                    {t('payment.pay_now')}
                   </button>
                 </div>
               )}
