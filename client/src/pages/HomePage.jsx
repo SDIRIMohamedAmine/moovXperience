@@ -100,7 +100,7 @@ export default function HomePage() {
         <div className="absolute inset-0 opacity-[0.04]"
           style={{ backgroundImage: 'linear-gradient(var(--hero-grid) 1px, transparent 1px), linear-gradient(90deg, var(--hero-grid) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-36">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 md:pt-14 md:pb-24">
           <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <motion.div initial="hidden" animate="visible" variants={stagger}>
               <motion.img variants={fadeInUp} custom={-1} src={dark ? '/logo-dark.png' : '/logo-light.png'} alt="MoovXperience" className="h-36 md:h-52 w-auto mb-6 md:mb-10" />
