@@ -13,6 +13,7 @@ import reviewRoutes from './routes/reviews.js'
 import quoteRoutes from './routes/quotes.js'
 import adminRoutes from './routes/admin.js'
 import adminAuthRoutes from './routes/adminAuth.js'
+import contactRoutes from './routes/contact.js'
 import { getPublicSettings } from './controllers/settingsController.js'
 import { getPage } from './controllers/pageController.js'
 import { getPublishedPosts, getPostBySlug } from './controllers/blogController.js'
@@ -51,6 +52,12 @@ const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
   message: { error: 'Too many auth attempts, please try again later.' },
+})
+
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: 'Too many contact submissions. Please try again later.' },
 })
 
 // CORS
@@ -104,6 +111,7 @@ app.use('/api/reviews', reviewRoutes)
 app.use('/api/quotes', quoteRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/admin-auth', authLimiter, adminAuthRoutes)
+app.use('/api/contact', contactLimiter, contactRoutes)
 
 // Public settings, pages, blog
 app.get('/api/settings', getPublicSettings)

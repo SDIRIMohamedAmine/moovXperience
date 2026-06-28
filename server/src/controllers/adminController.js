@@ -425,7 +425,7 @@ export async function upsertPage(req, res) {
   if (!(await requireAdmin(req, res))) return
 
   const { slug } = req.params
-  const { lang, title, subtitle, tag, sections } = req.body
+  const { lang, title, subtitle, tag, sections, cover_image } = req.body
 
   const { error } = await supabase
     .from('site_pages')
@@ -435,6 +435,7 @@ export async function upsertPage(req, res) {
       title,
       subtitle,
       tag,
+      cover_image: cover_image || null,
       sections: sections || [],
       updated_at: new Date().toISOString(),
     }, { onConflict: 'slug,lang' })
@@ -444,7 +445,7 @@ export async function upsertPage(req, res) {
     return res.status(500).json({ error: 'Failed to save page' })
   }
 
-  cacheDel(`page:${slug}`)
+  cacheDel(`page:${slug}:*`)
   res.json({ success: true })
 }
 

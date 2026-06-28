@@ -37,7 +37,7 @@ export function verifyAdminToken(token) {
     if (!dataB64 || !signature) return null
     const data = Buffer.from(dataB64, 'base64').toString('utf8')
     const expectedSig = crypto.createHmac('sha256', ADMIN_TOKEN_SECRET).update(data).digest('hex')
-    if (signature !== expectedSig) return null
+    if (!timingSafeCompare(signature, expectedSig)) return null
     const payload = JSON.parse(data)
     if (payload.email !== ADMIN_EMAIL) return null
     // Token valid for 24 hours
@@ -89,7 +89,7 @@ router.get('/verify', (req, res) => {
     return res.status(401).json({ valid: false })
   }
 
-  res.json({ valid: true, email: payload.email, role: payload.role })
+  res.json({ valid: true, role: payload.role })
 })
 
 export default router

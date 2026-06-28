@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { requireAuth } from '../middleware/auth.js'
+import { requireAdmin } from '../middleware/auth.js'
 import {
   getStats,
   getUsers,
@@ -25,8 +25,8 @@ import {
 
 const router = Router()
 
-// All admin routes require authentication
-router.use(requireAuth)
+// All admin routes require admin privileges
+router.use(requireAdmin)
 
 // Stats
 router.get('/stats', getStats)

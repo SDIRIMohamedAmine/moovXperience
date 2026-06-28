@@ -7,19 +7,18 @@ function sanitizeSearch(input) {
 }
 
 export async function getProducts(req, res) {
-  const { category, search, min_price, max_price, mode, pricing_type, limit = 20, offset = 0 } = req.query
+  const { category, search, min_price, max_price, mode, pricing_type, provider, limit = 20, offset = 0 } = req.query
 
   const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100)
   const safeOffset = Math.max(Number(offset) || 0, 0)
 
-  const cacheKey = `products:${category || ''}:${search || ''}:${mode || ''}:${min_price || ''}:${max_price || ''}:${safeLimit}:${safeOffset}`
+  const cacheKey = `products:${category || ''}:${search || ''}:${mode || ''}:${provider || ''}:${min_price || ''}:${max_price || ''}:${safeLimit}:${safeOffset}`
   const cached = await cacheGet(cacheKey)
   if (cached) return res.json(cached)
 
   let query = supabase
     .from('products')
-    .select('id, name, description, price_per_day, price_purchase, deposit, stock, is_available, images, mode, pricing_type, options, min_duration, created_at, categories(name, slug), product_ratings(avg_rating, review_count)', { count: 'exact' })
-    .eq('is_available', true)
+    .select('id, name, description, price_per_day, price_purchase, deposit, stock, is_available, images, mode, pricing_type, provider, options, min_duration, created_at, categories(name, slug), product_ratings(avg_rating, review_count)', { count: 'exact' })
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
     .range(safeOffset, safeOffset + safeLimit - 1)
@@ -55,6 +54,10 @@ export async function getProducts(req, res) {
 
   if (pricing_type && ['fixed', 'negotiable', 'suggestion'].includes(pricing_type)) {
     query = query.eq('pricing_type', pricing_type)
+  }
+
+  if (provider && typeof provider === 'string' && provider.trim()) {
+    query = query.eq('provider', provider.trim())
   }
 
   const { data, error, count } = await query
@@ -119,9 +122,15 @@ export async function createProduct(req, res) {
     return res.status(400).json({ error: 'Product name too long (max 200 chars)' })
   }
 
-  const price = Number(price_per_day)
+  const validMode = ['rental', 'sale', 'both'].includes(mode) ? mode : 'rental'
+
+  // price_per_day is only required for rental/both modes
+  let price = price_per_day != null && price_per_day !== '' ? Number(price_per_day) : 0
   if (isNaN(price) || price < 0) {
     return res.status(400).json({ error: 'Invalid price' })
+  }
+  if ((validMode === 'rental' || validMode === 'both') && price <= 0) {
+    return res.status(400).json({ error: 'Price per day is required for rental products' })
   }
 
   const purchasePrice = price_purchase != null ? Number(price_purchase) : null
@@ -148,8 +157,8 @@ export async function createProduct(req, res) {
     return res.status(400).json({ error: 'Invalid category ID' })
   }
 
-  const validMode = ['rental', 'sale', 'both'].includes(mode) ? mode : 'rental'
   const validPricingType = ['fixed', 'negotiable', 'suggestion'].includes(pricing_type) ? pricing_type : 'fixed'
+  const validProvider = (typeof req.body.provider === 'string' && req.body.provider.trim()) ? req.body.provider.trim().slice(0, 100) : 'makerskills'
 
   let safeOptions = []
   if (Array.isArray(options)) {
@@ -176,6 +185,7 @@ export async function createProduct(req, res) {
       images: safeImages,
       mode: validMode,
       pricing_type: validPricingType,
+      provider: validProvider,
       options: safeOptions,
       min_duration: minDur,
     })
@@ -260,6 +270,10 @@ export async function updateProduct(req, res) {
   }
   if (pricing_type !== undefined) {
     if (!['fixed', 'negotiable', 'suggestion'].includes(pricing_type)) return res.status(400).json({ error: 'Invalid pricing type' })
+  }
+  if (req.body.provider !== undefined) {
+    if (typeof req.body.provider !== 'string' || !req.body.provider.trim()) return res.status(400).json({ error: 'Invalid provider' })
+    updates.provider = req.body.provider.trim().slice(0, 100)
     updates.pricing_type = pricing_type
   }
   if (options !== undefined) {

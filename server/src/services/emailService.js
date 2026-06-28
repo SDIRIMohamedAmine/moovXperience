@@ -406,6 +406,105 @@ export async function sendRentalNotification({ clientName, rental, items }) {
   })
 }
 
+export async function sendContactEmail({ name, email, phone, subject, message }) {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="margin: 0; padding: 0; background-color: #0D0D0D; font-family: Outfit, sans-serif;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #141414;">
+        <div style="padding: 32px; border-bottom: 1px solid #222;">
+          <h1 style="margin: 0; font-size: 24px; font-weight: 800; background: linear-gradient(135deg, #D23AB0, #AE59CE); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            MoovXperience
+          </h1>
+        </div>
+        <div style="padding: 32px;">
+          <div style="display: inline-block; padding: 4px 12px; background: linear-gradient(135deg, #D23AB0, #AE59CE); color: #FFFFFF; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 16px;">
+            Message de contact
+          </div>
+          <h2 style="margin: 0 0 8px; font-size: 22px; color: #FFFFFF; font-weight: 700;">
+            ${escapeHtml(subject || 'Nouveau message de contact')}
+          </h2>
+
+          <div style="background-color: #0D0D0D; padding: 20px; margin-bottom: 24px; border: 1px solid #222;">
+            <h3 style="margin: 0 0 12px; font-size: 12px; color: #D23AB0; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">
+              Informations du contact
+            </h3>
+            <p style="margin: 0 0 6px; font-size: 13px; color: #FFFFFF;">${escapeHtml(name)}</p>
+            <p style="margin: 0 0 6px; font-size: 13px; color: #666;">${escapeHtml(email)}</p>
+            ${phone ? `<p style="margin: 0 0 6px; font-size: 13px; color: #666;">${escapeHtml(phone)}</p>` : ''}
+          </div>
+
+          <div style="background-color: #0D0D0D; padding: 20px; margin-bottom: 24px; border: 1px solid #222;">
+            <h3 style="margin: 0 0 8px; font-size: 12px; color: #D23AB0; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Message</h3>
+            <p style="margin: 0; font-size: 13px; color: #FFFFFF; line-height: 1.6; white-space: pre-wrap;">${escapeHtml(message)}</p>
+          </div>
+
+          <a href="mailto:${escapeHtml(email)}" style="display: block; background: linear-gradient(135deg, #D23AB0, #AE59CE); color: #FFFFFF; text-align: center; padding: 14px 24px; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.05em;">
+            RÉPONDRE PAR EMAIL
+          </a>
+
+          <p style="margin: 24px 0 0; font-size: 11px; color: #444; text-align: center;">
+            Message envoyé depuis le formulaire de contact · MoovXperience
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `
+
+  return sendEmail({
+    to: getConfig().adminEmail,
+    subject: `[Contact] ${sanitizeSubject(subject || 'Nouveau message')} — ${escapeHtml(name)}`,
+    html,
+  })
+}
+
+export async function sendContactConfirmation({ name, email }) {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="margin: 0; padding: 0; background-color: #0D0D0D; font-family: Outfit, sans-serif;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #141414;">
+        <div style="padding: 32px; border-bottom: 1px solid #222;">
+          <h1 style="margin: 0; font-size: 24px; font-weight: 800; background: linear-gradient(135deg, #D23AB0, #AE59CE); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            MoovXperience
+          </h1>
+        </div>
+        <div style="padding: 32px;">
+          <div style="display: inline-block; padding: 4px 12px; background: #4CAF50; color: #FFFFFF; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 16px;">
+            Message reçu
+          </div>
+          <h2 style="margin: 0 0 8px; font-size: 22px; color: #FFFFFF; font-weight: 700;">
+            Merci ${escapeHtml(name)} !
+          </h2>
+          <p style="margin: 0 0 24px; font-size: 14px; color: #666; line-height: 1.6;">
+            Nous avons bien reçu votre message. Notre équipe vous répondra dans les plus brefs délais.
+          </p>
+
+          <div style="background: linear-gradient(135deg, #D23AB0, #AE59CE); padding: 16px; text-align: center; margin-bottom: 24px;">
+            <p style="margin: 0; font-size: 13px; color: #FFFFFF; font-weight: 600;">
+              Nous vous contacterons très bientôt !
+            </p>
+          </div>
+
+          <p style="margin: 0; font-size: 11px; color: #444; text-align: center;">
+            MoovXperience by Maker Skills
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `
+
+  return sendEmail({
+    to: email,
+    subject: `Confirmation de réception — MoovXperience`,
+    html,
+  })
+}
+
 export async function sendRentalStatusUpdateToClient({ clientEmail, clientName, rentalId, status, startDate, endDate, totalPrice }) {
   const statusLabels = {
     confirmed: { label: 'Confirmée', color: '#4CAF50', message: 'Votre demande a été confirmée par notre équipe !' },
