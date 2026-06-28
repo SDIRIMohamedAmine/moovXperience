@@ -213,7 +213,7 @@ export async function getAllRentals(req, res) {
 
   let query = supabase
     .from('rentals')
-    .select('id, status, start_date, end_date, total_price, payment_status, client_id, created_at, profiles!client_id(full_name)', { count: 'exact' })
+    .select('id, status, start_date, end_date, total_price, client_id, created_at, profiles!client_id(full_name)', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(safeOffset, safeOffset + safeLimit - 1)
 

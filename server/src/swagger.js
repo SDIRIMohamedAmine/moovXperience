@@ -64,7 +64,6 @@ const options = {
             total_price: { type: 'number' },
             notes: { type: 'string' },
             delivery_address: { type: 'object' },
-            payment_status: { type: 'string', enum: ['pending', 'paid', 'failed', 'refunded'] },
             created_at: { type: 'string', format: 'date-time' },
           },
         },

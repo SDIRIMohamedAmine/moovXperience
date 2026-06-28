@@ -8,7 +8,6 @@ import profileRoutes from './routes/profiles.js'
 import categoryRoutes from './routes/categories.js'
 import productRoutes from './routes/products.js'
 import rentalRoutes from './routes/rentals.js'
-import paymentRoutes from './routes/payments.js'
 import reviewRoutes from './routes/reviews.js'
 import quoteRoutes from './routes/quotes.js'
 import adminRoutes from './routes/admin.js'
@@ -98,7 +97,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Apply rate limiters
 app.use('/api/', apiLimiter)
-app.use('/api/payments', authLimiter)
 app.use('/api/profiles', authLimiter)
 
 // Routes
@@ -106,7 +104,6 @@ app.use('/api/profiles', profileRoutes)
 app.use('/api/categories', categoryRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/rentals', rentalRoutes)
-app.use('/api/payments', paymentRoutes)
 app.use('/api/reviews', reviewRoutes)
 app.use('/api/quotes', quoteRoutes)
 app.use('/api/admin', adminRoutes)
