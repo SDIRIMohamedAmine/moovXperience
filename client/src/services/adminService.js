@@ -12,6 +12,15 @@ function authHeaders() {
   }
 }
 
+function handleAdminResponse(res) {
+  if (res.status === 401) {
+    adminLogout()
+    window.location.href = '/admin/login'
+    throw new Error('Session expired — please log in again')
+  }
+  return res
+}
+
 export function isAdminLoggedIn() {
   return !!getAdminToken()
 }
@@ -35,7 +44,7 @@ export async function adminLogin(email, password) {
 }
 
 export async function fetchStats() {
-  const res = await fetch(`${API_URL}/admin/stats`, { headers: authHeaders() })
+  const res = await fetch(`${API_URL}/admin/stats`, { headers: authHeaders() }).then(handleAdminResponse)
   if (!res.ok) throw new Error('Failed to fetch stats')
   return res.json()
 }
@@ -44,7 +53,7 @@ export async function fetchUsers(params = {}) {
   const qs = new URLSearchParams()
   if (params.role) qs.set('role', params.role)
   if (params.limit) qs.set('limit', params.limit)
-  const res = await fetch(`${API_URL}/admin/users?${qs}`, { headers: authHeaders() })
+  const res = await fetch(`${API_URL}/admin/users?${qs}`, { headers: authHeaders() }).then(handleAdminResponse)
   if (!res.ok) throw new Error('Failed to fetch users')
   return res.json()
 }
@@ -54,7 +63,7 @@ export async function updateUserRole(id, role) {
     method: 'PATCH',
     headers: authHeaders(),
     body: JSON.stringify({ role }),
-  })
+  }).then(handleAdminResponse)
   if (!res.ok) {
     const err = await res.json()
     throw new Error(err.error || 'Failed to update role')
@@ -65,7 +74,7 @@ export async function updateUserRole(id, role) {
 export async function fetchAllProducts(params = {}) {
   const qs = new URLSearchParams()
   if (params.limit) qs.set('limit', params.limit)
-  const res = await fetch(`${API_URL}/admin/products?${qs}`, { headers: authHeaders() })
+  const res = await fetch(`${API_URL}/admin/products?${qs}`, { headers: authHeaders() }).then(handleAdminResponse)
   if (!res.ok) throw new Error('Failed to fetch products')
   return res.json()
 }
@@ -74,7 +83,7 @@ export async function toggleProductAvailability(id) {
   const res = await fetch(`${API_URL}/admin/products/${id}/toggle`, {
     method: 'PATCH',
     headers: authHeaders(),
-  })
+  }).then(handleAdminResponse)
   if (!res.ok) throw new Error('Failed to toggle product')
   return res.json()
 }
@@ -83,7 +92,7 @@ export async function deleteProductAdmin(id) {
   const res = await fetch(`${API_URL}/admin/products/${id}`, {
     method: 'DELETE',
     headers: authHeaders(),
-  })
+  }).then(handleAdminResponse)
   if (!res.ok) throw new Error('Failed to delete product')
   return res.json()
 }
@@ -93,13 +102,13 @@ export async function fetchAllRentals(params = {}) {
   if (params.status) qs.set('status', params.status)
   if (params.client_id) qs.set('client_id', params.client_id)
   if (params.limit) qs.set('limit', params.limit)
-  const res = await fetch(`${API_URL}/admin/rentals?${qs}`, { headers: authHeaders() })
+  const res = await fetch(`${API_URL}/admin/rentals?${qs}`, { headers: authHeaders() }).then(handleAdminResponse)
   if (!res.ok) throw new Error('Failed to fetch rentals')
   return res.json()
 }
 
 export async function fetchRentalDetails(id) {
-  const res = await fetch(`${API_URL}/admin/rentals/${id}`, { headers: authHeaders() })
+  const res = await fetch(`${API_URL}/admin/rentals/${id}`, { headers: authHeaders() }).then(handleAdminResponse)
   if (!res.ok) throw new Error('Failed to fetch rental details')
   return res.json()
 }
@@ -109,7 +118,7 @@ export async function updateRentalStatus(id, status) {
     method: 'PATCH',
     headers: authHeaders(),
     body: JSON.stringify({ status }),
-  })
+  }).then(handleAdminResponse)
   if (!res.ok) {
     const err = await res.json()
     throw new Error(err.error || 'Failed to update status')
@@ -121,13 +130,13 @@ export async function deleteRental(id) {
   const res = await fetch(`${API_URL}/admin/rentals/${id}`, {
     method: 'DELETE',
     headers: authHeaders(),
-  })
+  }).then(handleAdminResponse)
   if (!res.ok) throw new Error('Failed to delete rental')
   return res.json()
 }
 
 export async function fetchAllCategories() {
-  const res = await fetch(`${API_URL}/admin/categories`, { headers: authHeaders() })
+  const res = await fetch(`${API_URL}/admin/categories`, { headers: authHeaders() }).then(handleAdminResponse)
   if (!res.ok) throw new Error('Failed to fetch categories')
   return res.json()
 }
@@ -137,7 +146,7 @@ export async function createCategory(name, slug) {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify({ name, slug }),
-  })
+  }).then(handleAdminResponse)
   if (!res.ok) {
     const err = await res.json()
     throw new Error(err.error || 'Failed to create category')
@@ -150,7 +159,7 @@ export async function updateCategory(id, data) {
     method: 'PUT',
     headers: authHeaders(),
     body: JSON.stringify(data),
-  })
+  }).then(handleAdminResponse)
   if (!res.ok) {
     const err = await res.json()
     throw new Error(err.error || 'Failed to update category')
@@ -162,7 +171,7 @@ export async function deleteCategory(id) {
   const res = await fetch(`${API_URL}/admin/categories/${id}`, {
     method: 'DELETE',
     headers: authHeaders(),
-  })
+  }).then(handleAdminResponse)
   if (!res.ok) {
     const err = await res.json()
     throw new Error(err.error || 'Failed to delete category')

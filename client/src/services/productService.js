@@ -8,6 +8,7 @@ export async function fetchProducts(filters = {}) {
   if (filters.max_price) params.set('max_price', filters.max_price)
   if (filters.mode) params.set('mode', filters.mode)
   if (filters.pricing_type) params.set('pricing_type', filters.pricing_type)
+  if (filters.provider) params.set('provider', filters.provider)
   if (filters.limit) params.set('limit', filters.limit)
   if (filters.offset) params.set('offset', filters.offset)
 

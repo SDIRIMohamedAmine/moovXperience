@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from '../i18n/LanguageContext'
 import { fetchProducts } from '../services/productService'
 import ProductCard from '../components/ProductCard'
+import SearchInput from '../components/SearchInput'
 import { SkeletonCard } from '../components/Skeleton'
 
 const getCategoryLabels = (t) => ({
@@ -91,23 +92,23 @@ export default function RentalsPage() {
 
   const hasActiveFilters = selectedCategory || selectedPricing || search
 
+  const handleSearchChange = useCallback((val) => {
+    setSearch(val)
+    updateParams('search', val)
+  }, [searchParams])
+
   const FilterSidebar = () => (
     <div className="space-y-6">
       <div>
         <label className="block text-xs uppercase tracking-wider font-medium mb-3" style={{ color: 'var(--text-muted)' }}>
           {t('catalog.search_placeholder').replace('...', '')}
         </label>
-        <div className="relative">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" fill="none" stroke="var(--text-muted)" strokeWidth="1.5" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
-          <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('catalog.search_placeholder')}
-            className="w-full pl-9 pr-3 py-2.5 text-sm"
-            style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
-            onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
-            onBlur={(e) => (e.target.style.borderColor = 'var(--border)')} />
-        </div>
+        <SearchInput
+          value={search}
+          onChange={handleSearchChange}
+          placeholder={t('catalog.search_placeholder')}
+          mode="rental"
+        />
       </div>
 
       <div>

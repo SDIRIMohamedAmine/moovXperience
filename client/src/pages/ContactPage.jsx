@@ -2,17 +2,34 @@ import { useState } from 'react'
 import { useTranslation } from '../i18n/LanguageContext'
 import { motion } from 'framer-motion'
 import { fadeInUp, stagger } from '../lib/animations'
+import { showToast } from '../components/Toast'
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 export default function ContactPage() {
   const { t } = useTranslation()
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' })
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setSending(true)
-    setTimeout(() => { setSending(false); setSent(true) }, 1000)
+    try {
+      const res = await fetch(`${API_URL}/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (res.ok) {
+        setSent(true)
+      } else {
+        showToast(t('contact.error_msg', 'Failed to send message. Please try again.'), 'error')
+      }
+    } catch {
+      showToast(t('contact.error_msg', 'Failed to send message. Please try again.'), 'error')
+    }
+    setSending(false)
   }
 
   const inputStyle = {
@@ -52,21 +69,41 @@ export default function ContactPage() {
               </motion.div>
             ) : (
               <motion.form variants={fadeInUp} onSubmit={handleSubmit} className="p-8 space-y-5" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                <div>
-                  <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
-                    {t('contact.name_label')}
-                  </label>
-                  <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder={t('contact.name_placeholder')}
-                    className="w-full px-4 py-3 text-sm" style={inputStyle} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
+                      {t('contact.name_label')}
+                    </label>
+                    <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      placeholder={t('contact.name_placeholder')}
+                      className="w-full px-4 py-3 text-sm" style={inputStyle} />
+                  </div>
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
+                      {t('contact.email_label')}
+                    </label>
+                    <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      placeholder={t('contact.email_placeholder')}
+                      className="w-full px-4 py-3 text-sm" style={inputStyle} />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
-                    {t('contact.email_label')}
-                  </label>
-                  <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    placeholder={t('contact.email_placeholder')}
-                    className="w-full px-4 py-3 text-sm" style={inputStyle} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
+                      {t('contact.phone_label', 'Phone')}
+                    </label>
+                    <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                      placeholder={t('contact.phone_placeholder', '+216 XX XXX XXX')}
+                      className="w-full px-4 py-3 text-sm" style={inputStyle} />
+                  </div>
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
+                      {t('contact.subject_label', 'Subject')}
+                    </label>
+                    <input type="text" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                      placeholder={t('contact.subject_placeholder', 'How can we help?')}
+                      className="w-full px-4 py-3 text-sm" style={inputStyle} />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-xs uppercase tracking-wider font-medium mb-2" style={{ color: 'var(--text-muted)' }}>
