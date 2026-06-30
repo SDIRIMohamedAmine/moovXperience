@@ -7,6 +7,29 @@ import { fadeInUp, stagger, viewportOnce } from '../lib/animations'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
+// Simple client-side cache for about page (avoids refetch on every visit)
+const aboutCache = { fr: null, en: null, ts: { fr: 0, en: 0 } }
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
+async function fetchAboutPage(lang) {
+  const now = Date.now()
+  if (aboutCache[lang] && (now - aboutCache.ts[lang]) < CACHE_TTL) {
+    return aboutCache[lang]
+  }
+  const res = await fetch(`${API_URL}/pages/about?lang=${lang}`)
+  const data = await res.json()
+  aboutCache[lang] = data
+  aboutCache.ts[lang] = now
+  return data
+}
+
+// Called by admin after saving to bust the cache
+export function invalidateAboutCache() {
+  aboutCache.fr = null
+  aboutCache.en = null
+  aboutCache.ts = { fr: 0, en: 0 }
+}
+
 function resolveText(text, t) {
   if (!text) return ''
   return text.startsWith('about.') ? t(text) : text
@@ -147,8 +170,7 @@ export default function AboutPage() {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    fetch(`${API_URL}/pages/about?lang=${lang}`)
-      .then((r) => r.json())
+    fetchAboutPage(lang)
       .then((data) => { setPage(data); setLoaded(true) })
       .catch(() => setLoaded(true))
   }, [lang])

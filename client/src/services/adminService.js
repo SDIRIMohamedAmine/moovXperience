@@ -15,7 +15,8 @@ function authHeaders() {
 function handleAdminResponse(res) {
   if (res.status === 401) {
     adminLogout()
-    window.location.href = '/admin/login'
+    // Use assign instead of href to force a full page reload (clears React state)
+    window.location.assign('/admin/login')
     throw new Error('Session expired — please log in again')
   }
   return res
@@ -23,6 +24,24 @@ function handleAdminResponse(res) {
 
 export function isAdminLoggedIn() {
   return !!getAdminToken()
+}
+
+// Verify admin token with server — call this on admin page loads
+export async function verifyAdminToken() {
+  const token = getAdminToken()
+  if (!token) return false
+  try {
+    const res = await fetch(`${API_URL}/admin-auth/verify`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!res.ok) {
+      adminLogout()
+      return false
+    }
+    return true
+  } catch {
+    return false
+  }
 }
 
 export function adminLogout() {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from '../../i18n/LanguageContext'
 import { useTheme } from '../../theme/ThemeContext'
 import { isAdminLoggedIn } from '../../services/adminService'
+import { invalidateAboutCache } from '../AboutPage'
 import { Navigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import MediaUploader from '../../components/MediaUploader'
@@ -110,9 +111,11 @@ function AddItemButton({ onClick, label }) {
 
 function StatsEditor({ section, onChange, t }) {
   const updateItem = (i, field, value) => {
-    const items = [...section.items]
-    items[i] = { ...items[i], [field]: value }
-    onChange({ ...section, items })
+    onChange(prev => {
+      const items = [...prev.items]
+      items[i] = { ...items[i], [field]: value }
+      return { ...prev, items }
+    })
   }
   return (
     <div className="space-y-3">
@@ -126,20 +129,22 @@ function StatsEditor({ section, onChange, t }) {
             <FieldInput label={t('admin.stats_label')} value={item.label} onChange={(v) => updateItem(i, 'label', v)} placeholder="Events" />
           </div>
           {section.items.length > 1 && (
-            <RemoveButton onClick={() => onChange({ ...section, items: section.items.filter((_, j) => j !== i) })} title={t('admin.section_remove_item')} />
+            <RemoveButton onClick={() => onChange(prev => ({ ...prev, items: prev.items.filter((_, j) => j !== i) }))} title={t('admin.section_remove_item')} />
           )}
         </motion.div>
       ))}
-      <AddItemButton onClick={() => onChange({ ...section, items: [...section.items, { value: '', label: '' }] })} label={t('admin.section_add_item')} />
+      <AddItemButton onClick={() => onChange(prev => ({ ...prev, items: [...prev.items, { value: '', label: '' }] }))} label={t('admin.section_add_item')} />
     </div>
   )
 }
 
 function MissionEditor({ section, onChange, t }) {
   const updateItem = (i, field, value) => {
-    const items = [...section.items]
-    items[i] = { ...items[i], [field]: value }
-    onChange({ ...section, items })
+    onChange(prev => {
+      const items = [...prev.items]
+      items[i] = { ...items[i], [field]: value }
+      return { ...prev, items }
+    })
   }
   return (
     <div className="space-y-3">
@@ -148,7 +153,7 @@ function MissionEditor({ section, onChange, t }) {
           className="p-4 space-y-3" style={{ backgroundColor: 'var(--bg)', borderRadius: '8px' }}>
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold" style={{ color: 'var(--text-muted)' }}>#{i + 1}</span>
-            {section.items.length > 1 && <RemoveButton onClick={() => onChange({ ...section, items: section.items.filter((_, j) => j !== i) })} title={t('admin.section_remove_item')} />}
+            {section.items.length > 1 && <RemoveButton onClick={() => onChange(prev => ({ ...prev, items: prev.items.filter((_, j) => j !== i) }))} title={t('admin.section_remove_item')} />}
           </div>
           <div className="flex gap-2 flex-wrap">
             {ICON_OPTIONS.map((opt) => (
@@ -165,16 +170,18 @@ function MissionEditor({ section, onChange, t }) {
           <FieldTextarea label={t('admin.cms_section_desc')} value={item.description} onChange={(v) => updateItem(i, 'description', v)} placeholder={t('admin.cms_section_desc')} rows={2} />
         </motion.div>
       ))}
-      <AddItemButton onClick={() => onChange({ ...section, items: [...section.items, { icon: ICON_OPTIONS[0].value, title: '', description: '' }] })} label={t('admin.section_add_item')} />
+      <AddItemButton onClick={() => onChange(prev => ({ ...prev, items: [...prev.items, { icon: ICON_OPTIONS[0].value, title: '', description: '' }] }))} label={t('admin.section_add_item')} />
     </div>
   )
 }
 
 function ServicesEditor({ section, onChange, t }) {
   const updateItem = (i, field, value) => {
-    const items = [...section.items]
-    items[i] = { ...items[i], [field]: value }
-    onChange({ ...section, items })
+    onChange(prev => {
+      const items = [...prev.items]
+      items[i] = { ...items[i], [field]: value }
+      return { ...prev, items }
+    })
   }
   return (
     <div className="space-y-3">
@@ -183,7 +190,7 @@ function ServicesEditor({ section, onChange, t }) {
           className="p-4 space-y-3" style={{ backgroundColor: 'var(--bg)', borderRadius: '8px' }}>
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold" style={{ color: 'var(--text-muted)' }}>#{i + 1}</span>
-            {section.items.length > 1 && <RemoveButton onClick={() => onChange({ ...section, items: section.items.filter((_, j) => j !== i) })} title={t('admin.section_remove_item')} />}
+            {section.items.length > 1 && <RemoveButton onClick={() => onChange(prev => ({ ...prev, items: prev.items.filter((_, j) => j !== i) }))} title={t('admin.section_remove_item')} />}
           </div>
           <div>
             <label className="block text-[10px] uppercase tracking-wider mb-1.5 font-semibold" style={{ color: 'var(--text-muted)' }}>{t('admin.service_image')}</label>
@@ -194,16 +201,18 @@ function ServicesEditor({ section, onChange, t }) {
           <FieldTextarea label={t('admin.service_description')} value={item.description} onChange={(v) => updateItem(i, 'description', v)} placeholder={t('admin.service_description')} rows={2} />
         </motion.div>
       ))}
-      <AddItemButton onClick={() => onChange({ ...section, items: [...section.items, { image: '', title: '', description: '' }] })} label={t('admin.section_add_item')} />
+      <AddItemButton onClick={() => onChange(prev => ({ ...prev, items: [...prev.items, { image: '', title: '', description: '' }] }))} label={t('admin.section_add_item')} />
     </div>
   )
 }
 
 function TeamEditor({ section, onChange, t }) {
   const updateItem = (i, field, value) => {
-    const items = [...section.items]
-    items[i] = { ...items[i], [field]: value }
-    onChange({ ...section, items })
+    onChange(prev => {
+      const items = [...prev.items]
+      items[i] = { ...items[i], [field]: value }
+      return { ...prev, items }
+    })
   }
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -212,7 +221,7 @@ function TeamEditor({ section, onChange, t }) {
           className="p-4 space-y-3" style={{ backgroundColor: 'var(--bg)', borderRadius: '8px' }}>
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold" style={{ color: 'var(--text-muted)' }}>#{i + 1}</span>
-            {section.items.length > 1 && <RemoveButton onClick={() => onChange({ ...section, items: section.items.filter((_, j) => j !== i) })} title={t('admin.section_remove_item')} />}
+            {section.items.length > 1 && <RemoveButton onClick={() => onChange(prev => ({ ...prev, items: prev.items.filter((_, j) => j !== i) }))} title={t('admin.section_remove_item')} />}
           </div>
           <div>
             <label className="block text-[10px] uppercase tracking-wider mb-1.5 font-semibold" style={{ color: 'var(--text-muted)' }}>{t('admin.team_image')}</label>
@@ -223,7 +232,7 @@ function TeamEditor({ section, onChange, t }) {
           <FieldInput label={t('admin.team_role')} value={item.role} onChange={(v) => updateItem(i, 'role', v)} placeholder={t('admin.team_role')} />
         </motion.div>
       ))}
-      <AddItemButton onClick={() => onChange({ ...section, items: [...section.items, { image: '', name: '', role: '' }] })} label={t('admin.section_add_item')} />
+      <AddItemButton onClick={() => onChange(prev => ({ ...prev, items: [...prev.items, { image: '', name: '', role: '' }] }))} label={t('admin.section_add_item')} />
     </div>
   )
 }
@@ -231,10 +240,10 @@ function TeamEditor({ section, onChange, t }) {
 function CtaEditor({ section, onChange, t }) {
   return (
     <div className="space-y-3 p-4" style={{ backgroundColor: 'var(--bg)', borderRadius: '8px' }}>
-      <FieldInput label={t('admin.cta_title')} value={section.title || ''} onChange={(v) => onChange({ ...section, title: v })} placeholder={t('admin.cta_title')} />
+      <FieldInput label={t('admin.cta_title')} value={section.title || ''} onChange={(v) => onChange(prev => ({ ...prev, title: v }))} placeholder={t('admin.cta_title')} />
       <div className="grid grid-cols-2 gap-3">
-        <FieldInput label={t('admin.cta_button_text')} value={section.button_text || ''} onChange={(v) => onChange({ ...section, button_text: v })} placeholder={t('admin.cta_button_text')} />
-        <FieldInput label={t('admin.cta_button_link')} value={section.button_link || ''} onChange={(v) => onChange({ ...section, button_link: v })} placeholder="/contact" />
+        <FieldInput label={t('admin.cta_button_text')} value={section.button_text || ''} onChange={(v) => onChange(prev => ({ ...prev, button_text: v }))} placeholder={t('admin.cta_button_text')} />
+        <FieldInput label={t('admin.cta_button_link')} value={section.button_link || ''} onChange={(v) => onChange(prev => ({ ...prev, button_link: v }))} placeholder="/contact" />
       </div>
     </div>
   )
@@ -358,31 +367,40 @@ export default function AdminPageEditor() {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ lang, ...form, cover_image: mediaFiles[0]?.url || '' }),
       })
-      if (res.ok) showToast(t('admin.page_saved'), 'success')
-      else showToast(t('admin.error_msg'), 'error')
+      if (res.ok) {
+        showToast(t('admin.page_saved'), 'success')
+        invalidateAboutCache()
+      } else showToast(t('admin.error_msg'), 'error')
     } catch { showToast(t('admin.error_msg'), 'error') }
     setSaving(false)
   }
 
-  const updateSection = (index, newSection) => {
-    const updated = [...form.sections]
-    updated[index] = newSection
-    setForm({ ...form, sections: updated })
+  const updateSection = (index, newSectionOrFn) => {
+    setForm(prev => {
+      const updated = [...prev.sections]
+      const newSection = typeof newSectionOrFn === 'function'
+        ? newSectionOrFn(updated[index])
+        : newSectionOrFn
+      updated[index] = newSection
+      return { ...prev, sections: updated }
+    })
   }
 
   const removeSection = (index) => {
-    setForm({ ...form, sections: form.sections.filter((_, i) => i !== index) })
+    setForm(prev => ({ ...prev, sections: prev.sections.filter((_, i) => i !== index) }))
   }
 
   const moveSection = (from, to) => {
-    const updated = [...form.sections]
-    const [moved] = updated.splice(from, 1)
-    updated.splice(to, 0, moved)
-    setForm({ ...form, sections: updated })
+    setForm(prev => {
+      const updated = [...prev.sections]
+      const [moved] = updated.splice(from, 1)
+      updated.splice(to, 0, moved)
+      return { ...prev, sections: updated }
+    })
   }
 
   const addSection = (type) => {
-    setForm({ ...form, sections: [...form.sections, createEmptySection(type)] })
+    setForm(prev => ({ ...prev, sections: [...prev.sections, createEmptySection(type)] }))
     setShowTypePicker(false)
   }
 
@@ -437,9 +455,9 @@ export default function AdminPageEditor() {
                 </h3>
               </motion.div>
               <div className="space-y-4">
-                <motion.div variants={fadeInUp}><FieldInput label={t('admin.cms_tag')} value={form.tag} onChange={(v) => setForm({ ...form, tag: v })} placeholder="About Us" /></motion.div>
-                <motion.div variants={fadeInUp}><FieldInput label={t('admin.cms_title')} value={form.title} onChange={(v) => setForm({ ...form, title: v })} placeholder="Who We Are" /></motion.div>
-                <motion.div variants={fadeInUp}><FieldTextarea label={t('admin.cms_subtitle')} value={form.subtitle} onChange={(v) => setForm({ ...form, subtitle: v })} placeholder="A short description..." rows={3} /></motion.div>
+                <motion.div variants={fadeInUp}><FieldInput label={t('admin.cms_tag')} value={form.tag} onChange={(v) => setForm(prev => ({ ...prev, tag: v }))} placeholder="About Us" /></motion.div>
+                <motion.div variants={fadeInUp}><FieldInput label={t('admin.cms_title')} value={form.title} onChange={(v) => setForm(prev => ({ ...prev, title: v }))} placeholder="Who We Are" /></motion.div>
+                <motion.div variants={fadeInUp}><FieldTextarea label={t('admin.cms_subtitle')} value={form.subtitle} onChange={(v) => setForm(prev => ({ ...prev, subtitle: v }))} placeholder="A short description..." rows={3} /></motion.div>
                 <motion.div variants={fadeInUp}>
                   <label className="block text-[10px] uppercase tracking-wider mb-1.5 font-semibold" style={{ color: 'var(--text-muted)' }}>{t('admin.editor_cover_image')}</label>
                   <MediaUploader files={mediaFiles} onChange={setMediaFiles} maxFiles={1} folder="pages" />
